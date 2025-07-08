@@ -1,4 +1,9 @@
-﻿namespace Ticketing.API.Endpoints;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Ticketing.Application.Dtos;
+using Ticketing.Application.Queries.GetTicketById;
+
+namespace Ticketing.API.Endpoints;
 public static class TicketingEndpoints
 {
   public static void MapTicketingEndpoints(this WebApplication app)
@@ -13,6 +18,22 @@ public static class TicketingEndpoints
   }
   public static RouteGroupBuilder MapTicketingGetsEndpoints(this RouteGroupBuilder group)
   {
+    group.MapGet("/{ticketId}", GetTicketById)
+      .WithName(nameof(GetTicketById))
+      .Produces<GetTicketDto>(StatusCodes.Status200OK)
+      .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
+      .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+      .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
+
     return group;
+  }
+
+
+  public static async Task<IResult> GetTicketById(Guid ticketId, IMediator mediator)
+  {
+    var query = new GetTicketByIdQuery { TicketId = ticketId };
+    var result = await mediator.Send(query);
+    return Results.Ok(result);
   }
 }

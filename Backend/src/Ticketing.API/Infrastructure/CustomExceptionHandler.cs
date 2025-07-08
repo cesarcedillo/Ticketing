@@ -85,7 +85,7 @@ public class CustomExceptionHandler : IExceptionHandler
   {
     httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-    await httpContext.Response.WriteAsJsonAsync(new Microsoft.AspNetCore.Mvc.ProblemDetails()
+    await httpContext.Response.WriteAsJsonAsync(new ProblemDetails()
     {
       Status = StatusCodes.Status500InternalServerError,
       Title = "Internal server error - " + ex.Source,
