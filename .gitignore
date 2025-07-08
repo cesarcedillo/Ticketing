@@ -1,0 +1,60 @@
+# Build results and binaries
+bin/
+obj/
+out/
+
+# User-specific files and Visual Studio/VSCode config
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vscode/
+.idea/
+*.code-workspace
+
+# Test results and coverage
+TestResults/
+*.ncrunch*
+*.nvuser
+*.vspscc
+
+# NuGet packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+packages/
+# Except build/, which is used as an MSBuild target.
+!packages/build/
+
+# SQLite databases and local data files
+*.db
+*.sqlite
+*.sqlite3
+*.db-shm
+*.db-wal
+
+# Entity Framework generated files (for temporary migrations)
+# If you want to version your migrations, DO NOT ignore Migrations/
+#Migrations/
+
+# Logs
+*.log
+
+# Other temporary files
+*.tmp
+*.bak
+*.cache
+*.config.user
+
+# Rider/JetBrains project files
+.idea/
+*.sln.iml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Visual Studio folder
+.vs/
+
+# User secrets
+secrets.json
