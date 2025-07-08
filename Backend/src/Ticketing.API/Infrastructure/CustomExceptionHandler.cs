@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Ticketing.Core.Application.Mediatr.Behaviours.Exceptions;
 
 namespace Ticketing.API.Infrastructure;
 
@@ -11,7 +12,7 @@ public class CustomExceptionHandler : IExceptionHandler
   {
     _exceptionHandlers = new()
             {
-                //{ typeof(ApplicationValidationException), HandleValidationException },
+                { typeof(ApplicationValidationException), HandleValidationException },
                 { typeof(KeyNotFoundException), HandleNotFoundException },
                 { typeof(ArgumentNullException), HandleArgumentException },
                 { typeof(ArgumentException), HandleArgumentException },
@@ -33,17 +34,17 @@ public class CustomExceptionHandler : IExceptionHandler
     return false;
   }
 
-  //private async Task HandleValidationException(HttpContext httpContext, Exception ex)
-  //{
-  //  httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+  private async Task HandleValidationException(HttpContext httpContext, Exception ex)
+  {
+    httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-  //  await httpContext.Response.WriteAsJsonAsync(new ProblemDetails()
-  //  {
-  //    Status = StatusCodes.Status400BadRequest,
-  //    Title = "Bad request",
-  //    Detail = ex.Message
-  //  });
-  //}
+    await httpContext.Response.WriteAsJsonAsync(new ProblemDetails()
+    {
+      Status = StatusCodes.Status400BadRequest,
+      Title = "Bad request",
+      Detail = ex.Message
+    });
+  }
 
   private async Task HandleNotFoundException(HttpContext httpContext, Exception ex)
   {
