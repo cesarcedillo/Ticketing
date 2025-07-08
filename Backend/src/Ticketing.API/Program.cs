@@ -84,7 +84,7 @@ app.MapHealthChecks("/healthcheck",
       }
     });
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsIntegration())
 {
   using (var scope = app.Services.CreateScope())
   {

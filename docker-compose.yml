@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ticketing-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+    networks:
+      - ticketing-micro-net
+
+  ticketing-api:
+    build:
+      context: ./Backend/src
+      dockerfile: Dockerfile
+    depends_on:
+      - sqlserver
+    ports:
+      - "8080:80"
+    environment:
+      - SerilogMinimumLevel=Debug
+      - RepositoryConnection=Server=sqlserver,1433;Database=Ticketing;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=Integration
+    networks:
+      - ticketing-micro-net
+
+volumes:
+  sql_data:
+
+networks:
+  ticketing-micro-net:
+    name: ticketing-micro-net
+    driver: bridge
