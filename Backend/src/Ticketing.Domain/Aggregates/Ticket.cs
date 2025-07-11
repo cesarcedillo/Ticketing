@@ -16,7 +16,7 @@ public class Ticket : IAggregateRoot
   private readonly List<TicketReply> _replies = new();
   public IReadOnlyCollection<TicketReply> Replies => _replies.AsReadOnly();
 
-  private Ticket() { }
+  public Ticket() { }
 
   public Ticket(Guid ticketId, string subject, string description, User user)
   {
@@ -28,12 +28,12 @@ public class Ticket : IAggregateRoot
     User = user;
   }
 
-  public void AddReply(string replyText, User agent)
+  public void AddReply(string replyText, User user)
   {
     if (Status == TicketStatus.Resolved)
       throw new InvalidOperationException("Ticket is already resolved.");
 
-    var reply = new TicketReply(replyText, agent.Id, DateTime.UtcNow);
+    var reply = new TicketReply(replyText, user, this, DateTime.UtcNow);
     _replies.Add(reply);
 
     if (Status == TicketStatus.Open)

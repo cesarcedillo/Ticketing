@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Ticketing.Core.Infrstructure.EntityFramework.Context;
+using Ticketing.Domain.Aggregates;
 using Ticketing.Infrastructure.EntityConfigurations;
 
 namespace Ticketing.Infrastructure.Data;
@@ -8,14 +9,16 @@ namespace Ticketing.Infrastructure.Data;
 public class TicketDbContext : DbContextBase
 {
 
-  public virtual DbSet<Domain.Aggregates.Ticket> Tickets => Set<Domain.Aggregates.Ticket>();
+  public virtual DbSet<Ticket> Tickets => Set<Ticket>();
 
   public TicketDbContext(DbContextOptions<TicketDbContext> options) : base(options) { }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
 
+    modelBuilder.ApplyConfiguration(new UserConfiguration());
     modelBuilder.ApplyConfiguration(new TicketConfiguration());
+    modelBuilder.ApplyConfiguration(new TicketReplyConfiguration());
 
     base.OnModelCreating(modelBuilder);
   }
