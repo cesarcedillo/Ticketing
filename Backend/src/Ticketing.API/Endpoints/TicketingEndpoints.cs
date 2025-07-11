@@ -2,10 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ticketing.Application.Commands.CreateTicket;
-using Ticketing.Application.Dtos;
 using Ticketing.Application.Dtos.Requests;
 using Ticketing.Application.Dtos.Responses;
-using Ticketing.Application.Queries.GetTicketById;
+using Ticketing.Application.Queries.GetTicketDetail;
 using Ticketing.Application.Queries.ListTickets;
 
 namespace Ticketing.API.Endpoints;
@@ -36,12 +35,12 @@ public static class TicketingEndpoints
     .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
 
-    group.MapGet("/{ticketId}", GetTicketById)
-      .WithName(nameof(GetTicketById))
-      .Produces<CreateTicketResponse>(StatusCodes.Status200OK)
-      .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
-      .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-      .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+    group.MapGet("/{ticketId}", GetTicketDetail)
+    .WithName("GetTicketDetail")
+    .Produces<TicketDetailResponse>(StatusCodes.Status200OK)
+    .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+    .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
 
 
     return group;
@@ -62,11 +61,21 @@ public static class TicketingEndpoints
     return Results.Ok(tickets);
   }
 
-
-  public static async Task<IResult> GetTicketById(Guid ticketId, IMediator mediator)
+  public static async Task<IResult> GetTicketDetail(
+    Guid ticketId,
+    IMediator mediator,
+    CancellationToken cancellationToken)
   {
-    var query = new GetTicketByIdQuery { TicketId = ticketId };
-    var result = await mediator.Send(query);
+    var query = new GetTicketDetailQuery { TicketId = ticketId };
+    var result = await mediator.Send(query, cancellationToken);
+
+    if (result == null)
+      return Results.NotFound(new ProblemDetails
+      {
+        Title = "Ticket not found",
+        Detail = $"Ticket with id {ticketId} does not exist."
+      });
+
     return Results.Ok(result);
   }
 

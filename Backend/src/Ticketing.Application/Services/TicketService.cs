@@ -59,5 +59,16 @@ public class TicketService : ITicketService
     return tickets;
   }
 
+  public async Task<TicketDetailResponse?> GetTicketDetailAsync(Guid ticketId, CancellationToken cancellationToken)
+  {
+    var ticket = await _ticketRepository.Query()
+        .Where(t => t.Id == ticketId)
+        .ProjectTo<TicketDetailResponse>(_mapper.ConfigurationProvider)
+        .FirstOrDefaultAsync(cancellationToken);
+
+    return ticket;
+  }
+
+
 }
 
