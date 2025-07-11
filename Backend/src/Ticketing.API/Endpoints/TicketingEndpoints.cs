@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ticketing.Application.Commands.CreateTicket;
+using Ticketing.Application.Commands.MarkTicketAsResolved;
 using Ticketing.Application.Dtos.Requests;
 using Ticketing.Application.Dtos.Responses;
 using Ticketing.Application.Queries.GetTicketDetail;
@@ -14,7 +15,8 @@ public static class TicketingEndpoints
   {
     app.MapGroup("api/Ticketing")
       .MapTicketingPostEndpoints()
-      .MapTicketingGetsEndpoints();
+      .MapTicketingGetEndpoints()
+      .MapTicketingPatchEndpoints();
   }
   public static RouteGroupBuilder MapTicketingPostEndpoints(this RouteGroupBuilder group)
   {
@@ -27,7 +29,7 @@ public static class TicketingEndpoints
 
     return group;
   }
-  public static RouteGroupBuilder MapTicketingGetsEndpoints(this RouteGroupBuilder group)
+  public static RouteGroupBuilder MapTicketingGetEndpoints(this RouteGroupBuilder group)
   {
     group.MapGet("/", ListTickets)
     .WithName("ListTickets")
@@ -41,7 +43,16 @@ public static class TicketingEndpoints
     .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
     .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
+    return group;
+  }
 
+  public static RouteGroupBuilder MapTicketingPatchEndpoints(this RouteGroupBuilder group)
+  {
+    group.MapPatch("/{ticketId}/mark-as-resolved", MarkTickedAsResolved)
+    .WithName("MarkAsResolved")
+    .Produces(StatusCodes.Status204NoContent)
+    .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+    .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
     return group;
   }
@@ -90,5 +101,21 @@ public static class TicketingEndpoints
 
     return Results.Created($"/api/Ticketing/{ticketId}", new { id = ticketId });
   }
+
+  public static async Task<IResult> MarkTickedAsResolved(
+    Guid ticketId,
+    IMediator mediator,
+    CancellationToken cancellationToken)
+  {
+    var command = new MarkTicketAsResolvedCommand
+    {
+      TicketId = ticketId,
+    };
+
+    await mediator.Send(command, cancellationToken);
+
+    return Results.NoContent();
+  }
+
 
 }

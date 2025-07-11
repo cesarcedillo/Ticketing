@@ -3,7 +3,9 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Ticketing.Application.Dtos.Responses;
 using Ticketing.Application.Services.Interfaces;
+using Ticketing.Core.Application.Mediatr.Behaviours.Exceptions;
 using Ticketing.Domain.Aggregates;
+using Ticketing.Domain.Enums;
 using Ticketing.Domain.Interfaces.Repositories;
 
 namespace Ticketing.Application.Services;
@@ -67,6 +69,18 @@ public class TicketService : ITicketService
         .FirstOrDefaultAsync(cancellationToken);
 
     return ticket;
+  }
+
+  public async Task MarkTicketAsResolvedAsync(Guid ticketId, CancellationToken cancellationToken)
+  {
+    var ticket = await _ticketRepository.Query()
+        .FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
+
+    if (ticket == null)
+      throw new KeyNotFoundException($"Ticket {ticketId} not found.");
+
+    ticket.MarkAsResolved();
+    await _ticketRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
   }
 
 
