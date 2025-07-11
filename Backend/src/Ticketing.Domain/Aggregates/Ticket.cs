@@ -18,9 +18,9 @@ public class Ticket : IAggregateRoot
 
   public Ticket() { }
 
-  public Ticket(Guid ticketId, string subject, string description, User user)
+  public Ticket(string subject, string description, User user)
   {
-    Id = ticketId;
+    Id = Guid.NewGuid();
     Subject = subject ?? throw new ArgumentNullException(nameof(subject));
     Description = description ?? throw new ArgumentNullException(nameof(description));
     Status = TicketStatus.Open;

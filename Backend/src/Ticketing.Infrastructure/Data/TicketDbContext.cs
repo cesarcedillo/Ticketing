@@ -10,6 +10,7 @@ public class TicketDbContext : DbContextBase
 {
 
   public virtual DbSet<Ticket> Tickets => Set<Ticket>();
+  public virtual DbSet<User> Users => Set<User>();
 
   public TicketDbContext(DbContextOptions<TicketDbContext> options) : base(options) { }
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Ticketing.Domain.Entities;
+using Ticketing.Domain.Aggregates;
 
 namespace Ticketing.Infrastructure.EntityConfigurations;
 public class UserConfiguration : IEntityTypeConfiguration<User>
