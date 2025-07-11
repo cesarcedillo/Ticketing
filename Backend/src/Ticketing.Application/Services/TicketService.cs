@@ -1,4 +1,8 @@
-﻿using Ticketing.Application.Services.Interfaces;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
+using Ticketing.Application.Dtos.Responses;
+using Ticketing.Application.Services.Interfaces;
 using Ticketing.Domain.Aggregates;
 using Ticketing.Domain.Interfaces.Repositories;
 
@@ -8,11 +12,13 @@ public class TicketService : ITicketService
 {
   private readonly ITicketRepository _ticketRepository;
   private readonly IUserRepository _userRepository;
+  private readonly IMapper _mapper;
 
-  public TicketService(ITicketRepository ticketRepository, IUserRepository userRepository)
+  public TicketService(ITicketRepository ticketRepository, IUserRepository userRepository, IMapper mapper)
   {
     _ticketRepository = ticketRepository;
     _userRepository = userRepository;
+    _mapper = mapper;
   }
 
   public async Task<Guid> CreateTicketAsync(string subject, string description, Guid userId, CancellationToken cancellationToken)
@@ -30,5 +36,28 @@ public class TicketService : ITicketService
 
     return ticket.Id;
   }
+
+  public async Task<IReadOnlyList<TicketResponse>> ListTicketsAsync(string? status, Guid? userId, CancellationToken cancellationToken)
+  {
+    var ticketsQuery = _ticketRepository.Query();
+
+    if (!string.IsNullOrWhiteSpace(status))
+    {
+      ticketsQuery = ticketsQuery.Where(t =>
+          t.Status.ToString().Equals(status, StringComparison.OrdinalIgnoreCase));
+    }
+    if (userId.HasValue)
+    {
+      ticketsQuery = ticketsQuery.Where(t => t.UserId == userId.Value);
+    }
+
+    var tickets = await ticketsQuery
+            .ProjectTo<TicketResponse>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
+
+
+    return tickets;
+  }
+
 }
 

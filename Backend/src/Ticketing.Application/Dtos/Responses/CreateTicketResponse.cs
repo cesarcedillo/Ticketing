@@ -1,5 +1,5 @@
 ﻿namespace Ticketing.Application.Dtos;
-public record CreateTicketResponse
+public sealed record CreateTicketResponse
 {
-  public required Guid TicketId { get; set; }
+  public Guid TicketId { get; set; }
 }

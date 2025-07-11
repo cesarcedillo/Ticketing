@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Ticketing.Application.Commands.CreateTicket;
 using Ticketing.Application.Dtos;
 using Ticketing.Application.Dtos.Requests;
+using Ticketing.Application.Dtos.Responses;
 using Ticketing.Application.Queries.GetTicketById;
+using Ticketing.Application.Queries.ListTickets;
 
 namespace Ticketing.API.Endpoints;
 public static class TicketingEndpoints
@@ -24,11 +26,16 @@ public static class TicketingEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
-
     return group;
   }
   public static RouteGroupBuilder MapTicketingGetsEndpoints(this RouteGroupBuilder group)
   {
+    group.MapGet("/", ListTickets)
+    .WithName("ListTickets")
+    .Produces<List<TicketResponse>>(StatusCodes.Status200OK)
+    .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
+
     group.MapGet("/{ticketId}", GetTicketById)
       .WithName(nameof(GetTicketById))
       .Produces<CreateTicketResponse>(StatusCodes.Status200OK)
@@ -38,6 +45,21 @@ public static class TicketingEndpoints
 
 
     return group;
+  }
+
+  public static async Task<IResult> ListTickets(
+    [FromQuery] string? status,
+    [FromQuery] Guid? userId,
+    IMediator mediator,
+    CancellationToken cancellationToken)
+  {
+    var query = new ListTicketsQuery
+    {
+      Status = status,
+      UserId = userId
+    };
+    var tickets = await mediator.Send(query, cancellationToken);
+    return Results.Ok(tickets);
   }
 
 
@@ -57,7 +79,6 @@ public static class TicketingEndpoints
     var command = mapper.Map<CreateTicketCommand>(request);
     var ticketId = await mediator.Send(command, cancellationToken);
 
-    // Usando Results.Created para devolver el recurso creado y su ubicación
     return Results.Created($"/api/Ticketing/{ticketId}", new { id = ticketId });
   }
 

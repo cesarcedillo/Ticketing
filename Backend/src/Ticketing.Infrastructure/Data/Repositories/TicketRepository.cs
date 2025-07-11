@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ticketing.Core.Infrstructure.EntityFramework.Repositories;
-using Ticketing.Domain.Aggregates;
 using Ticketing.Domain.Enums;
 using Ticketing.Domain.Interfaces.Repositories;
 using TicketType = Ticketing.Domain.Aggregates.Ticket;
@@ -15,7 +14,7 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
     _dbContext = dbContext;
   }
 
-  public async Task<Ticket?> GetByIdAsync(Guid ticketId, CancellationToken cancellationToken = default)
+  public async Task<TicketType?> GetByIdAsync(Guid ticketId, CancellationToken cancellationToken = default)
   {
     return await _dbContext.Tickets
         .Include(t => t.User)
@@ -23,7 +22,7 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
         .FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
   }
 
-  public async Task<IReadOnlyList<Ticket>> GetUnresolvedTicketsAsync(CancellationToken cancellationToken = default)
+  public async Task<IReadOnlyList<TicketType>> GetUnresolvedTicketsAsync(CancellationToken cancellationToken = default)
   {
     return await _dbContext.Tickets
         .Where(t => t.Status != TicketStatus.Resolved)
@@ -31,5 +30,8 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
         .ToListAsync(cancellationToken);
   }
 
-
+  public IQueryable<TicketType> Query()
+  {
+    return _dbContext.Tickets.Include(t => t.User);
+  }
 }
