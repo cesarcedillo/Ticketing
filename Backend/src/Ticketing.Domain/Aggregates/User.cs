@@ -12,9 +12,21 @@ namespace Ticketing.Domain.Aggregates
 
     public User() { }
 
-    public User(Guid userId, string userName, byte[] avatar, UserType userType)
+    public User(string userName, byte[] avatar, UserType userType)
     {
-      Id = userId;
+      
+      if (string.IsNullOrWhiteSpace(userName))
+        throw new ArgumentException("Username cannot be empty.", nameof(userName));
+
+      if (avatar == null)
+        throw new ArgumentNullException(nameof(avatar), "Avatar cannot be null.");
+      if (avatar.Length == 0)
+        throw new ArgumentException("Avatar cannot be empty.", nameof(avatar));
+
+      if (!Enum.IsDefined(typeof(UserType), userType))
+        throw new ArgumentException("Invalid UserType.", nameof(userType));
+
+      Id = Guid.NewGuid();
       UserName = userName;
       Avatar = avatar;
       UserType = userType;

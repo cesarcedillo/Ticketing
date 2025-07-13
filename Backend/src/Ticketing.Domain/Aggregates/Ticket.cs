@@ -10,6 +10,7 @@ public class Ticket : IAggregateRoot
   public string Subject { get; private set; } = string.Empty;
   public string Description { get; private set; } = string.Empty;
   public TicketStatus Status { get; private set; }
+  public DateTime CreatedAt { get; private set; }
   public Guid UserId { get; private set; }
   public User User { get; private set; } = null!;
 
@@ -20,24 +21,38 @@ public class Ticket : IAggregateRoot
 
   public Ticket(string subject, string description, User user)
   {
+    if (string.IsNullOrWhiteSpace(subject))
+      throw new ArgumentException("Subject cannot be empty.", nameof(subject));
+
+    if (string.IsNullOrWhiteSpace(description))
+      throw new ArgumentException("Description cannot be empty.", nameof(description));
+
+    User = user ?? throw new ArgumentNullException(nameof(user), "User cannot be null.");
+    UserId = user.Id;
     Id = Guid.NewGuid();
-    Subject = subject ?? throw new ArgumentNullException(nameof(subject));
-    Description = description ?? throw new ArgumentNullException(nameof(description));
+    Subject = subject;
+    Description = description;
     Status = TicketStatus.Open;
-    UserId = user?.Id ?? throw new ArgumentNullException(nameof(user));
-    User = user;
+    CreatedAt = DateTime.UtcNow;
   }
 
   public void AddReply(TicketReply reply)
   {
-    if (Status == TicketStatus.Resolved)
-      throw new InvalidOperationException("Ticket is already resolved.");
+    if (reply == null)
+      throw new ArgumentNullException(nameof(reply), "Reply cannot be null.");
 
-    _replies.Add(reply);
+    if (Status == TicketStatus.Resolved)
+      throw new InvalidOperationException("Cannot add reply to a resolved ticket.");
+
+    if (_replies.Any(r => r.Id == reply.Id))
+      throw new InvalidOperationException("This reply has already been added.");
 
     if (Status == TicketStatus.Open)
       Status = TicketStatus.InResolution;
+
+    _replies.Add(reply);
   }
+
 
   public void MarkAsResolved()
   {

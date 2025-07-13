@@ -14,15 +14,19 @@ public class TicketReply
 
   private TicketReply() { }
 
-  public TicketReply(string text, User user, Ticket ticket, DateTime createdAt)
+  public TicketReply(string text, User user, Ticket ticket)
   {
+
+    if (string.IsNullOrEmpty(text))
+      throw new ArgumentException("Text cannot be empty.", nameof(text));
+
     Id = Guid.NewGuid();
-    Text = text ?? throw new ArgumentNullException(nameof(text));
+    Text = text;
     UserId = user?.Id ?? throw new ArgumentNullException(nameof(user));
     User = user;
     TicketId = ticket?.Id ?? throw new ArgumentNullException(nameof(ticket));
     Ticket = ticket;
-    CreatedAt = createdAt;
+    CreatedAt = DateTime.UtcNow;
   }
 }
 

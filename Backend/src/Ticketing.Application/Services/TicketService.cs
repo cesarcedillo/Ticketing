@@ -95,7 +95,7 @@ public class TicketService : ITicketService
     if (user == null)
       throw new KeyNotFoundException($"User {userId} not found.");
 
-    var reply = new TicketReply(text, user, ticket, DateTime.UtcNow);
+    var reply = new TicketReply(text, user, ticket);
 
     ticket.AddReply(reply);
     await _ticketRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
