@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Ticketing.Application.Commands.AddTicketReply;
 using Ticketing.Application.Commands.CreateTicket;
 using Ticketing.Application.Commands.MarkTicketAsResolved;
 using Ticketing.Application.Dtos.Requests;
@@ -26,6 +27,14 @@ public static class TicketingEndpoints
         .Produces<Guid>(StatusCodes.Status201Created)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
+    group.MapPost("/{ticketId}/replies", AddTicketReply)
+    .WithName("AddTicketReply")
+    .Accepts<AddTicketReplyRequest>("application/json")
+    .Produces<Guid>(StatusCodes.Status201Created)
+    .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+    .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
+
 
     return group;
   }
@@ -101,6 +110,22 @@ public static class TicketingEndpoints
 
     return Results.Created($"/api/Ticketing/{ticketId}", new { id = ticketId });
   }
+
+  public static async Task<IResult> AddTicketReply(
+    Guid ticketId,
+    [FromBody] AddTicketReplyRequest request,
+    IMediator mediator,
+    IMapper mapper,
+    CancellationToken cancellationToken)
+  {
+    var command = mapper.Map<AddTicketReplyCommand>(request);
+    command.TicketId = ticketId;
+
+    var replyId = await mediator.Send(command, cancellationToken);
+
+    return Results.Created($"/api/tickets/{ticketId}/replies/{replyId}", new { id = replyId });
+  }
+
 
   public static async Task<IResult> MarkTickedAsResolved(
     Guid ticketId,

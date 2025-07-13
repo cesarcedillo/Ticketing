@@ -28,12 +28,11 @@ public class Ticket : IAggregateRoot
     User = user;
   }
 
-  public void AddReply(string replyText, User user)
+  public void AddReply(TicketReply reply)
   {
     if (Status == TicketStatus.Resolved)
       throw new InvalidOperationException("Ticket is already resolved.");
 
-    var reply = new TicketReply(replyText, user, this, DateTime.UtcNow);
     _replies.Add(reply);
 
     if (Status == TicketStatus.Open)

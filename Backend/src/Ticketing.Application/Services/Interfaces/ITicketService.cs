@@ -7,6 +7,6 @@ public interface ITicketService
   Task<IReadOnlyList<TicketResponse>> ListTicketsAsync(string? status, Guid? userId, CancellationToken cancellationToken);
   Task<TicketDetailResponse?> GetTicketDetailAsync(Guid ticketId, CancellationToken cancellationToken);
   Task MarkTicketAsResolvedAsync(Guid ticketId, CancellationToken cancellationToken);
-
+  Task<Guid> AddReplyAsync(Guid ticketId, string text, Guid userId, CancellationToken cancellationToken);
 
 }
