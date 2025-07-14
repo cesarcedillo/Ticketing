@@ -28,6 +28,9 @@ namespace Ticketing.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(4000)
@@ -49,6 +52,33 @@ namespace Ticketing.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Tickets", (string)null);
+                });
+
+            modelBuilder.Entity("Ticketing.Domain.Aggregates.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Avatar")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("varbinary(4000)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Ticketing.Domain.Entities.TicketReply", b =>
@@ -80,36 +110,9 @@ namespace Ticketing.Infrastructure.Migrations
                     b.ToTable("TicketReplies", (string)null);
                 });
 
-            modelBuilder.Entity("Ticketing.Domain.Entities.User", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("Avatar")
-                        .IsRequired()
-                        .HasMaxLength(4000)
-                        .HasColumnType("varbinary(4000)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserName")
-                        .IsUnique();
-
-                    b.ToTable("Users", (string)null);
-                });
-
             modelBuilder.Entity("Ticketing.Domain.Aggregates.Ticket", b =>
                 {
-                    b.HasOne("Ticketing.Domain.Entities.User", "User")
+                    b.HasOne("Ticketing.Domain.Aggregates.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -126,7 +129,7 @@ namespace Ticketing.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Ticketing.Domain.Entities.User", "User")
+                    b.HasOne("Ticketing.Domain.Aggregates.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)

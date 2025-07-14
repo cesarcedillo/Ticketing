@@ -18,7 +18,6 @@ public class TicketRepositoryTests
         .Options;
     _context = new TicketDbContext(contextOptions);
 
-    // Limpia y seed
     _context.Tickets.RemoveRange(_context.Tickets);
     _context.Users.RemoveRange(_context.Users);
     _context.SaveChanges();
@@ -56,7 +55,6 @@ public class TicketRepositoryTests
   {
     var repo = new TicketRepository(_context);
 
-    // Resuelve un ticket para la prueba
     var resolvedTicket = _context.Tickets.First();
     resolvedTicket.MarkAsResolved();
     _context.SaveChanges();
