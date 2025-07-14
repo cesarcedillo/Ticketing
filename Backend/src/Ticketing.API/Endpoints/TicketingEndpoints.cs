@@ -72,11 +72,7 @@ public static class TicketingEndpoints
     IMediator mediator,
     CancellationToken cancellationToken)
   {
-    var query = new ListTicketsQuery
-    {
-      Status = status,
-      UserId = userId
-    };
+    var query = new ListTicketsQuery(status, userId);
     var tickets = await mediator.Send(query, cancellationToken);
     return Results.Ok(tickets);
   }
@@ -86,7 +82,7 @@ public static class TicketingEndpoints
     IMediator mediator,
     CancellationToken cancellationToken)
   {
-    var query = new GetTicketDetailQuery { TicketId = ticketId };
+    var query = new GetTicketDetailQuery(ticketId);
     var result = await mediator.Send(query, cancellationToken);
 
     if (result == null)
@@ -118,8 +114,7 @@ public static class TicketingEndpoints
     IMapper mapper,
     CancellationToken cancellationToken)
   {
-    var command = mapper.Map<AddTicketReplyCommand>(request);
-    command.TicketId = ticketId;
+    var command = new AddTicketReplyCommand(ticketId, request.Text, request.UserId);
 
     var replyId = await mediator.Send(command, cancellationToken);
 
@@ -132,10 +127,7 @@ public static class TicketingEndpoints
     IMediator mediator,
     CancellationToken cancellationToken)
   {
-    var command = new MarkTicketAsResolvedCommand
-    {
-      TicketId = ticketId,
-    };
+    var command = new MarkTicketAsResolvedCommand(ticketId);
 
     await mediator.Send(command, cancellationToken);
 

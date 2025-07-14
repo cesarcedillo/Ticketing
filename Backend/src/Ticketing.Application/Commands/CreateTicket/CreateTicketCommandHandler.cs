@@ -4,11 +4,11 @@ using Ticketing.Application.Services.Interfaces;
 
 namespace Ticketing.Application.Commands.CreateTicket
 {
-  public class CrearteTicketCommandHandler : IRequestHandler<CreateTicketCommand, CreateTicketResponse>
+  public class CreateTicketCommandHandler : IRequestHandler<CreateTicketCommand, CreateTicketResponse>
   {
     private readonly ITicketService _ticketService;
 
-    public CrearteTicketCommandHandler(ITicketService ticketService)
+    public CreateTicketCommandHandler(ITicketService ticketService)
     {
       _ticketService = ticketService;
     }
