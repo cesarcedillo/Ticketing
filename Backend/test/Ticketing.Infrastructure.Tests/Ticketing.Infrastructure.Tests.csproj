@@ -17,6 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Ticketing.Infrastructure\Ticketing.Infrastructure.csproj" />
+    <ProjectReference Include="..\Ticketing.TestCommon\Ticketing.TestCommon.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

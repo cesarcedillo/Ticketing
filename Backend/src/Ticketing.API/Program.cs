@@ -6,6 +6,7 @@ using Ticketing.API.Endpoints;
 using Ticketing.API.Extensions;
 using Ticketing.Infrastructure.Extensions;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.RegisterServices();
 
