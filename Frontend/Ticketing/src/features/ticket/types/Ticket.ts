@@ -4,7 +4,7 @@ export interface TicketSummary {
   status: string;
   userName: string;
   userId: string;
-  avatar: number[];
+  avatar: string;
 }
 
 export interface TicketReply {
@@ -13,7 +13,7 @@ export interface TicketReply {
   createdAt: string;
   userId: string;
   userName: string;
-  avatar: number[];
+  avatar: string;
 }
 
 export interface Ticket extends TicketSummary {

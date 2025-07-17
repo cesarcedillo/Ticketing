@@ -8,26 +8,13 @@ function binaryStringToByteArray(binary: string): number[] {
 // --- LISTA DE TICKETS ---
 export async function fetchTicketSummaries(): Promise<TicketSummary[]> {
   const resp = await fetch("https://localhost:7086/api/Ticketing");
-  if (!resp.ok) throw new Error("Error cargando tickets");
-  const data = await resp.json();
-  // Convertir avatar (string) a array de bytes si es necesario
-  return data.map((t: any) => ({
-    ...t,
-    avatar: binaryStringToByteArray(t.avatar),
-  }));
+  if (!resp.ok) throw new Error("Error loading tickets");
+  return resp.json();
 }
 
 // --- DETALLE DE TICKET ---
 export async function fetchTicketDetail(id: string): Promise<Ticket> {
   const resp = await fetch(`https://localhost:7086/api/Ticketing/${id}`);
-  if (!resp.ok) throw new Error("Error cargando detalle de ticket");
-  const t = await resp.json();
-  return {
-    ...t,
-    avatar: binaryStringToByteArray(t.avatar),
-    replies: (t.replies || []).map((r: any) => ({
-      ...r,
-      avatar: binaryStringToByteArray(r.avatar),
-    }))
-  };
+  if (!resp.ok) throw new Error("Error loading ticket detail");
+  return resp.json();
 }

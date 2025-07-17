@@ -10,9 +10,7 @@ export default function UserPage() {
 
   useEffect(() => {
     if (user?.avatar && user.avatar.length > 0) {
-      const byteArray = new Uint8Array(user.avatar);
-      const blob = new Blob([byteArray], { type: "image/png" });
-      const url = URL.createObjectURL(blob);
+      const url = `data:image/png;base64,${user.avatar}`;
       setAvatarUrl(url);
       return () => URL.revokeObjectURL(url);
     }

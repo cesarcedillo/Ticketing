@@ -1,5 +1,4 @@
 import type { TicketSummary } from "../types/Ticket";
-import { bytesToImageUrl } from "../../../shared/utils/bytesToImageUrl";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -15,7 +14,7 @@ export default function TicketList({ tickets, selectedId, onSelect }: Props) {
     const urls: Record<string, string> = {};
     tickets.forEach(ticket => {
       if (ticket.avatar?.length) {
-        const url = bytesToImageUrl(ticket.avatar);
+        const url = `data:image/png;base64,${ticket.avatar}`;
         if (url) urls[ticket.id] = url;
       }
     });
@@ -42,7 +41,7 @@ export default function TicketList({ tickets, selectedId, onSelect }: Props) {
             }}
           >
             {avatars[ticket.id] && (
-              <img src={avatars[ticket.id]} alt="avatar"
+              <img src={`data:image/png;base64,${ticket.avatar}`} alt="avatar"
                 style={{ width: 30, height: 30, borderRadius: "50%" }} />
             )}
             <div style={{ flex: 1 }}>

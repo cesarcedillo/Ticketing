@@ -14,7 +14,7 @@ export function useTicketDetail() {
       const t = await fetchTicketDetail(id);
       setTicket(t);
     } catch {
-      setError("Error cargando detalle del ticket");
+      setError("Error loading ticket details");
       setTicket(undefined);
     } finally {
       setLoading(false);

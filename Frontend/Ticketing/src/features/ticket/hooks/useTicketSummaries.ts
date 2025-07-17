@@ -11,7 +11,7 @@ export function useTicketSummaries() {
     setLoading(true);
     fetchTicketSummaries()
       .then(setTickets)
-      .catch(() => setError("Error cargando tickets"))
+      .catch(() => setError("Error loading tickets"))
       .finally(() => setLoading(false));
   }, []);
 
