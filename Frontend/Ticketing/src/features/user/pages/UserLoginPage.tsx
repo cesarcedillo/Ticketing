@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserLogin } from "../hooks/useUserLogin";
 
@@ -9,8 +9,13 @@ export default function UserLoginPage() {
 
   const handleSearch = async () => {
     await login(username);
-    if (user) navigate(`/user/${encodeURIComponent(user.userName)}`, { state: { user } });
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate(`/user/${encodeURIComponent(user.userName)}`, { state: { user } });
+    }
+  }, [user, navigate]);
 
   return (
     <div style={{ padding: "2rem" }}>
