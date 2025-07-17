@@ -17,14 +17,7 @@ public static class DependencyInjection
       throw new Exception("The connection string is empty or null");
     }
 
-    //if (isDevelopment)
-    //{
-    //services.AddDbContext<TicketDbContext>(options => options.UseSqlite(connectionString));
-    //}
-    //else
-    //{
-    services.AddDbContext<TicketDbContext>(options => options.UseSqlServer(connectionString));
-    //}
+    services.AddDbContext<TicketDbContext>(options => options.UseSqlite(connectionString));
 
 
     services.AddTransient<ITicketRepository, TicketRepository>();

@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Ticketing.Application.Dtos.Responses;
+using Ticketing.Application.Services.Interfaces;
 using Ticketing.Domain.Interfaces.Repositories;
 
 namespace Ticketing.Application.Services;
-public class UserService
+public class UserService: IUserService
 {
   private readonly IUserRepository _userRepository;
   private readonly IMapper _mapper;
