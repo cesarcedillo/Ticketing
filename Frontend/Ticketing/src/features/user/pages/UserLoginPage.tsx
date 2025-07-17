@@ -13,7 +13,7 @@ export default function UserLoginPage() {
 
   useEffect(() => {
     if (user) {
-      navigate(`/user/${encodeURIComponent(user.userName)}`, { state: { user } });
+      navigate(`/ticketing`, { state: { user } });
     }
   }, [user, navigate]);
 
