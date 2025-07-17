@@ -32,7 +32,8 @@ public class MappingProfile : Profile
     CreateMap<AddTicketReplyRequest, AddTicketReplyCommand>()
         .ForMember(dest => dest.TicketId, opt => opt.Ignore());
 
-    CreateMap<User, UserResponse>();
+    CreateMap<User, UserResponse>()
+        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.UserType.ToString()));
 
   }
 }
