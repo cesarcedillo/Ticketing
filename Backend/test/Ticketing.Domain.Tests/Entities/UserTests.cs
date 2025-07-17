@@ -10,7 +10,7 @@ public class UserTests
   public void Create_User_Assigns_Properties_Correctly()
   {
     var username = "user_test";
-    var avatar = new byte[] { 1, 2, 3, 4 };
+    var avatar = "avatar";
     var userType = UserType.Agent;
 
     var user = new UserBuilder()
@@ -20,7 +20,7 @@ public class UserTests
         .Build();
 
     user.UserName.Should().Be(username);
-    user.Avatar.Should().Equal(avatar);
+    user.Avatar.Should().Be(avatar);
     user.UserType.Should().Be(userType);
   }
 
@@ -37,13 +37,11 @@ public class UserTests
   [Theory]
   [InlineData(null)]
   [InlineData("")]
-  public void Cannot_Create_User_With_Empty_Avatar(string? _)
+  public void Cannot_Create_User_With_Empty_Avatar(string avatar)
   {
-    Action act1 = () => new UserBuilder().WithAvatar(Array.Empty<byte>()).Build();
-    Action act2 = () => new UserBuilder().WithAvatar(null!).Build();
+    Action act1 = () => new UserBuilder().WithAvatar(avatar).Build();
 
     act1.Should().Throw<ArgumentException>();
-    act2.Should().Throw<ArgumentNullException>();
   }
 
   [Fact]

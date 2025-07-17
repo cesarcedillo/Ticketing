@@ -5,7 +5,7 @@ namespace Ticketing.TestCommon.Builders;
 public class UserBuilder
 {
   private string _username = "username";
-  private byte[] _avatar = [1, 2, 3, 4, 5];
+  private string _avatar = "avatar";
   private UserType _userType = UserType.Customer;
 
   public UserBuilder WithUsername(string username)
@@ -14,7 +14,7 @@ public class UserBuilder
     return this;
   }
 
-  public UserBuilder WithAvatar(byte[] avatar)
+  public UserBuilder WithAvatar(string avatar)
   {
     _avatar = avatar;
     return this;

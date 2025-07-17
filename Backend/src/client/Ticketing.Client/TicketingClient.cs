@@ -270,9 +270,9 @@ namespace Ticketing.Client.NswagAutoGen.HttpClientFactoryImplementation
             {
                 return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();
             }
-            else if (value is byte[])
+            else if (value is string)
             {
-                return System.Convert.ToBase64String((byte[]) value);
+                return System.Convert.ToString((string) value);
             }
             else if (value is string[])
             {

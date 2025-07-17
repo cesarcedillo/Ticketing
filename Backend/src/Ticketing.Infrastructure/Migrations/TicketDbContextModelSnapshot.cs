@@ -60,10 +60,10 @@ namespace Ticketing.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<byte[]>("Avatar")
+                    b.Property<string>("Avatar")
                         .IsRequired()
                         .HasMaxLength(4000)
-                        .HasColumnType("varbinary(4000)");
+                        .HasColumnType("nvarchar(4000)");
 
                     b.Property<string>("UserName")
                         .IsRequired()

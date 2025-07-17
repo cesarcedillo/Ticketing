@@ -17,7 +17,7 @@ namespace Ticketing.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Avatar = table.Column<byte[]>(type: "varbinary(4000)", maxLength: 4000, nullable: false),
+                    Avatar = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     UserType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

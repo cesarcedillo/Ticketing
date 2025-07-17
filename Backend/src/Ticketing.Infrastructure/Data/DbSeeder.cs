@@ -8,8 +8,8 @@ public static class DbSeeder
   {
     if (!context.Users.Any())
     {
-      var admin = new User("admin", [1, 2, 3 ], UserType.Admin);
-      var alice = new User("alice", [4, 5, 6 ], UserType.Customer);
+      var admin = new User("admin", "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAIAAAADnC86AAAAO0lEQVRIDbXBAQ0AAAgCoNm/9HI4BlFq8g5nZs0Rm81Rm81Rm81Rm81Rm81Rm81Rm81Rm81RkFMAF6YB3e+eU7UAAAAASUVORK5CYII=", UserType.Admin);
+      var alice = new User("alice", "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAIAAAADnC86AAAAOElEQVRIDbXBAQ0AAAgCoNm/9HI4BlFq8g5nZs0Rm81Rm81Rm81Rm81Rm81Rm81Rm81Rm81RlVMAF3jB1nByd6AAAAASUVORK5CYII=", UserType.Customer);
 
       context.Users.AddRange(admin, alice);
       await context.SaveChangesAsync();

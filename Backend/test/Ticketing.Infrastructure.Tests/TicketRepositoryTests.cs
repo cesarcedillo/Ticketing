@@ -22,8 +22,8 @@ public class TicketRepositoryTests
     _context.Users.RemoveRange(_context.Users);
     _context.SaveChanges();
 
-    var user1 = new User("alice", new byte[] { 1, 2, 3 }, UserType.Customer);
-    var user2 = new User("bob", new byte[] { 4, 5, 6 }, UserType.Agent);
+    var user1 = new User("alice", "avatar", UserType.Customer);
+    var user2 = new User("bob", "avatar", UserType.Agent);
 
     _context.Users.AddRange(user1, user2);
 

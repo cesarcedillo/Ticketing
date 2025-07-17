@@ -7,20 +7,18 @@ namespace Ticketing.Domain.Aggregates
   {
     public Guid Id { get; private set; }
     public string UserName { get; private set; } = string.Empty;
-    public byte[] Avatar { get; private set; } = [];
+    public string Avatar { get; private set; } = string.Empty;
     public UserType UserType { get; private set; } = UserType.Customer;
 
     public User() { }
 
-    public User(string userName, byte[] avatar, UserType userType)
+    public User(string userName, string avatar, UserType userType)
     {
       
       if (string.IsNullOrWhiteSpace(userName))
         throw new ArgumentException("Username cannot be empty.", nameof(userName));
 
-      if (avatar == null)
-        throw new ArgumentNullException(nameof(avatar), "Avatar cannot be null.");
-      if (avatar.Length == 0)
+      if (string.IsNullOrWhiteSpace(avatar))
         throw new ArgumentException("Avatar cannot be empty.", nameof(avatar));
 
       if (!Enum.IsDefined(typeof(UserType), userType))
