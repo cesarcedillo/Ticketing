@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ticketing.API.Endpoints;
 using Ticketing.API.Extensions;
+using Ticketing.Infrastructure.Data;
 using Ticketing.Infrastructure.Extensions;
 
 
@@ -91,6 +92,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsIntegration())
   using (var scope = app.Services.CreateScope())
   {
     app.Services.ApplyMigrations();
+    var db = scope.ServiceProvider.GetRequiredService<TicketDbContext>();
+    await DbSeeder.SeedAsync(db);
   }
 }
 

@@ -1,9 +1,10 @@
-﻿using Ticketing.Application.Dtos.Responses;
+﻿using MediatR;
+using Ticketing.Application.Dtos.Responses;
 using Ticketing.Application.Services.Interfaces;
 
 namespace Ticketing.Application.Queries.GetUserByName
 {
-  public class GetUserByNameQueryHandler
+  public class GetUserByNameQueryHandler : IRequestHandler<GetUserByNameQuery, UserResponse>
   {
     private readonly IUserService _userService;
 

@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ticketing.Application.Dtos.Responses;
-using Ticketing.Application.Queries.GetTicketDetail;
 using Ticketing.Application.Queries.GetUserByName;
 
 namespace Ticketing.API.Endpoints;
