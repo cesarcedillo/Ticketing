@@ -28,5 +28,18 @@ public class TicketReply
     Ticket = ticket;
     CreatedAt = DateTime.UtcNow;
   }
+
+  public TicketReply(string text, Guid userId, Guid ticketId)
+  {
+    if (string.IsNullOrEmpty(text))
+      throw new ArgumentException("Text cannot be empty.", nameof(text));
+
+    Id = Guid.NewGuid();
+    Text = text;
+    UserId = userId;
+    TicketId = ticketId;
+    CreatedAt = DateTime.UtcNow;
+  }
+
 }
 

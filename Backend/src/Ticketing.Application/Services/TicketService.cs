@@ -3,10 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Ticketing.Application.Dtos.Responses;
 using Ticketing.Application.Services.Interfaces;
-using Ticketing.Core.Application.Mediatr.Behaviours.Exceptions;
 using Ticketing.Domain.Aggregates;
-using Ticketing.Domain.Entities;
-using Ticketing.Domain.Enums;
 using Ticketing.Domain.Interfaces.Repositories;
 
 namespace Ticketing.Application.Services;
@@ -55,6 +52,7 @@ public class TicketService : ITicketService
     }
 
     var tickets = await ticketsQuery
+            .OrderByDescending(t => t.CreatedAt)
             .ProjectTo<TicketResponse>(_mapper.ConfigurationProvider)
             .ToListAsync(cancellationToken);
 
@@ -84,23 +82,10 @@ public class TicketService : ITicketService
     await _ticketRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
   }
 
-  public async Task<Guid> AddReplyAsync(Guid ticketId, string text, Guid userId, CancellationToken cancellationToken)
+  public async Task AddReplyAsync(Guid ticketId, string text, Guid userId, CancellationToken cancellationToken)
   {
-    var ticket = await _ticketRepository.Query()
-        .FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
-    if (ticket == null)
-      throw new KeyNotFoundException($"Ticket {ticketId} not found.");
-
-    var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-    if (user == null)
-      throw new KeyNotFoundException($"User {userId} not found.");
-
-    var reply = new TicketReply(text, user, ticket);
-
-    ticket.AddReply(reply);
+    await _ticketRepository.AddReplyAsync(ticketId, text, userId, cancellationToken);
     await _ticketRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
-
-    return reply.Id;
   }
 
 }

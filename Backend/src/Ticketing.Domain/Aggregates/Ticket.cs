@@ -9,13 +9,17 @@ public class Ticket : IAggregateRoot
   public Guid Id { get; private set; }
   public string Subject { get; private set; } = string.Empty;
   public string Description { get; private set; } = string.Empty;
-  public TicketStatus Status { get; private set; }
-  public DateTime CreatedAt { get; private set; }
+  public TicketStatus Status { get; private set; } = TicketStatus.Open;
+  public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
   public Guid UserId { get; private set; }
   public User User { get; private set; } = null!;
 
   private readonly List<TicketReply> _replies = new();
   public IReadOnlyCollection<TicketReply> Replies => _replies.AsReadOnly();
+
+  public Ticket(Guid id) {
+    Id = id;
+  }
 
   public Ticket() { }
 

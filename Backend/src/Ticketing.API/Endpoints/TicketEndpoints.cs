@@ -31,7 +31,7 @@ public static class TicketEndpoints
     group.MapPost("/{ticketId}/replies", AddTicketReply)
     .WithName("AddTicketReply")
     .Accepts<AddTicketReplyRequest>("application/json")
-    .Produces<Guid>(StatusCodes.Status201Created)
+    .Produces(StatusCodes.Status204NoContent)
     .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
     .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);
 
@@ -116,9 +116,9 @@ public static class TicketEndpoints
   {
     var command = new AddTicketReplyCommand(ticketId, request.Text, request.UserId);
 
-    var replyId = await mediator.Send(command, cancellationToken);
+    await mediator.Send(command, cancellationToken);
 
-    return Results.Created($"/api/tickets/{ticketId}/replies/{replyId}", new { id = replyId });
+    return Results.NoContent();
   }
 
 

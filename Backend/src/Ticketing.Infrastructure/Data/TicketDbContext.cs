@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Ticketing.Core.Infrstructure.EntityFramework.Context;
 using Ticketing.Domain.Aggregates;
+using Ticketing.Domain.Entities;
 using Ticketing.Infrastructure.EntityConfigurations;
 
 namespace Ticketing.Infrastructure.Data;
@@ -9,7 +10,8 @@ namespace Ticketing.Infrastructure.Data;
 public class TicketDbContext : DbContextBase
 {
 
-  public virtual DbSet<Ticket> Tickets => Set<Ticket>();
+  public virtual DbSet<Ticket> Tickets => Set<Ticket>(); 
+  public virtual DbSet<TicketReply> TicketReplies => Set<TicketReply>();
   public virtual DbSet<User> Users => Set<User>();
 
   public TicketDbContext(DbContextOptions<TicketDbContext> options) : base(options) { }
