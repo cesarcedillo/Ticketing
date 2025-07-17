@@ -7,4 +7,6 @@ public interface IUserRepository : IGenericRepository<User>
 {
   Task<User?> GetByIdAsync(Guid userId, CancellationToken cancellationToken = default);
 
+  Task<User?> GetByUserNameAsync(string userName, CancellationToken cancellationToken = default);
+
 }

@@ -1,10 +1,6 @@
-﻿using AutoMapper;
-using MediatR;
-using Ticketing.Application.Dtos;
+﻿using MediatR;
 using Ticketing.Application.Dtos.Responses;
 using Ticketing.Application.Services.Interfaces;
-using Ticketing.Domain.Aggregates;
-using Ticketing.Domain.Interfaces.Repositories;
 
 namespace Ticketing.Application.Queries.GetTicketDetail;
 

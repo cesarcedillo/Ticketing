@@ -49,4 +49,27 @@ public class UserRepositoryTests
 
     result.Should().BeNull();
   }
+
+  [Fact]
+  public async Task GetByUserNameAsync_Should_Return_User_When_Exists()
+  {
+    var repo = new UserRepository(_context);
+
+    var user = await _context.Users.FirstAsync();
+
+    var result = await repo.GetByUserNameAsync(user.UserName);
+
+    result.Should().NotBeNull();
+    result!.UserName.Should().Be(user.UserName);
+  }
+
+  [Fact]
+  public async Task GetByUserNameAsync_Should_Return_Null_When_Not_Found()
+  {
+    var repo = new UserRepository(_context);
+
+    var result = await repo.GetByUserNameAsync("nonExistentUser");
+
+    result.Should().BeNull();
+  }
 }

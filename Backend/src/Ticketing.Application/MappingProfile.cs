@@ -15,7 +15,7 @@ public class MappingProfile : Profile
     CreateMap<CreateTicketCommand, CreateTicketRequest>().ReverseMap();
     
     CreateMap<Ticket, CreateTicketResponse>().ReverseMap();
-    
+
     CreateMap<Ticket, TicketResponse>()
         .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
         .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.User.Avatar));
@@ -32,6 +32,7 @@ public class MappingProfile : Profile
     CreateMap<AddTicketReplyRequest, AddTicketReplyCommand>()
         .ForMember(dest => dest.TicketId, opt => opt.Ignore());
 
+    CreateMap<User, UserResponse>();
 
   }
 }

@@ -47,7 +47,7 @@ app.UseSwaggerUI(c =>
 
 app.MapControllers();
 
-app.MapTicketingEndpoints();
+app.MapTicketEndpoints();
 
 app.UseExceptionHandler(opt => { });
 

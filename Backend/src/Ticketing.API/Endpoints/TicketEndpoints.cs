@@ -10,9 +10,9 @@ using Ticketing.Application.Queries.GetTicketDetail;
 using Ticketing.Application.Queries.ListTickets;
 
 namespace Ticketing.API.Endpoints;
-public static class TicketingEndpoints
+public static class TicketEndpoints
 {
-  public static void MapTicketingEndpoints(this WebApplication app)
+  public static void MapTicketEndpoints(this WebApplication app)
   {
     app.MapGroup("api/Ticketing")
       .MapTicketingPostEndpoints()
