@@ -1,19 +1,20 @@
 import type { Ticket, TicketSummary } from "../types/Ticket";
+import { API_BASE_URL } from "../../../config/apiConfig";
 
 export async function fetchTicketSummaries(): Promise<TicketSummary[]> {
-  const resp = await fetch("https://localhost:7086/api/Ticketing");
+  const resp = await fetch(`${API_BASE_URL}/api/Ticketing`);
   if (!resp.ok) throw new Error("Error loading tickets");
   return resp.json();
 }
 
 export async function fetchTicketDetail(id: string): Promise<Ticket> {
-  const resp = await fetch(`https://localhost:7086/api/Ticketing/${id}`);
+  const resp = await fetch(`${API_BASE_URL}/api/Ticketing/${id}`);
   if (!resp.ok) throw new Error("Error loading ticket detail");
   return resp.json();
 }
 
 export async function postTicketReply(ticketId: string, text: string, userId: string): Promise<void> {
-  const resp = await fetch(`https://localhost:7086/api/Ticketing/${ticketId}/replies`, {
+  const resp = await fetch(`${API_BASE_URL}/api/Ticketing/${ticketId}/replies`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ text, userId })
@@ -24,7 +25,7 @@ export async function postTicketReply(ticketId: string, text: string, userId: st
 }
 
 export async function createTicket(subject: string, description: string, userId: string): Promise<void> {
-  const resp = await fetch("https://localhost:7086/api/Ticketing", {
+  const resp = await fetch(`${API_BASE_URL}/api/Ticketing`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ subject, description, userId })
@@ -35,7 +36,7 @@ export async function createTicket(subject: string, description: string, userId:
 }
 
 export async function markTicketAsResolved(ticketId: string): Promise<void> {
-  const resp = await fetch(`https://localhost:7086/api/Ticketing/${ticketId}/mark-as-resolved`, {
+  const resp = await fetch(`${API_BASE_URL}/api/Ticketing/${ticketId}/mark-as-resolved`, {
     method: "PATCH",
   });
   if (!resp.ok) {
