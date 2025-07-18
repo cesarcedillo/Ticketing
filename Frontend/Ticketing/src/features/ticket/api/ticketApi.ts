@@ -22,3 +22,14 @@ export async function postTicketReply(ticketId: string, text: string, userId: st
     throw new Error("The reply could not be sent");
   }
 }
+
+export async function createTicket(subject: string, description: string, userId: string): Promise<void> {
+  const resp = await fetch("https://localhost:7086/api/Ticketing", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ subject, description, userId })
+  });
+  if (!resp.ok) {
+    throw new Error("The ticket could not be created");
+  }
+}
