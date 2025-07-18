@@ -33,3 +33,12 @@ export async function createTicket(subject: string, description: string, userId:
     throw new Error("The ticket could not be created");
   }
 }
+
+export async function markTicketAsResolved(ticketId: string): Promise<void> {
+  const resp = await fetch(`https://localhost:7086/api/Ticketing/${ticketId}/mark-as-resolved`, {
+    method: "PATCH",
+  });
+  if (!resp.ok) {
+    throw new Error("the ticket could not be marked as resolved");
+  }
+}

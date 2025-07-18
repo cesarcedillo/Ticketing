@@ -26,7 +26,6 @@ export default function TicketList({ tickets, selectedId, onSelect }: Props) {
 
   return (
     <div>
-      <h3>Tickets</h3>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {tickets.map(ticket => (
           <li

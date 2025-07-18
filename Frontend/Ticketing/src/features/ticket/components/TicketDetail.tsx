@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import type { Ticket } from "../types/Ticket";
 import ReplyForm from "./ReplyForm";
+import { useMarkTicketAsResolved } from "../hooks/useMarkTicketAsResolved";
 
 type Props = {
   ticket: Ticket | undefined;
-  userId: string;                  // El usuario logueado
-  onReplyAdded: () => void;        // Función para recargar el detalle tras nueva reply
+  userId: string;
+  onReplyAdded: () => void;
+  onResolved: () => void;
 };
 
-export default function TicketDetail({ ticket, userId, onReplyAdded }: Props) {
+export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved }: Props) {
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>();
+  const { loading, error, resolve } = useMarkTicketAsResolved();
 
   useEffect(() => {
     if (ticket?.avatar) {
@@ -20,8 +23,17 @@ export default function TicketDetail({ ticket, userId, onReplyAdded }: Props) {
   }, [ticket]);
 
   if (!ticket) {
-    return <div>Select a ticket from the list</div>;
+    return <div>Selecciona un ticket de la lista</div>;
   }
+
+  const handleResolve = async () => {
+    try {
+      await resolve(ticket.id);
+      onResolved(); 
+    } catch {
+      // error handled by the hook
+    }
+  };
 
   return (
     <div>
@@ -38,11 +50,20 @@ export default function TicketDetail({ ticket, userId, onReplyAdded }: Props) {
         <span style={{ color: "#666", fontSize: 13, marginLeft: 8 }}>
           ({ticket.status})
         </span>
+        {ticket.status !== "Resolved" && (
+          <button
+            onClick={handleResolve}
+            style={{ marginLeft: "auto" }}
+            disabled={loading}
+          >
+            {loading ? "Resolving..." : "Resolve"}
+          </button>
+        )}
       </div>
+      {error && <div style={{ color: "red", margin: "8px 0" }}>{error}</div>}
       <p style={{ marginTop: 16 }}>{ticket.description}</p>
-
       <hr />
-      <h4>Replies</h4>
+      <h4>Respuestas</h4>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {ticket.replies.map(reply => (
           <li key={reply.id} style={{ marginBottom: 18 }}>
@@ -63,10 +84,9 @@ export default function TicketDetail({ ticket, userId, onReplyAdded }: Props) {
           </li>
         ))}
         {ticket.replies.length === 0 && (
-          <li style={{ color: "#888" }}>There are no reply yet.</li>
+          <li style={{ color: "#888" }}>No hay respuestas aún.</li>
         )}
       </ul>
-
       <ReplyForm
         ticketId={ticket.id}
         userId={userId}

@@ -11,22 +11,34 @@ export default function TicketingPage() {
   const location = useLocation();
   const user = (location.state as { user: User })?.user;
 
-  const { tickets, loading: loadingList, error: errorList } = useTicketSummaries();
-  const { ticket, loading: loadingDetail, error: errorDetail, loadTicket } = useTicketDetail();
+  const { tickets, loading: loadingList, error: errorList, refetch: refetchTickets } = useTicketSummaries();
+
+  const {
+    ticket,
+    loading: loadingDetail,
+    error: errorDetail,
+    loadTicket
+  } = useTicketDetail();
+
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const [showNewModal, setShowNewModal] = useState(false);
 
-  const handleTicketCreated = () => {
-    window.location.reload();
-  };
-
   useEffect(() => {
-    if (selectedId) loadTicket(selectedId);
+    if (selectedId) {
+      loadTicket(selectedId);
+    }
   }, [selectedId, loadTicket]);
 
-  const handleReplyAdded = () => {
-    if (selectedId) loadTicket(selectedId);
+  const handleTicketCreated = () => {
+    refetchTickets();
+  };
+  
+  const handleReplyOrResolved = () => {
+    if (selectedId) {
+      loadTicket(selectedId);
+      refetchTickets();
+    }
   };
 
   return (
@@ -57,7 +69,8 @@ export default function TicketingPage() {
         <TicketDetail
           ticket={ticket}
           userId={user?.id ?? ""}
-          onReplyAdded={handleReplyAdded}
+          onReplyAdded={handleReplyOrResolved}
+          onResolved={handleReplyOrResolved}
         />
       </div>
     </div>
