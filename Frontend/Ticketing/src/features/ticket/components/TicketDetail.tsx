@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Ticket } from "../types/Ticket";
 import ReplyForm from "./ReplyForm";
 import { useMarkTicketAsResolved } from "../hooks/useMarkTicketAsResolved";
+import styles from "./TicketDetail.module.css";
 
 type Props = {
   ticket: Ticket | undefined;
@@ -36,24 +37,25 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
   };
 
   return (
-    <div>
-      <h2>{ticket.subject}</h2>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        {avatarUrl && (
-          <img
-            src={avatarUrl}
-            alt="avatar"
-            style={{ width: 38, height: 38, borderRadius: "50%", border: "1px solid #ccc" }}
-          />
-        )}
-        <span style={{ fontWeight: "bold" }}>{ticket.userName}</span>
-        <span style={{ color: "#666", fontSize: 13, marginLeft: 8 }}>
-          ({ticket.status})
-        </span>
+    <div className={styles.detailContainer}>
+      <div className={styles.header}>
+        <div>
+          <h2 className={styles.title}>{ticket.subject}</h2>
+          <div className={styles.userInfo}>
+            <span className={styles.userName}>{ticket.userName}</span>
+            {avatarUrl && (
+              <img
+                src={avatarUrl}
+                alt="avatar"
+                className={styles.userAvatar}
+              />
+            )}
+          </div>
+        </div>
         {ticket.status !== "Resolved" && (
           <button
+            className={styles.resolveBtn}
             onClick={handleResolve}
-            style={{ marginLeft: "auto" }}
             disabled={loading}
           >
             {loading ? "Resolving..." : "Resolve"}
@@ -61,38 +63,47 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
         )}
       </div>
       {error && <div style={{ color: "red", margin: "8px 0" }}>{error}</div>}
-      <p style={{ marginTop: 16 }}>{ticket.description}</p>
+      <div className={styles.ticketDesc}>{ticket.description}</div>
       <hr />
-      <h4>Respuestas</h4>
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <h4>Replies</h4>
+      <div className={styles.repliesBlock}>
+        {ticket.replies.length === 0 && (
+          <div style={{ color: "#888", marginTop: 8 }}>No replies yet.</div>
+        )}
         {ticket.replies.map(reply => (
-          <li key={reply.id} style={{ marginBottom: 18 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              {reply.avatar && (
+          <div key={reply.id} className={styles.replyCard}>
+            <div className={styles.replyAvatar}>
+              {reply.avatar ? (
                 <img
                   src={`data:image/png;base64,${reply.avatar}`}
                   alt="avatar"
-                  style={{ width: 28, height: 28, borderRadius: "50%" }}
+                  style={{ width: 32, height: 32, borderRadius: "50%" }}
                 />
+              ) : (
+                <svg viewBox="0 0 24 24" width={24} height={24} fill="#bfc9d7">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M12 14c-4 0-6 2-6 3.5V20h12v-2.5c0-1.5-2-3.5-6-3.5z" />
+                </svg>
               )}
-              <b>{reply.userName}</b>
-              <span style={{ color: "#888", fontSize: 12 }}>
-                {new Date(reply.createdAt).toLocaleString()}
-              </span>
             </div>
-            <div style={{ marginLeft: 36 }}>{reply.text}</div>
-          </li>
+            <div className={styles.replyBody}>
+              <div className={styles.replyMeta}>
+                <span className={styles.replyName}>{reply.userName}</span>
+                <span>{new Date(reply.createdAt).toLocaleString()}</span>
+              </div>
+              <div className={styles.replyText}>{reply.text}</div>
+            </div>
+          </div>
         ))}
-        {ticket.replies.length === 0 && (
-          <li style={{ color: "#888" }}>There are not reply yet</li>
-        )}
-      </ul>
+      </div>
       {ticket.status !== "Resolved" && (
-        <ReplyForm
-          ticketId={ticket.id}
-          userId={userId}
-          onSuccess={onReplyAdded}
-        />
+        
+          <ReplyForm
+            ticketId={ticket.id}
+            userId={userId}
+            onSuccess={onReplyAdded}
+          />
+        
       )}
     </div>
   );

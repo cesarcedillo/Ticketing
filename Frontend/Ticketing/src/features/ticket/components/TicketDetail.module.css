@@ -1,0 +1,117 @@
+.detailContainer {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #0001;
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-height: 90vh;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userName {
+  font-weight: 500;
+  color: #222;
+  font-size: 1.1rem;
+}
+
+.userAvatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px;
+}
+
+.resolveBtn {
+  background: #317aff;
+  color: #fff;
+  border: none;
+  padding: 0.4em 1.2em;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 18px;
+  transition: background 0.15s;
+}
+.resolveBtn:disabled {
+  background: #a3bffa;
+  cursor: not-allowed;
+}
+
+.ticketDesc {
+  margin: 1.5em 0;
+  font-size: 1.06rem;
+  color: #444;
+  white-space: pre-wrap;
+}
+
+.repliesBlock {
+  margin-bottom: 2.5em;
+}
+
+.replyCard {
+  background: #f8fafc;
+  border-radius: 8px;
+  margin-bottom: 1.1em;
+  padding: 0.8em 1em 0.5em 1em;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.replyAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.replyBody {
+  flex: 1;
+}
+
+.replyName {
+  font-weight: bold;
+  color: #317aff;
+  margin-right: 8px;
+}
+.replyMeta {
+  color: #888;
+  font-size: 0.93em;
+  margin-bottom: 0.2em;
+}
+.replyText {
+  margin-top: 1px;
+  color: #2d3748;
+}
+
+.replyFormBlock {
+  margin-top: 2.5em;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 1.2em 1em;
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useCreateTicket } from "../hooks/useCreateTicket";
+import styles from "./NewTicketModal.module.css";
 
 type Props = {
   userId: string;
@@ -21,45 +22,60 @@ export default function NewTicketModal({ userId, onClose, onCreated }: Props) {
       onCreated();
       onClose();
     } catch {
+      // error handled by hook
     }
   };
 
   return (
-    <div
-      style={{
-        position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh",
-        background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
-      }}>
-      <div style={{ background: "white", borderRadius: 8, padding: 24, minWidth: 320, boxShadow: "0 2px 16px #3332" }}>
-        <h3>New Ticket</h3>
-        <label>
-          Subject<br />
-          <input
-            style={{ width: "100%", marginBottom: 8 }}
-            value={subject}
-            onChange={e => setSubject(e.target.value)}
-            disabled={loading}
-          />
-        </label>
-        <label>
-          Description<br />
-          <textarea
-            style={{ width: "100%", marginBottom: 8 }}
-            rows={4}
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            disabled={loading}
-          />
-        </label>
-        <div>
-          <button onClick={handleCreate} disabled={loading || !subject.trim() || !description.trim()}>
-            {loading ? "Creating..." : "Create"}
-          </button>
-          <button onClick={onClose} style={{ marginLeft: 8 }} disabled={loading}>
-            Cancel
-          </button>
-        </div>
-        {error && <div style={{ color: "red", marginTop: 8 }}>{error}</div>}
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalBox}>
+        <div className={styles.title}>New Ticket</div>
+        <form
+          className={styles.formGroup}
+          onSubmit={e => { e.preventDefault(); handleCreate(); }}
+        >
+          <div>
+            <div className={styles.label}>Subject</div>
+            <input
+              className={styles.input}
+              value={subject}
+              onChange={e => setSubject(e.target.value)}
+              disabled={loading}
+              maxLength={80}
+              autoFocus
+              placeholder="Enter a short title..."
+            />
+          </div>
+          <div>
+            <div className={styles.label}>Description</div>
+            <textarea
+              className={styles.textarea}
+              value={description}
+              onChange={e => setDescription(e.target.value)}
+              disabled={loading}
+              maxLength={800}
+              placeholder="Describe your issue or request..."
+            />
+          </div>
+          <div className={styles.buttonRow}>
+            <button
+              className={styles.cancelBtn}
+              onClick={onClose}
+              disabled={loading}
+              type="button"
+            >
+              Cancel
+            </button>
+            <button
+              className={styles.createBtn}
+              disabled={loading || !subject.trim() || !description.trim()}
+              type="submit"
+            >
+              {loading ? "Creating..." : "Create"}
+            </button>
+          </div>
+          {error && <div className={styles.errorMsg}>{error}</div>}
+        </form>
       </div>
     </div>
   );

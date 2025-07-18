@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { usePostTicketReply } from "../hooks/usePostTicketReply";
+import styles from "./ReplyForm.module.css";
 
 type Props = {
   ticketId: string;
@@ -13,28 +14,35 @@ export default function ReplyForm({ ticketId, userId, onSuccess }: Props) {
 
   const handleSend = async () => {
     if (!text.trim()) return;
-    await sendReply(ticketId, text, userId);
-    if (!error) {
+    try {
+      await sendReply(ticketId, text, userId);
       setText("");
       onSuccess();
+    } catch {
+      // error handled by hook
     }
   };
 
   return (
-    <div style={{ marginTop: 24, background: "#fafbfc", padding: 16, borderRadius: 8 }}>
+    <div className={styles.replyFormBox}>
       <textarea
         rows={3}
-        style={{ width: "100%", marginBottom: 8, resize: "vertical" }}
-        placeholder="Write here your reply..."
+        className={styles.replyTextarea}
+        placeholder="Write your reply..."
         value={text}
         onChange={e => setText(e.target.value)}
         disabled={loading}
+        maxLength={700}
       />
-      <div>
-        <button onClick={handleSend} disabled={loading || !text.trim()}>
+      <div className={styles.actionRow}>
+        <button
+          className={styles.sendBtn}
+          onClick={handleSend}
+          disabled={loading || !text.trim()}
+        >
           {loading ? "Sending..." : "Send"}
         </button>
-        {error && <span style={{ color: "red", marginLeft: 12 }}>{error}</span>}
+        {error && <span className={styles.errorMsg}>{error}</span>}
       </div>
     </div>
   );
