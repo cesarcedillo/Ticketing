@@ -33,7 +33,7 @@ export default function TicketingPage() {
   const handleTicketCreated = () => {
     refetchTickets();
   };
-  
+
   const handleReplyOrResolved = () => {
     if (selectedId) {
       loadTicket(selectedId);
@@ -43,10 +43,12 @@ export default function TicketingPage() {
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
-      <div style={{ width: "33%", borderRight: "1px solid #eee", padding: "1.5rem" }}>
+      <div style={{ width: "33%", borderRight: "1px solid #eee", padding: "1.5rem 1rem 1.5rem 1.5rem", background: "#f5f7fa" }}>
         <div style={{ marginBottom: 16, display: "flex", justifyContent: "space-between" }}>
-          <h3 style={{ margin: 0 }}>Tickets</h3>
-          <button onClick={() => setShowNewModal(true)}>New Ticket</button>
+          <h3 style={{ margin: 0, color: "#317aff" }}>Tickets</h3>
+          <button onClick={() => setShowNewModal(true)} style={{ background: "#fff", color: "#317aff", border: "1px solid #317aff", borderRadius: 5, padding: "4px 12px", fontWeight: 500, cursor: "pointer" }}>
+            New Ticket
+          </button>
         </div>
         <TicketList
           tickets={tickets}

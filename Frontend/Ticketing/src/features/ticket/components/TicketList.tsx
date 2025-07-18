@@ -1,5 +1,5 @@
+import styles from "./TicketList.module.css";
 import type { TicketSummary } from "../types/Ticket";
-import { useEffect, useState } from "react";
 
 type Props = {
   tickets: TicketSummary[];
@@ -8,48 +8,37 @@ type Props = {
 };
 
 export default function TicketList({ tickets, selectedId, onSelect }: Props) {
-  const [avatars, setAvatars] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    const urls: Record<string, string> = {};
-    tickets.forEach(ticket => {
-      if (ticket.avatar?.length) {
-        const url = `data:image/png;base64,${ticket.avatar}`;
-        if (url) urls[ticket.id] = url;
-      }
-    });
-    setAvatars(urls);
-    return () => {
-      Object.values(urls).forEach(url => URL.revokeObjectURL(url));
-    };
-  }, [tickets]);
-
   return (
-    <div>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {tickets.map(ticket => (
-          <li
-            key={ticket.id}
-            onClick={() => onSelect(ticket.id)}
-            style={{
-              display: "flex", alignItems: "center", gap: 10,
-              padding: "0.7em 1em", marginBottom: 4, cursor: "pointer",
-              background: ticket.id === selectedId ? "#e3e8f0" : "white",
-              borderRadius: 6,
-              border: ticket.id === selectedId ? "2px solid #3182ce" : "1px solid #e2e8f0"
-            }}
-          >
-            {avatars[ticket.id] && (
-              <img src={`data:image/png;base64,${ticket.avatar}`} alt="avatar"
-                style={{ width: 30, height: 30, borderRadius: "50%" }} />
-            )}
-            <div style={{ flex: 1 }}>
-              <b>{ticket.subject}</b><br />
-              <small>{ticket.userName} - {ticket.userId}</small>
+    <div className={styles.listContainer}>
+      {tickets.map(ticket => (
+        <div
+          key={ticket.id}
+          className={`${styles.ticketItem} ${ticket.id === selectedId ? styles.selected : ""}`}
+          onClick={() => onSelect(ticket.id)}
+        >
+          {ticket.avatar ? (
+            <img
+              src={`data:image/png;base64,${ticket.avatar}`}
+              className={styles.avatar}
+              alt="avatar"
+            />
+          ) : (
+            <div className={styles.avatar}>
+              {/* Icono SVG de usuario */}
+              <svg viewBox="0 0 24 24" width={20} height={20} fill="currentColor">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M12 14c-4 0-6 2-6 3.5V20h12v-2.5c0-1.5-2-3.5-6-3.5z" />
+              </svg>
             </div>
-          </li>
-        ))}
-      </ul>
+          )}
+          <div className={styles.ticketInfo}>
+            <span className={styles.ticketSubject}>{ticket.subject}</span>
+            <span className={styles.ticketUser}>
+              {ticket.userName} • {ticket.id.slice(0, 6)}
+            </span>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

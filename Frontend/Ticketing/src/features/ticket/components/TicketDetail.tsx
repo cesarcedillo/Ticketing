@@ -84,7 +84,7 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
           </li>
         ))}
         {ticket.replies.length === 0 && (
-          <li style={{ color: "#888" }}>No hay respuestas aún.</li>
+          <li style={{ color: "#888" }}>There are not reply yet</li>
         )}
       </ul>
       {ticket.status !== "Resolved" && (
