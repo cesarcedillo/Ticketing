@@ -57,13 +57,17 @@ public class Ticket : IAggregateRoot
     _replies.Add(reply);
   }
 
-
   public void MarkAsResolved()
   {
     if (Status == TicketStatus.Resolved)
       throw new InvalidOperationException("Ticket is already resolved.");
 
     Status = TicketStatus.Resolved;
+  }
+
+  public void MarkAsInResolution()
+  {
+    Status = TicketStatus.InResolution;
   }
 
 }

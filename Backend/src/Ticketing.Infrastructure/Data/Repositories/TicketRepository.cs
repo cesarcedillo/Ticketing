@@ -41,8 +41,8 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
 
   public async Task AddReplyAsync(Guid ticketId, string text, Guid userId, CancellationToken cancellationToken)
   {
-    var ticketExists = await _dbContext.Tickets.AnyAsync(t => t.Id == ticketId, cancellationToken);
-    if (!ticketExists)
+    var ticket = await _dbContext.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
+    if (ticket == null)
       throw new KeyNotFoundException($"Ticket {ticketId} not found.");
 
     var userExists = await _dbContext.Users.AnyAsync(u => u.Id == userId, cancellationToken);
@@ -50,6 +50,7 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
       throw new KeyNotFoundException($"User {userId} not found.");
 
     var reply = new TicketReply(text, userId, ticketId);
+    ticket.MarkAsInResolution();
 
     _dbContext.TicketReplies.Add(reply);
   }

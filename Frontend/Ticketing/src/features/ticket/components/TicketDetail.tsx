@@ -29,7 +29,7 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
   const handleResolve = async () => {
     try {
       await resolve(ticket.id);
-      onResolved(); 
+      onResolved();
     } catch {
       // error handled by the hook
     }
@@ -87,11 +87,13 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
           <li style={{ color: "#888" }}>No hay respuestas aún.</li>
         )}
       </ul>
-      <ReplyForm
-        ticketId={ticket.id}
-        userId={userId}
-        onSuccess={onReplyAdded}
-      />
+      {ticket.status !== "Resolved" && (
+        <ReplyForm
+          ticketId={ticket.id}
+          userId={userId}
+          onSuccess={onReplyAdded}
+        />
+      )}
     </div>
   );
 }
