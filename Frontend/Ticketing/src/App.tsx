@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
-import UserLoginPage from "./features/user/pages/UserLoginPage";
-import TicketingPage from "./features/ticket/pages/TicketingPage";
+import UserLoginPage from "./features/user/pages/UserLoginPage/UserLoginPage";
+import TicketingPage from "./features/ticket/pages/TicketingPage/TicketingPage";
 
 import './App.css'
 

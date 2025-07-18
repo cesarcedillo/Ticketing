@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUserLogin } from "../hooks/useUserLogin";
-import UserLoginForm from "../components/UserLoginForm/UserLoginForm";
+import { useUserLogin } from "../../hooks/useUserLogin";
+import UserLoginForm from "../../components/UserLoginForm/UserLoginForm";
+import styles from "./UserLoginPage.module.css";
 
 export default function UserLoginPage() {
   const navigate = useNavigate();
@@ -18,15 +19,7 @@ export default function UserLoginPage() {
   }, [user, navigate]);
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f1f5f9",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}
-    >
+    <div className={styles.bg}>
       <UserLoginForm
         onLogin={handleLogin}
         loading={loading}
