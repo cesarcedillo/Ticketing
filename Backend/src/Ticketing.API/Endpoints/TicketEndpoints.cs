@@ -14,7 +14,7 @@ public static class TicketEndpoints
 {
   public static void MapTicketEndpoints(this WebApplication app)
   {
-    app.MapGroup("api/Ticketing")
+    app.MapGroup("api/Ticket")
       .MapTicketingPostEndpoints()
       .MapTicketingGetEndpoints()
       .MapTicketingPatchEndpoints();

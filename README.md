@@ -1,87 +1,139 @@
 ﻿# 🎟️ Ticketing System
 
-## Description
-A simple yet robust ticket management system built with .NET Core, following Clean Architecture principles and Docker support.  
-Includes:
-- Backend RESTful API (`Ticketing.API`)
-- Data infrastructure using Entity Framework Core (`Ticketing.Infrastructure`)
-- Domain model and business logic (`Ticketing.Domain`)
-- Unit tests for main components
-- Orchestration with `docker-compose`
+## Project Overview
 
-## Architecture
-- **Ticketing.API**: Exposes HTTP endpoints, configures services and dependencies.
-- **Ticketing.Domain**: Contains entities, aggregates, and domain logic.
-- **Ticketing.Infrastructure**: Implements EF Core context, repositories, and migrations.
-- **Ticketing.Tests**: Unit tests (xUnit/NUnit/MSTest).
+Ticketing System is a simple yet robust ticket management platform built using Clean Architecture with a .NET 8 backend and a modern React frontend (Vite).
 
-## Requirements
-- [.NET 8 SDK](https://dotnet.microsoft.com/)
-- Docker & Docker Compose (optional, for containerized environments)
-- SQL Server or PostgreSQL database (depending on configuration)
+The solution includes:
 
-## Getting Started
+* **Backend RESTful API** (`Ticketing.API`, .NET 8)
+* **Frontend SPA** (`Ticketing`, React + Vite)
+* **Infrastructure** (Entity Framework Core, SQLite for local/dev)
+* **Unit tests** (backend)
+* **Container orchestration** via Docker Compose for easy setup
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/cesarcedillo/Ticketing.git
-   cd Ticketing
-   ```
+---
 
-2. Add your connection string in `Ticketing.API/appsettings.json`:
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=localhost;Database=TicketingDb;User Id=sa;Password=Your_password123;"
-   }
-   ```
+## Setup Instructions
 
-3. Apply migrations:
-   ```bash
-   dotnet ef migrations add InitialCreate --project ./Ticketing.Infrastructure --startup-project ./Ticketing.API
-   dotnet ef database update --project ./Ticketing.Infrastructure --startup-project ./Ticketing.API
-   ```
+### Prerequisites
 
-4. Run the application:
-   ```bash
-   cd Ticketing.API
-   dotnet run
-   ```
-   The API will be available at `https://localhost:5001` or `http://localhost:5000`.
+* [.NET 8 SDK](https://dotnet.microsoft.com/)
+* [Node.js](https://nodejs.org/) (for frontend development, not needed for Docker)
+* [Docker & Docker Compose](https://docs.docker.com/get-docker/) (recommended)
+* **(Optional):** GitHub/GitLab account for private repository
 
-## Using Docker
+---
 
-1. Start all services:
-   ```bash
-   docker-compose up -d --build
-   ```
+### 1. Clone the Repository
 
-2. Containers for the API and the database will be created.
-
-3. Verify with:
-   ```bash
-   docker ps
-   ```
-
-## Available Endpoints
-Briefly describe available RESTful endpoints, for example:
-- `GET /api/tickets` – List all tickets
-- `GET /api/tickets/{id}` – Get ticket by ID
-- `POST /api/tickets` – Create a ticket
-- `PUT /api/tickets/{id}` – Update a ticket
-- `DELETE /api/tickets/{id}` – Delete a ticket
-
-
-## Running Tests
-From the root directory:
 ```bash
+git clone <your-private-repo-url>
+cd Ticketing
+```
+
+---
+
+### 2. Configuration
+
+#### Backend
+
+* For local development, edit secret file.
+
+  ```
+  {
+    "SerilogMinimumLevel": "Debug",
+    "RepositoryConnection": "Data Source=Ticketing.db"
+  }
+  ```
+
+#### Frontend
+
+* For local development, edit or create `Frontend/.env`
+
+  ```
+  VITE_API_BASE_URL=https://localhost:7086
+  ```
+
+---
+
+### 3. Running the App
+
+#### Option A: Docker Compose (Recommended)
+
+This will run **both backend (API) and frontend** containers and use SQLite for persistence.
+
+```bash
+docker compose up --build
+```
+
+* **Frontend**: [http://localhost:3000](http://localhost:3000)
+* **Backend API**: [http://localhost:8080](http://localhost:8080)
+
+#### Option B: Run Locally (Development Mode)
+
+**Backend:**
+
+```bash
+cd Backend/src
+dotnet run --project Ticketing.API
+```
+
+* Default API: [https://localhost:7086](https://localhost:7086)
+
+**Frontend:**
+
+```bash
+cd Frontend
+npm install
+npm run dev
+```
+
+* Vite Dev Server: [http://localhost:5173](http://localhost:5173)
+
+---
+
+## Assumptions
+
+* SQLite is used for local development and when running via Docker by default. No external DB configuration required unless specified.
+* The frontend expects the backend API URL to be set via `VITE_API_BASE_URL` (in `.env` for local dev or as a build arg for Docker).
+* No authentication is implemented (public API for demonstration).
+* All migrations are automatically applied on startup when using Docker.
+
+---
+
+## How to Run the Tests
+
+**Backend tests:**
+
+```bash
+cd Backend/tests/Ticketing.Tests
 dotnet test
 ```
 
-## Best Practices
-- C# code style: Microsoft .NET Coding Conventions
-- Constructor-based dependency injection
-- Single Responsibility Principle
-- Unit tests for critical logic
-- Standard validation and error handling
+**Frontend tests:**
 
+If not implemented.
 
+---
+
+## SQLite Setup Notes
+
+* **Docker:** The API uses a local SQLite file located at `/app/Ticketing.db` inside the container.
+* **Local development:** If no connection string is set, defaults to a `Ticketing.db` file in the project folder.
+* To inspect the DB, you can open the `.db` file with [DB Browser for SQLite](https://sqlitebrowser.org/) or similar tools.
+
+---
+
+## Available Endpoints
+
+Sample RESTful endpoints:
+
+* `GET /api/ticket` – List all tickets
+* `GET /api/ticket/{id}` – Get ticket by ID
+* `POST /api/ticket` – Create a new ticket
+* `PUT /api/ticket/{id}` – Update ticket
+* `DELETE /api/ticket/{id}` – Delete ticket
+* `GET /api/user/{username}` – Get user by UserName
+
+---
