@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useCreateTicket } from "../hooks/useCreateTicket";
+import { useCreateTicket } from "../../hooks/useCreateTicket";
 import styles from "./NewTicketModal.module.css";
 
 type Props = {

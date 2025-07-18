@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePostTicketReply } from "../hooks/usePostTicketReply";
+import { usePostTicketReply } from "../../hooks/usePostTicketReply";
 import styles from "./ReplyForm.module.css";
 
 type Props = {

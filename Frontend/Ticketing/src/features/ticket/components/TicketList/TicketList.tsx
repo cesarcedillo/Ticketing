@@ -1,5 +1,5 @@
 import styles from "./TicketList.module.css";
-import type { TicketSummary } from "../types/Ticket";
+import type { TicketSummary } from "../../types/Ticket";
 
 type Props = {
   tickets: TicketSummary[];

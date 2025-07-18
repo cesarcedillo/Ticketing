@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import type { Ticket } from "../types/Ticket";
-import ReplyForm from "./ReplyForm";
-import { useMarkTicketAsResolved } from "../hooks/useMarkTicketAsResolved";
+import type { Ticket } from "../../types/Ticket";
+import ReplyForm from "../ReplyForm/ReplyForm";
+import { useMarkTicketAsResolved } from "../../hooks/useMarkTicketAsResolved";
 import styles from "./TicketDetail.module.css";
 
 type Props = {
@@ -24,7 +24,7 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
   }, [ticket]);
 
   if (!ticket) {
-    return <div>Selecciona un ticket de la lista</div>;
+    return <div>Select a ticket from the list</div>;
   }
 
   const handleResolve = async () => {

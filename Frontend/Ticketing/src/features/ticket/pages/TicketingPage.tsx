@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useTicketSummaries } from "../hooks/useTicketSummaries";
 import { useTicketDetail } from "../hooks/useTicketDetail";
-import TicketList from "../components/TicketList";
-import TicketDetail from "../components/TicketDetail";
-import NewTicketModal from "../components/NewTicketModal";
+import TicketList from "../components/TicketList/TicketList";
+import TicketDetail from "../components/TicketDetail/TicketDetail";
+import NewTicketModal from "../components/NewTicketModal/NewTicketModal";
 import type { User } from "../../user/types/User";
 import { useLocation } from "react-router-dom";
 
