@@ -180,7 +180,6 @@ namespace Ticketing.Application.Tests.Services
 
       // Assert
       _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-
     }
   }
 }

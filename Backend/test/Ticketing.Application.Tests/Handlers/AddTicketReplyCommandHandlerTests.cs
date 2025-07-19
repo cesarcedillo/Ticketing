@@ -16,14 +16,10 @@ public class AddTicketReplyCommandHandlerTests
   }
 
   [Fact]
-  public async Task Handle_Should_Call_Service_And_Return_ReplyId()
+  public async Task Handle_Should_Call_Service_And_Save_It()
   {
     // Arrange
     var fakeReplyId = Guid.NewGuid();
-    //_ticketServiceMock
-    //    .Setup(s => s.AddReplyAsync(
-    //        It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-    //    .ReturnsAsync(fakeReplyId);
 
     var command = new AddTicketReplyCommand(Guid.NewGuid(), "Test reply", Guid.NewGuid());
 
