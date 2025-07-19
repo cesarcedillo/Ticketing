@@ -20,18 +20,17 @@ public class AddTicketReplyCommandHandlerTests
   {
     // Arrange
     var fakeReplyId = Guid.NewGuid();
-    _ticketServiceMock
-        .Setup(s => s.AddReplyAsync(
-            It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-        .ReturnsAsync(fakeReplyId);
+    //_ticketServiceMock
+    //    .Setup(s => s.AddReplyAsync(
+    //        It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+    //    .ReturnsAsync(fakeReplyId);
 
     var command = new AddTicketReplyCommand(Guid.NewGuid(), "Test reply", Guid.NewGuid());
 
     // Act
-    var result = await _handler.Handle(command, CancellationToken.None);
+    await _handler.Handle(command, CancellationToken.None);
 
     // Assert
-    result.Should().Be(fakeReplyId);
     _ticketServiceMock.Verify(s =>
         s.AddReplyAsync(command.TicketId, command.Text, command.UserId, It.IsAny<CancellationToken>()),
         Times.Once);

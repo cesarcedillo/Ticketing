@@ -5,6 +5,8 @@ using System.Reflection;
 using Ticketing.API.Extensions.Loggers.Configurations;
 using Ticketing.API.Infrastructure;
 using Ticketing.Application;
+using Ticketing.Core.OpenTelemetry;
+using Ticketing.Core.OpenTelemetry.Helpers;
 
 namespace Ticketing.API.Extensions;
 
@@ -14,7 +16,6 @@ public static class MinimalApiExtensions
   {
     var Configuration = builder.Configuration;
     var Environment = builder.Environment;
-    // Add services to the container.
     builder.Services.AddControllers();
 
     if (Environment.IsDevelopment())
@@ -49,9 +50,19 @@ public static class MinimalApiExtensions
                 });
     });
 
+    if (!Environment.IsTesting())
+    {
+      builder.Services.AddOpenTelemetryCustom(new OpenTelemetryOptions
+                {
+                  ServiceName = Configuration["ServiceName"] ?? "Unknown-Service",
+                  PropertiesToTrace = Configuration.GetSection("PropertiesToTrace").Get<List<string>>() ?? [],
+                  SamplingRatio = Configuration.GetValue<float>("SamplingRatio", 1.0F),
+                  TraceContents = Configuration.GetValue<bool>("TraceContents", false)
+                });
+    }
+
     var mapperConfig = new MapperConfiguration(cfg =>
     {
-      //cfg.AddCollectionMappers();
       cfg.AddProfile<MappingProfile>();
     });
 

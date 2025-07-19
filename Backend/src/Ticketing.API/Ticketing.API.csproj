@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\core\Ticketing.Core.OpenTelemetry.Helpers\Ticketing.Core.OpenTelemetry.Helpers.csproj" />
+    <ProjectReference Include="..\core\Ticketing.Core.OpenTelemetry\Ticketing.Core.OpenTelemetry.csproj" />
     <ProjectReference Include="..\Ticketing.Application\Ticketing.Application.csproj" />
     <ProjectReference Include="..\Ticketing.Infrastructure\Ticketing.Infrastructure.csproj" />
   </ItemGroup>
