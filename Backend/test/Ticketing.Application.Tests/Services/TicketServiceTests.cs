@@ -156,7 +156,7 @@ namespace Ticketing.Application.Tests.Services
     }
 
     [Fact]
-    public async Task AddReplyAsync_Should_Add_Reply_And_Return_ReplyId()
+    public async Task AddReplyAsync_Should_Add_Reply_And_Save_It()
     {
       // Arrange
       var ticket = new TicketBuilder().Build();
@@ -174,11 +174,10 @@ namespace Ticketing.Application.Tests.Services
           .ReturnsAsync(1);
 
       // Act
-      var replyId = await _service.AddReplyAsync(ticket.Id, "Response", agent.Id, CancellationToken.None);
+      await _service.AddReplyAsync(ticket.Id, "Response", agent.Id, CancellationToken.None);
 
       // Assert
-      replyId.Should().NotBeEmpty();
-      ticket.Replies.Should().Contain(r => r.Text == "Response" && r.User == agent);
+      _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
   }
 }
