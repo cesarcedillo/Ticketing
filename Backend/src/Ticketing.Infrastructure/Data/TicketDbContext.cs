@@ -1,6 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Ticketing.Core.Infrstructure.EntityFramework.Context;
+using Ticketing.Core.Infrastructure.EntityFramework.Context;
 using Ticketing.Domain.Aggregates;
 using Ticketing.Domain.Entities;
 using Ticketing.Infrastructure.EntityConfigurations;

@@ -1,7 +1,7 @@
 ﻿using Ticketing.Core.Domain.SeedWork.Interfaces;
-using Ticketing.Core.Infrstructure.EntityFramework.Context;
+using Ticketing.Core.Infrastructure.EntityFramework.Context;
 
-namespace Ticketing.Core.Infrstructure.EntityFramework.Repositories;
+namespace Ticketing.Core.Infrastructure.EntityFramework.Repositories;
 public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class, IAggregateRoot, new()
 {
   private readonly DbContextBase _dbContextBase;

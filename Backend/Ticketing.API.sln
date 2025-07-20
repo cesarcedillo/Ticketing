@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{7F13DCEF-0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Core.Domain.SeedWork", "src\core\Ticketing.Core.Domain.SeedWork\Ticketing.Core.Domain.SeedWork.csproj", "{7A0229F0-8BC2-4095-AD6F-9CA09D99C106}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Core.Infrstructure.EntityFramework", "src\core\Ticketing.Core.Infrstructure.EntityFramework\Ticketing.Core.Infrstructure.EntityFramework.csproj", "{66A1CBA5-EF1E-4F6A-8B89-5143CAC9BFE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Core.Infrastructure.EntityFramework", "src\core\Ticketing.Core.Infrastructure.EntityFramework\Ticketing.Core.Infrastructure.EntityFramework.csproj", "{66A1CBA5-EF1E-4F6A-8B89-5143CAC9BFE9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Client", "src\client\Ticketing.Client\Ticketing.Client.csproj", "{2F633722-7AE3-4635-9E10-3B01829FE840}"
 EndProject

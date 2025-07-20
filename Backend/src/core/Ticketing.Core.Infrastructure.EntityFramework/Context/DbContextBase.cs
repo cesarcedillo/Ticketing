@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ticketing.Core.Domain.SeedWork.Interfaces;
 
-namespace Ticketing.Core.Infrstructure.EntityFramework.Context;
+namespace Ticketing.Core.Infrastructure.EntityFramework.Context;
 public class DbContextBase : DbContext, IUnitOfWork
 {
   public DbContextBase() { }
