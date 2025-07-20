@@ -9,6 +9,7 @@ public class User : IAggregateRoot
   public string PasswordHash { get; private set; }
   public Role Role { get; private set; }
 
+  public User() { }
   public User(string username, string passwordHash, Role role)
   {
     Id = Guid.NewGuid();

@@ -1,0 +1,34 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+
+ENV ASPNETCORE_HTTP_PORTS 80
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY Ticketing.Auth/src/Ticketing.Auth.API Ticketing.Ticket.API/
+COPY Ticketing.Auth/src/Ticketing.Auth.Domain Ticketing.Ticket.Domain/
+COPY Ticketing.Auth/src/Ticketing.Auth.Application Ticketing.Ticket.Application/
+COPY Ticketing.Auth/src/Ticketing.Auth.Infrastructure Ticketing.Ticket.Infrastructure/
+COPY nuget-packages nuget-packages/
+COPY nuget.config ./
+
+ENV DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER=0
+
+RUN dotnet restore "Ticketing.Auth.Domain/Ticketing.Auth.Domain.csproj"
+RUN dotnet restore "Ticketing.Auth.API/Ticketing.Auth.API.csproj"
+RUN dotnet restore "Ticketing.Auth.Application/Ticketing.Auth.Application.csproj"
+RUN dotnet restore "Ticketing.Auth.Infrastructure/Ticketing.Auth.Infrastructure.csproj"
+
+COPY . .
+
+WORKDIR "/src/Ticketing.Auth.API"
+RUN dotnet build "Ticketing.Auth.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Ticketing.Auth.API.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Ticketing.Auth.API.dll"]

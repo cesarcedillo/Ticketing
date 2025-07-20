@@ -19,13 +19,16 @@ public class JwtTokenGenerator : IJwtTokenGenerator
 
   public JwtTokenDto GenerateToken(User user)
   {
-    var jwtSecret = _configuration["Jwt:Secret"] ?? "SOME_SECRET_KEY";
-    var expiryHours = double.TryParse(_configuration["Jwt:ExpiryHours"], out var h) ? h : 2;
-    var expires = DateTime.UtcNow.AddHours(expiryHours);
+    var jwtSecret = _configuration["Secret"] ?? "SOME_SECRET_KEY";
+    var expiryHours = double.TryParse(_configuration["ExpiryHours"], out var h) ? h : 2;
+    //var expires = DateTime.UtcNow.AddHours(expiryHours);
+    var expires = DateTime.UtcNow.AddMinutes(5);
 
     var claims = new[]
     {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+            new Claim(JwtRegisteredClaimNames.Name, user.UserName),
+            new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Role, user.Role.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
@@ -34,8 +37,8 @@ public class JwtTokenGenerator : IJwtTokenGenerator
     var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     var token = new JwtSecurityToken(
-        issuer: _configuration["Jwt:Issuer"],
-        audience: _configuration["Jwt:Audience"],
+        issuer: _configuration["Issuer"],
+        audience: _configuration["Audience"],
         claims: claims,
         expires: expires,
         signingCredentials: creds

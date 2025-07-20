@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "Ticketing/swagger",
+      "launchUrl": "Ticket/swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -19,7 +19,7 @@
     "Ticketing.Ticket.API": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "Ticketing/swagger",
+      "launchUrl": "Ticket/swagger",
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7086;http://localhost:5247",
       "environmentVariables": {
