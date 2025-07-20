@@ -6,7 +6,7 @@ Ticketing System is a simple yet robust ticket management platform built using C
 
 The solution includes:
 
-* **Backend RESTful API** (`Ticketing.API`, .NET 8)
+* **Backend RESTful API** (`Ticketing.Ticket.API`, .NET 8)
 * **Frontend SPA** (`Ticketing`, React + Vite)
 * **Infrastructure** (Entity Framework Core, SQLite for local/dev)
 * **Observability** (OpenTelemetry + Zipkin for distributed tracing)
@@ -97,7 +97,7 @@ docker compose up --build
 
 ```bash
 cd Backend/src
-dotnet run --project Ticketing.API
+dotnet run --project Ticketing.Ticket.API
 ```
 
 * Default API: [https://localhost:7086](https://localhost:7086)
