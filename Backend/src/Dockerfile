@@ -9,13 +9,16 @@ COPY ["Ticketing.API/Ticketing.API.csproj", "Ticketing.API/"]
 COPY ["Ticketing.Domain/Ticketing.Domain.csproj", "Ticketing.Domain/"]
 COPY ["Ticketing.Application/Ticketing.Application.csproj", "Ticketing.Application/"]
 COPY ["Ticketing.Infrastructure/Ticketing.Infrastructure.csproj", "Ticketing.Infrastructure/"]
+COPY ./nuget-packages ./nuget-packages
+COPY ./nuget.config ./
+
 
 ENV DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER=0
 
-RUN dotnet restore "Ticketing.Domain/Ticketing.Domain.csproj" -s "https://api.nuget.org/v3/index.json" 
-RUN dotnet restore "Ticketing.API/Ticketing.API.csproj" -s "https://api.nuget.org/v3/index.json"
-RUN dotnet restore "Ticketing.Application/Ticketing.Application.csproj" -s "https://api.nuget.org/v3/index.json" 
-RUN dotnet restore "Ticketing.Infrastructure/Ticketing.Infrastructure.csproj" -s "https://api.nuget.org/v3/index.json" 
+RUN dotnet restore "Ticketing.Domain/Ticketing.Domain.csproj" 
+RUN dotnet restore "Ticketing.API/Ticketing.API.csproj" 
+RUN dotnet restore "Ticketing.Application/Ticketing.Application.csproj" 
+RUN dotnet restore "Ticketing.Infrastructure/Ticketing.Infrastructure.csproj" 
 
 COPY . .
 
