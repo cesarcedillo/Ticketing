@@ -3,6 +3,6 @@
 namespace Ticketing.Auth.Domain.Interfaces;
 public interface IUserRepository
 {
-  Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
+  Task<User?> GetByUserNameAsync(string username, CancellationToken cancellationToken = default);
   Task AddAsync(User user, CancellationToken cancellationToken = default);
 }

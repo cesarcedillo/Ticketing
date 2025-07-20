@@ -5,14 +5,14 @@ namespace Ticketing.Auth.Domain.Aggregates;
 public class User : IAggregateRoot
 {
   public Guid Id { get; private set; }
-  public string Username { get; private set; }
+  public string UserName { get; private set; }
   public string PasswordHash { get; private set; }
   public Role Role { get; private set; }
 
   public User(Guid id, string username, string passwordHash, Role role)
   {
     Id = id;
-    Username = username;
+    UserName = username;
     PasswordHash = passwordHash;
     Role = role;
   }
