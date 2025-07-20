@@ -3,8 +3,8 @@ version: "3.8"
 services:
   ticketing-api:
     build:
-      context: ./Backend/src
-      dockerfile: Dockerfile
+      context: ./Backend
+      dockerfile: Dockerfile.ticket
     ports:
       - "8080:80"
     environment:
