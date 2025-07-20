@@ -1,19 +1,18 @@
-using System.Net.Mime;
-using System.Text.Json;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Net.Mime;
+using System.Text.Json;
 using Ticketing.API.Endpoints;
 using Ticketing.API.Extensions;
+using Ticketing.Core.Observability.OpenTelemetry.Middleware;
 using Ticketing.Infrastructure.Data;
 using Ticketing.Infrastructure.Extensions;
-
 
 var builder = WebApplication.CreateBuilder(args);
 builder.RegisterServices();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
   app.UseDeveloperExceptionPage();
@@ -27,6 +26,10 @@ else
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseExceptionHandler(opt => { });
+
+app.UseOpenTelemetryPayload();
 
 app.UseCors(x => x
     .AllowAnyMethod()
@@ -50,8 +53,6 @@ app.MapControllers();
 
 app.MapTicketEndpoints();
 app.MapUserEndpoints();
-
-app.UseExceptionHandler(opt => { });
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 

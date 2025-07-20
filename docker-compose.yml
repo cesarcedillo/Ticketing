@@ -8,9 +8,22 @@ services:
     ports:
       - "8080:80"
     environment:
-      - SerilogMinimumLevel=Debug
-      - ASPNETCORE_ENVIRONMENT=integration
       - RepositoryConnection=Data Source=/app/Ticketing.db
+
+      # OpenTelemetry config
+      - PropertiesToTrace=Id
+      - TraceContents=false
+      - ServiceName=TicketService
+      - ExcludedPaths=swagger,health
+      - AgentHost=zipkin
+      - AgentPort=9411
+
+      # Logging config
+      - MinimumLevel=Verbose
+      - Sink=Console
+      - FilePath=Logs/TicketService.log
+
+      - ASPNETCORE_ENVIRONMENT=development 
     networks:
       - ticketing-micro-net
 
@@ -24,6 +37,30 @@ services:
       - "3000:80"
     depends_on:
       - ticketing-api
+    networks:
+      - ticketing-micro-net
+
+  # jaeger:
+  #   image: jaegertracing/all-in-one:latest
+  #   container_name: jaeger
+  #   environment:
+  #     - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+  #   ports:
+  #     - "16686:16686"
+  #     - "6831:6831/udp" 
+  #     - "6832:6832/udp"
+  #     - "5778:5778"
+  #     - "14268:14268"
+  #     - "14250:14250"
+  #     - "9411:9411"
+  #   networks:
+  #     - ticketing-micro-net
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
     networks:
       - ticketing-micro-net
 
