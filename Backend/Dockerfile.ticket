@@ -6,10 +6,10 @@ ENV ASPNETCORE_HTTP_PORTS 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY ticket/src/Ticketing.API Ticketing.API/
-COPY ticket/src/Ticketing.Domain Ticketing.Domain/
-COPY ticket/src/Ticketing.Application Ticketing.Application/
-COPY ticket/src/Ticketing.Infrastructure Ticketing.Infrastructure/
+COPY Ticketing.Ticket/src/Ticketing.API Ticketing.API/
+COPY Ticketing.Ticket/src/Ticketing.Domain Ticketing.Domain/
+COPY Ticketing.Ticket/src/Ticketing.Application Ticketing.Application/
+COPY Ticketing.Ticket/src/Ticketing.Infrastructure Ticketing.Infrastructure/
 COPY nuget-packages nuget-packages/
 COPY nuget.config ./
 
