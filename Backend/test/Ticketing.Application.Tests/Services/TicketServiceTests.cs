@@ -155,6 +155,8 @@ namespace Ticketing.Application.Tests.Services
       ticket.Status.Should().Be(TicketStatus.Resolved);
     }
 
+
+
     [Fact]
     public async Task AddReplyAsync_Should_Add_Reply_And_Save_It()
     {

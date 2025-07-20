@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.OpenApi.Models;
-using Serilog;
 using System.Reflection;
-using Ticketing.API.Extensions.Loggers.Configurations;
 using Ticketing.API.Infrastructure;
 using Ticketing.Application;
 
@@ -14,19 +12,12 @@ public static class MinimalApiExtensions
   {
     var Configuration = builder.Configuration;
     var Environment = builder.Environment;
-    // Add services to the container.
     builder.Services.AddControllers();
 
     if (Environment.IsDevelopment())
     {
       Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
     }
-
-    builder.Host.UseSerilog((context, services, loggerConfiguration) =>
-       loggerConfiguration
-         .MinimumLevel.ControlledBy(new EnvironmentVariableLoggingLevelSwitch(Configuration["SerilogMinimumLevel"] ?? throw new ArgumentException("Minimum Serilog level not present, check CFG provider")))
-         .WriteTo.Console()
-     );
 
     builder.Services.AddCors(options =>
     {
@@ -49,9 +40,13 @@ public static class MinimalApiExtensions
                 });
     });
 
+    if (!Environment.IsTesting())
+    {
+      builder.AddObservability(Configuration);
+    }
+
     var mapperConfig = new MapperConfiguration(cfg =>
     {
-      //cfg.AddCollectionMappers();
       cfg.AddProfile<MappingProfile>();
     });
 
