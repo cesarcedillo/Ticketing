@@ -40,13 +40,13 @@ app.UseAuthorization();
 
 app.UseSwagger(c =>
 {
-  c.RouteTemplate = "Ticketing/swagger/{documentNAme}/swagger.json";
+  c.RouteTemplate = "Ticket/swagger/{documentNAme}/swagger.json";
 });
 
 app.UseSwaggerUI(c =>
 {
-  c.SwaggerEndpoint("v1/swagger.json", "Ticketing v1");
-  c.RoutePrefix = "Ticketing/swagger";
+  c.SwaggerEndpoint("v1/swagger.json", "Ticket v1");
+  c.RoutePrefix = "Ticket/swagger";
 });
 
 app.MapControllers();
