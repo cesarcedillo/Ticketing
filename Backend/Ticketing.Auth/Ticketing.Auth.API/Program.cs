@@ -4,6 +4,8 @@ using System.Net.Mime;
 using System.Text.Json;
 using Ticketing.Auth.API.Endpoints;
 using Ticketing.Auth.API.Extensions;
+using Ticketing.Auth.Infrastructure.Data;
+using Ticketing.Auth.Infrastructure.Extensions;
 using Ticketing.Core.Observability.OpenTelemetry.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -85,14 +87,14 @@ app.MapHealthChecks("/healthcheck",
       }
     });
 
-//if (app.Environment.IsDevelopment() || app.Environment.IsIntegration())
-//{
-//  using (var scope = app.Services.CreateScope())
-//  {
-//    app.Services.ApplyMigrations();
-//    var db = scope.ServiceProvider.GetRequiredService<TicketDbContext>();
-//    await DbSeeder.SeedAsync(db);
-//  }
-//}
+if (app.Environment.IsDevelopment() || app.Environment.IsIntegration())
+{
+  using (var scope = app.Services.CreateScope())
+  {
+    app.Services.ApplyMigrations();
+    var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+    await DbSeeder.SeedAsync(db);
+  }
+}
 
 app.Run();

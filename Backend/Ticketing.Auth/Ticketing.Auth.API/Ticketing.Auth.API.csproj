@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ticketing.Auth.Application\Ticketing.Auth.Application.csproj" />
+    <ProjectReference Include="..\Ticketing.Auth.Infrastructure\Ticketing.Auth.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

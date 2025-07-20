@@ -50,7 +50,7 @@ public static class MinimalApiExtensions
       cfg.AddProfile<MappingProfile>();
     });
 
-    //Ticketing.Infrastructure.DependencyInjection.AddInfrastructureServices(builder.Services, Configuration, Environment.IsDevelopment());
+    Ticketing.Auth.Infrastructure.DependencyInjection.AddInfrastructureServices(builder.Services, Configuration, Environment.IsDevelopment());
     builder.Services.AddAutoMapper(typeof(MappingProfile));
     IMapper mapper = mapperConfig.CreateMapper();
     builder.Services.AddSingleton(mapper);

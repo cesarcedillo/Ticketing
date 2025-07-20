@@ -24,6 +24,7 @@ public static class DependencyInjection
 
     services.AddTransient<IAuthService, AuthService>();
     services.AddTransient<IUserService, UserService>();
+    services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
     return services;
   }
