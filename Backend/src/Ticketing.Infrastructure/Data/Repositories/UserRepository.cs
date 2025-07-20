@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ticketing.Core.Infrstructure.EntityFramework.Repositories;
+using Ticketing.Core.Infrastructure.EntityFramework.Repositories;
 using Ticketing.Domain.Aggregates;
 using Ticketing.Domain.Interfaces.Repositories;
 using UserType = Ticketing.Domain.Aggregates.User;

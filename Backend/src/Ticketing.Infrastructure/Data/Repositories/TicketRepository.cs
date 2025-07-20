@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ticketing.Core.Infrstructure.EntityFramework.Repositories;
+using Ticketing.Core.Infrastructure.EntityFramework.Repositories;
 using Ticketing.Domain.Aggregates;
 using Ticketing.Domain.Entities;
 using Ticketing.Domain.Enums;

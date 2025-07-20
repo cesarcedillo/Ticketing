@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Ticketing.Core.Domain.SeedWork.Abstractions;
-using Ticketing.Core.Infrstructure.EntityFramework.Context;
+using Ticketing.Core.Infrastructure.EntityFramework.Context;
 
-namespace Ticketing.Core.Infrstructure.EntityFramework.Extensions;
+namespace Ticketing.Core.Infrastructure.EntityFramework.Extensions;
 public static class MediatorDispatcherExtension
 {
   public static async Task DispatchAllDomainEventAsync(this IMediator mediator, DbContextBase dbContextBase)
