@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Auth.Domain", "src\Ticketing.Auth.Domain\Ticketing.Auth.Domain.csproj", "{7F82D750-B43E-461F-B6FD-51D25D389C5A}"
 EndProject
@@ -16,6 +16,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D0C7DC3D-9818-4A11-ABA8-44CD9CD8AC7D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "client", "client", "{2B7EBEA2-B093-4621-AB82-49BFDB218F4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Auth.Application.Tests", "test\Ticketing.Auth.Application.Tests\Ticketing.Auth.Application.Tests.csproj", "{3934FE56-4BA2-415F-9943-5B2E57F60D83}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Auth.Infrastructure.Tests", "test\Ticketing.Auth.Infrastructure.Tests\Ticketing.Auth.Infrastructure.Tests.csproj", "{6F40DD51-6D45-480D-9C0D-F1F596FE034D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Auth.Domain.Tests", "test\Ticketing.Auth.Domain.Tests\Ticketing.Auth.Domain.Tests.csproj", "{02926B3D-D364-4AF2-A847-EF43C200B0B7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Auth.TestCommon", "test\Ticketing.Auth.TestCommon\Ticketing.Auth.TestCommon.csproj", "{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +47,22 @@ Global
 		{92E048A6-2B47-4E20-A15B-8C292F413CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92E048A6-2B47-4E20-A15B-8C292F413CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92E048A6-2B47-4E20-A15B-8C292F413CEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3934FE56-4BA2-415F-9943-5B2E57F60D83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3934FE56-4BA2-415F-9943-5B2E57F60D83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3934FE56-4BA2-415F-9943-5B2E57F60D83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3934FE56-4BA2-415F-9943-5B2E57F60D83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F40DD51-6D45-480D-9C0D-F1F596FE034D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F40DD51-6D45-480D-9C0D-F1F596FE034D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F40DD51-6D45-480D-9C0D-F1F596FE034D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F40DD51-6D45-480D-9C0D-F1F596FE034D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02926B3D-D364-4AF2-A847-EF43C200B0B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02926B3D-D364-4AF2-A847-EF43C200B0B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02926B3D-D364-4AF2-A847-EF43C200B0B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02926B3D-D364-4AF2-A847-EF43C200B0B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +73,10 @@ Global
 		{B890505E-A90C-4BE1-830A-D50108E492AF} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{92E048A6-2B47-4E20-A15B-8C292F413CEC} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{2B7EBEA2-B093-4621-AB82-49BFDB218F4A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{3934FE56-4BA2-415F-9943-5B2E57F60D83} = {D0C7DC3D-9818-4A11-ABA8-44CD9CD8AC7D}
+		{6F40DD51-6D45-480D-9C0D-F1F596FE034D} = {D0C7DC3D-9818-4A11-ABA8-44CD9CD8AC7D}
+		{02926B3D-D364-4AF2-A847-EF43C200B0B7} = {D0C7DC3D-9818-4A11-ABA8-44CD9CD8AC7D}
+		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510} = {D0C7DC3D-9818-4A11-ABA8-44CD9CD8AC7D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4AFFCA1-FE21-4CF2-81CD-944DE8B7DDBC}
