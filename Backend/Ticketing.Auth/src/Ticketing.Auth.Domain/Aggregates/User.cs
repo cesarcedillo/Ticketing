@@ -10,10 +10,19 @@ public class User : IAggregateRoot
   public Role Role { get; private set; }
 
   public User() { }
-  public User(string username, string passwordHash, Role role)
+  public User(string userName, string passwordHash, Role role)
   {
+    if (string.IsNullOrWhiteSpace(userName))
+      throw new ArgumentException("Username cannot be empty.", nameof(userName));
+
+    if (string.IsNullOrWhiteSpace(passwordHash))
+      throw new ArgumentException("Password cannot be empty.", nameof(passwordHash));
+
+    if (!System.Enum.IsDefined(typeof(Role), role))
+      throw new ArgumentException("Invalid Role.", nameof(role));
+
     Id = Guid.NewGuid();
-    UserName = username;
+    UserName = userName;
     PasswordHash = passwordHash;
     Role = role;
   }
