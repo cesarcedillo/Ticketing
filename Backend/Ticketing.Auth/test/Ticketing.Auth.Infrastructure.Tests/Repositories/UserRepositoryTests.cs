@@ -5,7 +5,7 @@ using Ticketing.Auth.Domain.Enum;
 using Ticketing.Auth.Infrastructure.Data;
 using Ticketing.Auth.Infrastructure.Data.Repositories;
 
-namespace Ticketing.Auth.Infrastructure.Tests;
+namespace Ticketing.Auth.Infrastructure.Tests.Repositories;
 
 public class UserRepositoryTests
 {
