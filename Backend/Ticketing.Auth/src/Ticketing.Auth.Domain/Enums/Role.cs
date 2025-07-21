@@ -1,5 +1,5 @@
 ﻿
-namespace Ticketing.Auth.Domain.Enum;
+namespace Ticketing.Auth.Domain.Enums;
 
 public enum Role
 {

@@ -1,5 +1,5 @@
 ﻿using Ticketing.Auth.Domain.Aggregates;
-using Ticketing.Auth.Domain.Enum;
+using Ticketing.Auth.Domain.Enums;
 using Ticketing.Auth.TestCommon.BuildersM;
 
 namespace Ticketing.Auth.TestCommon.Fixtures;

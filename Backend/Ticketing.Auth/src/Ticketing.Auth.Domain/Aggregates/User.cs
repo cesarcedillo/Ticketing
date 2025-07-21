@@ -1,4 +1,4 @@
-﻿using Ticketing.Auth.Domain.Enum;
+﻿using Ticketing.Auth.Domain.Enums;
 using Ticketing.Core.Domain.SeedWork.Interfaces;
 
 namespace Ticketing.Auth.Domain.Aggregates;

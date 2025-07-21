@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Ticketing.Auth.Domain.Aggregates;
-using Ticketing.Auth.Domain.Enum;
+using Ticketing.Auth.Domain.Enums;
 using Ticketing.Auth.Infrastructure.Data;
 using Ticketing.Auth.Infrastructure.Data.Repositories;
 

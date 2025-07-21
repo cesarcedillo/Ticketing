@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Ticketing.Auth.Domain.Enum;
+using Ticketing.Auth.Domain.Enums;
 using Ticketing.Auth.TestCommon.BuildersM;
 
 namespace Ticketing.Auth.Domain.Tests.Aggregates;
