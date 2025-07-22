@@ -4,7 +4,7 @@ obj/
 out/
 
 # User-specific files and Visual Studio/VSCode config
-*.user
+.user
 *.suo
 *.userosscache
 *.sln.docstates
