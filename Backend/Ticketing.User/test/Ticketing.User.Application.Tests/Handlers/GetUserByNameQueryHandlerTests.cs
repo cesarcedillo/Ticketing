@@ -22,10 +22,7 @@ public class GetUserByNameQueryHandlerTests
   {
     // Arrange
     var userName = "userName";
-    var id = Guid.NewGuid();
-    var avatar = "avatar.png";
-    var type = "Customer"; 
-    var expectedDto = new UserResponse(id, userName, avatar, type);
+    var expectedDto = new UserResponse { UserName = userName };
     _userServiceMock
         .Setup(s => s.GetUserByUserNameAsync(userName, It.IsAny<CancellationToken>()))
         .ReturnsAsync(expectedDto);
