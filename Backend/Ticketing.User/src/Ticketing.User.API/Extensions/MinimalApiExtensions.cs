@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using Ticketing.Ticket.API.Infrastructure;
-using Ticketing.Ticket.Application;
+using Ticketing.User.API.Infrastructure;
+using Ticketing.User.Application;
 
-namespace Ticketing.Ticket.API.Extensions;
-
+namespace Ticketing.User.API.Extensions;
 public static class MinimalApiExtensions
 {
   public static void RegisterServices(this WebApplicationBuilder builder)
@@ -35,7 +34,7 @@ public static class MinimalApiExtensions
       c.SwaggerDoc("v1",
                 new OpenApiInfo
                 {
-                  Title = "Ticket",
+                  Title = "User",
                   Version = "v1",
                 });
     });
@@ -50,7 +49,7 @@ public static class MinimalApiExtensions
       cfg.AddProfile<MappingProfile>();
     });
 
-    Ticketing.Ticket.Infrastructure.DependencyInjection.AddInfrastructureServices(builder.Services, Configuration, Environment.IsDevelopment());
+    Infraestructure.DependencyInjection.AddInfrastructureServices(builder.Services, Configuration, Environment.IsDevelopment());
     builder.Services.AddAutoMapper(typeof(MappingProfile));
     IMapper mapper = mapperConfig.CreateMapper();
     builder.Services.AddSingleton(mapper);
@@ -61,4 +60,3 @@ public static class MinimalApiExtensions
     builder.AddHealthChecks(Configuration);
   }
 }
-

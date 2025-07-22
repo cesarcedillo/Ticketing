@@ -29,8 +29,6 @@ namespace Ticketing.Ticket.API.Extensions
         AgentPort = configuration.GetValue<int>("AgentPort", 9411),
       });
 
-      Console.WriteLine(">> OpenTelemetry configurado. Deberías ver spans en Jaeger en breves.");
-
       Console.WriteLine($"ServiceName: {configuration.GetValue<string>("ServiceName")}");
       Console.WriteLine($"AgentHost: {configuration.GetValue<string>("AgentHost")}");
       Console.WriteLine($"AgentPort: {configuration.GetValue<string>("AgentPort")}");
