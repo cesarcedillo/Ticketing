@@ -6,4 +6,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Ticketing.Core.Infrastructure.EntityFramework" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ticketing.User.Domain\Ticketing.User.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
