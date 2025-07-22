@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Ticketing.User.Domain.Enums;
-using Ticketing.User.Infraestructure.Data;
-using Ticketing.User.Infraestructure.Data.Repositories;
+using Ticketing.User.infrastructure.Data;
+using Ticketing.User.infrastructure.Data.Repositories;
 using UserType = Ticketing.User.Domain.Aggregates.User;
 
 namespace Ticketing.User.Infrastructure.Tests;

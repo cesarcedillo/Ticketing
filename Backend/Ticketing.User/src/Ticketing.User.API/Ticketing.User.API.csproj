@@ -20,7 +20,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Ticketing.User.Application\Ticketing.User.Application.csproj" />
-		<ProjectReference Include="..\Ticketing.User.Infraestructure\Ticketing.User.Infraestructure.csproj" />
+		<ProjectReference Include="..\Ticketing.User.infrastructure\Ticketing.User.infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>

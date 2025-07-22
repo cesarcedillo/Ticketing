@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Ticketing.User.Domain.Interfaces.Repositories;
-using Ticketing.User.Infraestructure.Data;
-using Ticketing.User.Infraestructure.Data.Repositories;
+using Ticketing.User.infrastructure.Data;
+using Ticketing.User.infrastructure.Data.Repositories;
 
-namespace Ticketing.User.Infraestructure;
+namespace Ticketing.User.infrastructure;
 public static class DependencyInjection
 {
   public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, bool isDevelopment)

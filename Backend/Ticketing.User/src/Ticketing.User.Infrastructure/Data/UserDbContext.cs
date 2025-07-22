@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Ticketing.Core.Infrastructure.EntityFramework.Context;
-using Ticketing.User.Infraestructure.EntityConfigurations;
+using Ticketing.User.infrastructure.EntityConfigurations;
 using UserType = Ticketing.User.Domain.Aggregates.User;
 
-namespace Ticketing.User.Infraestructure.Data;
+namespace Ticketing.User.infrastructure.Data;
 public class UserDbContext : DbContextBase
 {
   public virtual DbSet<UserType> Users => Set<UserType>();

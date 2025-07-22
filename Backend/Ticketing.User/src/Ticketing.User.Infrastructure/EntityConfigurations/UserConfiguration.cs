@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UserType = Ticketing.User.Domain.Aggregates.User;
 
-namespace Ticketing.User.Infraestructure.EntityConfigurations;
+namespace Ticketing.User.infrastructure.EntityConfigurations;
 public class UserConfiguration : IEntityTypeConfiguration<UserType>
 {
   public void Configure(EntityTypeBuilder<UserType> builder)

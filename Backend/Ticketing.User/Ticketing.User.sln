@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.User.Domain", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.User.Application", "src\Ticketing.User.Application\Ticketing.User.Application.csproj", "{E89248CD-D4D9-40C6-9A5D-C5399EAC91B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.User.Infraestructure", "src\Ticketing.User.Infraestructure\Ticketing.User.Infraestructure.csproj", "{1287AA79-4A24-401A-A605-6E3B43AEE68C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.User.infrastructure", "src\Ticketing.User.infrastructure\Ticketing.User.infrastructure.csproj", "{1287AA79-4A24-401A-A605-6E3B43AEE68C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.User.Infrastructure.Tests", "test\Ticketing.User.Infrastructure.Tests\Ticketing.User.Infrastructure.Tests.csproj", "{94C19257-7126-4F91-9E2E-F26BFCCA7866}"
 EndProject
