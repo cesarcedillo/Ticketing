@@ -51,6 +51,31 @@ services:
       - ASPNETCORE_ENVIRONMENT=development 
     networks:
       - ticketing-micro-net
+  ticketing-ticket-user:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.user
+    ports:
+      - "5002:80"
+    environment:
+      - RepositoryConnection=Data Source=/app/User.db
+
+      # OpenTelemetry config
+      - PropertiesToTrace=Id
+      - TraceContents=false
+      - ServiceName=UserService
+      - ExcludedPaths=swagger,health
+      - AgentHost=zipkin
+      - AgentPort=9411
+
+      # Logging config
+      - MinimumLevel=Verbose
+      - Sink=Console
+      - FilePath=Logs/UserService.log
+
+      - ASPNETCORE_ENVIRONMENT=development 
+    networks:
+      - ticketing-micro-net
   ticketing-frontend:
     build:
       context: ./Frontend/Ticketing
