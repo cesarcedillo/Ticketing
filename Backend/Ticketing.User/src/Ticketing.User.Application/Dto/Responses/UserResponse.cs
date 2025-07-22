@@ -1,4 +1,11 @@
-﻿namespace Ticketing.User.Application.Dto.Responses;
+﻿using Ticketing.User.Domain.Enums;
 
-public sealed record UserResponse(Guid Id, string UserName, string Avatar, string Type);
+namespace Ticketing.User.Application.Dto.Responses;
 
+public sealed record UserResponse
+{
+  public Guid Id { get; set; }
+  public string UserName { get; set; } = string.Empty;
+  public string Avatar { get; set; } = string.Empty;
+  public string Type { get; set; } = Role.Customer.ToString();
+}
