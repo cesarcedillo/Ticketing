@@ -5,8 +5,8 @@ using System.Text.Json;
 using Ticketing.Core.Observability.OpenTelemetry.Middleware;
 using Ticketing.User.API.Endpoints;
 using Ticketing.User.API.Extensions;
-using Ticketing.User.infrastructure.Data;
-using Ticketing.User.infrastructure.Extensions;
+using Ticketing.User.Infrastructure.Data;
+using Ticketing.User.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.RegisterServices();

@@ -2,7 +2,7 @@
 using Ticketing.User.Domain.Enums;
 using UserType = Ticketing.User.Domain.Aggregates.User;
 
-namespace Ticketing.User.infrastructure.Data;
+namespace Ticketing.User.Infrastructure.Data;
 public static class DbSeeder
 {
   public static async Task SeedAsync(UserDbContext context)

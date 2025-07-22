@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Ticketing.User.infrastructure\Ticketing.User.infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\Ticketing.User.Infrastructure\Ticketing.User.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

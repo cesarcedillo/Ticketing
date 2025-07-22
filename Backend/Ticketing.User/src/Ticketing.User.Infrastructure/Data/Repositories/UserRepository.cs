@@ -4,7 +4,7 @@ using Ticketing.Core.Infrastructure.EntityFramework.Repositories;
 using Ticketing.User.Domain.Interfaces.Repositories;
 using UserType = Ticketing.User.Domain.Aggregates.User;
 
-namespace Ticketing.User.infrastructure.Data.Repositories;
+namespace Ticketing.User.Infrastructure.Data.Repositories;
 public class UserRepository : GenericRepository<UserType>, IUserRepository
 {
   protected readonly UserDbContext _dbContext;
