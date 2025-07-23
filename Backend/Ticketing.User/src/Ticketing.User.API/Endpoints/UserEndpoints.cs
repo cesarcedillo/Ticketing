@@ -9,6 +9,7 @@ public static class UserEndpoints
   public static void MapUserEndpoints(this WebApplication app)
   {
     app.MapGroup("api/User")
+        .RequireAuthorization()
       .MapUserGetEndpoints();
   }
 
@@ -16,7 +17,9 @@ public static class UserEndpoints
   {
     group.MapGet("/{userName}", GetUserByUserName)
     .WithName("GetUserByUserName")
+        .RequireAuthorization()
     .Produces<UserResponse>(StatusCodes.Status200OK)
+    .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
     .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
     .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 

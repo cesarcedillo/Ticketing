@@ -29,14 +29,55 @@ public static class MinimalApiExtensions
                 });
     });
 
+    builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer("Bearer", options =>
+    {
+      options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+      {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = Configuration["Issuer"],
+        ValidAudience = Configuration["Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+              System.Text.Encoding.UTF8.GetBytes(Configuration["Secret"] ?? "SOME_SECRET_KEY"))
+      };
+    });
+
+
     builder.Services.AddSwaggerGen(c =>
     {
       c.SwaggerDoc("v1",
-                new OpenApiInfo
-                {
-                  Title = "User",
-                  Version = "v1",
-                });
+          new OpenApiInfo
+          {
+            Title = "Ticketing.USer",
+            Version = "v1",
+          });
+
+      c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+      {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter the JWT token here. Example: Bearer {token}"
+      });
+      c.AddSecurityRequirement(new OpenApiSecurityRequirement
+      {
+          {
+              new OpenApiSecurityScheme
+              {
+                  Reference = new OpenApiReference
+                  {
+                      Type = ReferenceType.SecurityScheme,
+                      Id = "Bearer"
+                  }
+              },
+              Array.Empty<string>()
+          }
+      });
     });
 
     if (!Environment.IsTesting())

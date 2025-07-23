@@ -21,9 +21,8 @@ public class JwtTokenGenerator : IJwtTokenGenerator
   {
     var jwtSecret = _configuration["Secret"] ?? "SOME_SECRET_KEY";
     var expiryHours = double.TryParse(_configuration["ExpiryHours"], out var h) ? h : 2;
-    //var expires = DateTime.UtcNow.AddHours(expiryHours);
-    var expires = DateTime.UtcNow.AddMinutes(5);
-
+    var expires = DateTime.UtcNow.AddHours(expiryHours);
+    
     var claims = new[]
     {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),

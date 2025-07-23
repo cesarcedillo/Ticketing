@@ -32,6 +32,7 @@ public static class AuthEndpoints
   {
     group.MapGet("/me", Me)
         .WithName("Me")
+        .RequireAuthorization()
         .Produces<UserResponse>(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
