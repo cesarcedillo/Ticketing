@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Auth.Domain.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Auth.TestCommon", "test\Ticketing.Auth.TestCommon\Ticketing.Auth.TestCommon.csproj", "{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Auth.Client", "src\client\Ticketing.Auth.Client\Ticketing.Auth.Client.csproj", "{90EA9481-D518-477C-A022-948599B38B5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90EA9481-D518-477C-A022-948599B38B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90EA9481-D518-477C-A022-948599B38B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90EA9481-D518-477C-A022-948599B38B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90EA9481-D518-477C-A022-948599B38B5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +83,7 @@ Global
 		{6F40DD51-6D45-480D-9C0D-F1F596FE034D} = {D0C7DC3D-9818-4A11-ABA8-44CD9CD8AC7D}
 		{02926B3D-D364-4AF2-A847-EF43C200B0B7} = {D0C7DC3D-9818-4A11-ABA8-44CD9CD8AC7D}
 		{50A4FA77-9C83-43C5-BCD3-1B3A8C44E510} = {D0C7DC3D-9818-4A11-ABA8-44CD9CD8AC7D}
+		{90EA9481-D518-477C-A022-948599B38B5A} = {2B7EBEA2-B093-4621-AB82-49BFDB218F4A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C4AFFCA1-FE21-4CF2-81CD-944DE8B7DDBC}
