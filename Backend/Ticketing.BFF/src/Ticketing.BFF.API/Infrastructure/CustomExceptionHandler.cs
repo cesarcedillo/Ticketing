@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using Auth.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
+using User.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
+using Microsoft.AspNetCore.Diagnostics;
 using Ticketing.Core.Application.Mediatr.Behaviours.Exceptions;
+using AuthProblemDetails = Auth.Cliente.NswagAutoGen.HttpClientFactoryImplementation.ProblemDetails;
+using UserProblemDetails = Auth.Cliente.NswagAutoGen.HttpClientFactoryImplementation.ProblemDetails;
+using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
 namespace Ticketing.BFF.API.Infrastructure;
 public class CustomExceptionHandler : IExceptionHandler
@@ -16,6 +20,8 @@ public class CustomExceptionHandler : IExceptionHandler
                 { typeof(ArgumentNullException), HandleArgumentException },
                 { typeof(ArgumentException), HandleArgumentException },
                 { typeof(InvalidOperationException), HandleInvalidOperationException},
+                { typeof(AuthApiException), HandleAuthApiException},
+                { typeof(UserApiException), HandleUserApiException},
                 { typeof(Exception), HandleGenericException }
             };
   }
@@ -24,9 +30,10 @@ public class CustomExceptionHandler : IExceptionHandler
   {
     var exceptionType = exception.GetType();
 
-    if (_exceptionHandlers.ContainsKey(exceptionType))
+    if (_exceptionHandlers.TryGetValue(exceptionType, out var handler) ||
+        _exceptionHandlers.TryGetValue(exceptionType.BaseType!, out handler))
     {
-      await _exceptionHandlers[exceptionType].Invoke(httpContext, exception);
+      await handler.Invoke(httpContext, exception);
       return true;
     }
 
@@ -96,6 +103,52 @@ public class CustomExceptionHandler : IExceptionHandler
       Status = StatusCodes.Status500InternalServerError,
       Title = "Internal server error - " + ex.Source,
       Detail = ex.Message
+    });
+  }
+
+  private async Task HandleAuthApiException(HttpContext httpContext, Exception ex)
+  {
+    var exceptionDetailed = ex as AuthApiException<AuthProblemDetails>;
+    var exceptionGeneral = ex as AuthApiException;
+
+    var statusCode = exceptionDetailed?.Result?.Status
+              ?? exceptionGeneral?.StatusCode
+              ?? StatusCodes.Status500InternalServerError;
+
+    var detail = exceptionDetailed?.Result?.Detail
+               ?? exceptionGeneral?.Message
+               ?? "Unhandled exception";
+
+    httpContext.Response.StatusCode = statusCode;
+
+    await httpContext.Response.WriteAsJsonAsync(new HttpValidationProblemDetails()
+    {
+      Status = statusCode,
+      Title = "Client exception - " + ex.Source,
+      Detail = detail
+    });
+  }
+
+  private async Task HandleUserApiException(HttpContext httpContext, Exception ex)
+  {
+    var exceptionDetailed = ex as UserApiException<UserProblemDetails>;
+    var exceptionGeneral = ex as UserApiException;
+
+    var statusCode = exceptionDetailed?.Result?.Status
+              ?? exceptionGeneral?.StatusCode
+              ?? StatusCodes.Status500InternalServerError;
+
+    var detail = exceptionDetailed?.Result?.Detail
+               ?? exceptionGeneral?.Message
+               ?? "Unhandled exception";
+
+    httpContext.Response.StatusCode = statusCode;
+
+    await httpContext.Response.WriteAsJsonAsync(new HttpValidationProblemDetails()
+    {
+      Status = statusCode,
+      Title = "Client exception - " + ex.Source,
+      Detail = detail
     });
   }
 }
