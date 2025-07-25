@@ -35,13 +35,19 @@ public class CustomExceptionHandler : IExceptionHandler
 
   private async Task HandleValidationException(HttpContext httpContext, Exception ex)
   {
+    var exception = (ApplicationValidationException)ex;
+
     httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
     await httpContext.Response.WriteAsJsonAsync(new ProblemDetails()
     {
       Status = StatusCodes.Status400BadRequest,
-      Title = "Bad request",
-      Detail = ex.Message
+      Title = "Validation error",
+      Detail = ex.Message,
+      Extensions = exception.Errors.ToDictionary(
+            keySelector: e => e.Key,
+            elementSelector: e => (object?)e.Value
+        )
     });
   }
 

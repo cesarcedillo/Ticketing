@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
-using Ticketing.Auth.API.Infrastructure;
-using Ticketing.Auth.Application;
+using Ticketing.BFF.API.Infrastructure;
+using Ticketing.BFF.Application;
 
-namespace Ticketing.Auth.API.Extensions;
-
+namespace Ticketing.BFF.API.Extensions;
 public static class MinimalApiExtensions
 {
   public static void RegisterServices(this WebApplicationBuilder builder)
@@ -52,14 +51,14 @@ public static class MinimalApiExtensions
       c.SwaggerDoc("v1",
           new OpenApiInfo
           {
-            Title = "Ticketing.Auth",
+            Title = "Ticketing.Bff",
             Version = "v1",
           });
 
       c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
       {
         Name = "Authorization",
-        Type = SecuritySchemeType.Http,
+        Type = SecuritySchemeType.ApiKey,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
@@ -91,15 +90,13 @@ public static class MinimalApiExtensions
       cfg.AddProfile<MappingProfile>();
     });
 
-    Auth.Infrastructure.DependencyInjection.AddInfrastructureServices(builder.Services, Configuration, Environment.IsDevelopment());
     builder.Services.AddAutoMapper(typeof(MappingProfile));
     IMapper mapper = mapperConfig.CreateMapper();
     builder.Services.AddSingleton(mapper);
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-    builder.Services.AddApplicationServices();
+    builder.Services.AddApplicationServices(Configuration);
     builder.Services.AddSingleton(TimeProvider.System);
     builder.AddHealthChecks(Configuration);
   }
 }
-

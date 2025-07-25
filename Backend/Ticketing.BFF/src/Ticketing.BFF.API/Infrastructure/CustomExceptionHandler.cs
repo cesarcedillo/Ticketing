@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Ticketing.Core.Application.Mediatr.Behaviours.Exceptions;
 
-namespace Ticketing.Ticket.API.Infrastructure;
-
+namespace Ticketing.BFF.API.Infrastructure;
 public class CustomExceptionHandler : IExceptionHandler
 {
   private readonly Dictionary<Type, Func<HttpContext, Exception, Task>> _exceptionHandlers;
@@ -100,4 +99,3 @@ public class CustomExceptionHandler : IExceptionHandler
     });
   }
 }
-
