@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>a55abb19-5929-4ee8-abf4-0ae4e71e77d1</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ticketing.BFF.Application\Ticketing.BFF.Application.csproj" />
+    <ProjectReference Include="..\Ticketing.BFF.Infrastructure\Ticketing.BFF.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ticketing.Auth.Client" Version="1.0.0" />
+    <PackageReference Include="Ticketing.Auth.Client" Version="1.0.1" />
     <PackageReference Include="Ticketing.User.Client" Version="1.0.0" />
 	  <PackageReference Include="AutoMapper" Version="13.0.1" />
 	  <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
@@ -18,6 +18,10 @@
 
   <ItemGroup>
     <Folder Include="Querires\User\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ticketing.BFF.Infrastructure\Ticketing.BFF.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

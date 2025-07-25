@@ -90,6 +90,8 @@ public static class MinimalApiExtensions
       cfg.AddProfile<MappingProfile>();
     });
 
+
+    BFF.Infrastructure.DependencyInjection.AddInfrastructureServices(builder.Services);
     builder.Services.AddAutoMapper(typeof(MappingProfile));
     IMapper mapper = mapperConfig.CreateMapper();
     builder.Services.AddSingleton(mapper);

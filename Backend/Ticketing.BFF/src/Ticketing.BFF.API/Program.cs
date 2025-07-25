@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Net.Mime;
 using System.Text.Json;
+using Ticketing.BFF.API.Endpoints;
 using Ticketing.BFF.API.Extensions;
 using Ticketing.Core.Observability.OpenTelemetry.Middleware;
 
@@ -49,7 +50,7 @@ app.UseSwaggerUI(c =>
 
 app.MapControllers();
 
-//app.MapAuthEndpoints();
+app.MapUserEndpoints();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 

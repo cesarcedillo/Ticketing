@@ -19,13 +19,13 @@ public static class UserEndpoints
 
   public static RouteGroupBuilder MapUserGetEndpoints(this RouteGroupBuilder group)
   {
-    group.MapGet("/{userName}", GetUserByUserName)
-        .WithName("GetUserByUserName")
-        .RequireAuthorization()
-        .Produces<UserResponseBff>(StatusCodes.Status200OK)
-        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
-        .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+    //group.MapGet("/{userName}", GetUserByUserName)
+    //    .WithName("GetUserByUserName")
+    //    .RequireAuthorization()
+    //    .Produces<UserResponseBff>(StatusCodes.Status200OK)
+    //    .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+    //    .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+    //    .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
     return group;
   }
@@ -37,12 +37,12 @@ public static class UserEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
-    group.MapPost("/Me", Me)
-        .WithName("Me")
-        .RequireAuthorization()
-        .Produces<UserResponseBff>(StatusCodes.Status200OK)
-        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
-        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+    //group.MapPost("/Me", Me)
+    //    .WithName("Me")
+    //    .RequireAuthorization()
+    //    .Produces<UserResponseBff>(StatusCodes.Status200OK)
+    //    .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+    //    .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
     return group;
   }
@@ -61,32 +61,32 @@ public static class UserEndpoints
     return Results.Ok(result);
   }
 
-  public static async Task<IResult> GetUserByUserName(
-    string userName,
-    IMediator mediator,
-    CancellationToken cancellationToken)
-  {
-    var query = new GetUserByNameQuery(userName);
-    var result = await mediator.Send(query, cancellationToken);
+  //public static async Task<IResult> GetUserByUserName(
+  //  string userName,
+  //  IMediator mediator,
+  //  CancellationToken cancellationToken)
+  //{
+  //  var query = new GetUserByNameQuery(userName);
+  //  var result = await mediator.Send(query, cancellationToken);
 
-    return Results.Ok(result);
-  }
+  //  return Results.Ok(result);
+  //}
 
-  public static async Task<IResult> Me(
-      ClaimsPrincipal user,
-      IMediator mediator,
-      CancellationToken cancellationToken)
-  {
-    var username = user.Identity?.Name;
-    if (string.IsNullOrEmpty(username))
-      return Results.Unauthorized();
+  //public static async Task<IResult> Me(
+  //    ClaimsPrincipal user,
+  //    IMediator mediator,
+  //    CancellationToken cancellationToken)
+  //{
+  //  var username = user.Identity?.Name;
+  //  if (string.IsNullOrEmpty(username))
+  //    return Results.Unauthorized();
 
-    var query = new GetUserByNameQuery(username);
-    var result = await mediator.Send(query, cancellationToken);
+  //  var query = new GetUserByNameQuery(username);
+  //  var result = await mediator.Send(query, cancellationToken);
 
-    if (result is null)
-      return Results.NotFound();
+  //  if (result is null)
+  //    return Results.NotFound();
 
-    return Results.Ok(result);
-  }
+  //  return Results.Ok(result);
+  //}
 }

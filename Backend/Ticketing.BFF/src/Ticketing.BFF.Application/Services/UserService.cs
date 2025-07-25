@@ -1,5 +1,6 @@
 ﻿using Auth.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Ticketing.BFF.Application.Dto.Responses;
 using Ticketing.BFF.Application.Services.Interfaces;
 using User.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
@@ -10,12 +11,14 @@ public class UserService : IUserService
 {
   private readonly IAuthClient _authClient;
   private readonly IUserClient _userClient;
+  private readonly IHttpContextAccessor _httpContextAccessor;
   private readonly IMapper _mapper;
 
-  public UserService(IAuthClient authClient, IUserClient userClient, IMapper mapper)
+  public UserService(IAuthClient authClient, IUserClient userClient, IHttpContextAccessor httpContextAccessor, IMapper mapper)
   {
     _authClient = authClient;
     _userClient = userClient;
+    _httpContextAccessor = httpContextAccessor;
     _mapper = mapper;
   }
 
@@ -28,11 +31,11 @@ public class UserService : IUserService
     };
     var loginResponse = _mapper.Map<LoginResponseBff>(await _authClient.LoginAsync(loginRequest, cancellationToken));
 
-    if (loginResponse.Success)
+    if (loginResponse.Success && !string.IsNullOrEmpty(loginResponse.AccessToken))
     {
-
-      _authClient.BearerToken = "";
+      _httpContextAccessor.HttpContext!.Items["ManualToken"] = loginResponse.AccessToken;
       loginResponse.User = _mapper.Map<UserResponseBff>(await _userClient.GetUserByUserNameAsync(userName, cancellationToken));
+      _httpContextAccessor.HttpContext!.Items.Remove("ManualToken");
     }
 
     return loginResponse;
