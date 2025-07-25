@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Ticketing.BFF.Application.Querires.User;
+namespace Ticketing.BFF.Application.Querires.User.GetUserByName;
 public class GetUserByNameQueryBffValidator : AbstractValidator<GetUserByNameQueryBff>
 {
   public GetUserByNameQueryBffValidator()

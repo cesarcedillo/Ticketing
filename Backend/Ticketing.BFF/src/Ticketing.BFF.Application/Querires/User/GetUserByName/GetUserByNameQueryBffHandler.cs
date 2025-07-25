@@ -2,7 +2,7 @@
 using Ticketing.BFF.Application.Dto.Responses;
 using Ticketing.BFF.Application.Services.Interfaces;
 
-namespace Ticketing.BFF.Application.Querires.User;
+namespace Ticketing.BFF.Application.Querires.User.GetUserByName;
 public class GetUserByNameQueryBffHandler : IRequestHandler<GetUserByNameQueryBff, UserResponseBff>
 {
   private readonly IUserService _userService;

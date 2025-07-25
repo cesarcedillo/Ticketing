@@ -4,9 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Ticketing.BFF.Application.Commands.User.Login;
 using Ticketing.BFF.Application.Dto.Responses;
-using Ticketing.BFF.Application.Querires.User;
+using Ticketing.BFF.Application.Querires.User.GetUserByName;
 using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
-using UserResponse = User.Cliente.NswagAutoGen.HttpClientFactoryImplementation.UserResponse;
 
 namespace Ticketing.BFF.API.Endpoints;
 public static class UserEndpoints
@@ -38,12 +37,12 @@ public static class UserEndpoints
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
-    //group.MapPost("/Me", Me)
-    //    .WithName("Me")
-    //    .RequireAuthorization()
-    //    .Produces<UserResponseBff>(StatusCodes.Status200OK)
-    //    .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
-    //    .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+    group.MapPost("/Me", Me)
+        .WithName("Me")
+        .RequireAuthorization()
+        .Produces<UserResponseBff>(StatusCodes.Status200OK)
+        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
     return group;
   }
@@ -53,7 +52,7 @@ public static class UserEndpoints
       IMediator mediator,
       CancellationToken cancellationToken)
   {
-    var command = new LoginCommandBff(request.Username, request.Password);
+    var command = new LoginCommandBff(request.Username!, request.Password!);
     var result = await mediator.Send(command, cancellationToken);
 
     if (!result.Success)
@@ -73,21 +72,21 @@ public static class UserEndpoints
     return Results.Ok(result);
   }
 
-  //public static async Task<IResult> Me(
-  //    ClaimsPrincipal user,
-  //    IMediator mediator,
-  //    CancellationToken cancellationToken)
-  //{
-  //  var username = user.Identity?.Name;
-  //  if (string.IsNullOrEmpty(username))
-  //    return Results.Unauthorized();
+  public static async Task<IResult> Me(
+      ClaimsPrincipal user,
+      IMediator mediator,
+      CancellationToken cancellationToken)
+  {
+    var username = user.Identity?.Name;
+    if (string.IsNullOrEmpty(username))
+      return Results.Unauthorized();
 
-  //  var query = new GetUserByNameQuery(username);
-  //  var result = await mediator.Send(query, cancellationToken);
+    var query = new GetUserByNameQueryBff(username);
+    var result = await mediator.Send(query, cancellationToken);
 
-  //  if (result is null)
-  //    return Results.NotFound();
+    if (result is null)
+      return Results.NotFound();
 
-  //  return Results.Ok(result);
-  //}
+    return Results.Ok(result);
+  }
 }
