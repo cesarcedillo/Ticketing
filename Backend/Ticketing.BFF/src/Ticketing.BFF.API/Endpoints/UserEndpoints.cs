@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Ticketing.BFF.Application.Commands.User.Login;
 using Ticketing.BFF.Application.Dto.Responses;
+using Ticketing.BFF.Application.Querires.User;
 using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 using UserResponse = User.Cliente.NswagAutoGen.HttpClientFactoryImplementation.UserResponse;
 
@@ -19,13 +20,13 @@ public static class UserEndpoints
 
   public static RouteGroupBuilder MapUserGetEndpoints(this RouteGroupBuilder group)
   {
-    //group.MapGet("/{userName}", GetUserByUserName)
-    //    .WithName("GetUserByUserName")
-    //    .RequireAuthorization()
-    //    .Produces<UserResponseBff>(StatusCodes.Status200OK)
-    //    .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
-    //    .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-    //    .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+    group.MapGet("/{userName}", GetUserByUserName)
+        .WithName("GetUserByUserName")
+        .RequireAuthorization()
+        .Produces<UserResponseBff>(StatusCodes.Status200OK)
+        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+        .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
     return group;
   }
@@ -61,16 +62,16 @@ public static class UserEndpoints
     return Results.Ok(result);
   }
 
-  //public static async Task<IResult> GetUserByUserName(
-  //  string userName,
-  //  IMediator mediator,
-  //  CancellationToken cancellationToken)
-  //{
-  //  var query = new GetUserByNameQuery(userName);
-  //  var result = await mediator.Send(query, cancellationToken);
+  public static async Task<IResult> GetUserByUserName(
+    string userName,
+    IMediator mediator,
+    CancellationToken cancellationToken)
+  {
+    var query = new GetUserByNameQueryBff(userName);
+    var result = await mediator.Send(query, cancellationToken);
 
-  //  return Results.Ok(result);
-  //}
+    return Results.Ok(result);
+  }
 
   //public static async Task<IResult> Me(
   //    ClaimsPrincipal user,

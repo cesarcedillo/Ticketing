@@ -17,10 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Querires\User\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Ticketing.BFF.Infrastructure\Ticketing.BFF.Infrastructure.csproj" />
   </ItemGroup>
 

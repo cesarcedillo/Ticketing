@@ -41,5 +41,12 @@ public class UserService : IUserService
     return loginResponse;
   }
 
+  public async Task<UserResponseBff> GetUserByUserNameAsync(string userName, CancellationToken cancellationToken)
+  {
+    var user = await _userClient.GetUserByUserNameAsync(userName, cancellationToken);
+    var userResponse = _mapper.Map<UserResponseBff>(user);
+    return userResponse;
+  }
+
 }
 
