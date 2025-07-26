@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MediatR;
 using Ticketing.User.Application.Dto.Responses;
 using Ticketing.User.Application.Services.Interfaces;
 using Ticketing.User.Domain.Interfaces.Repositories;
@@ -18,6 +19,9 @@ public class UserService : IUserService
   public async Task<UserResponse> GetUserByUserNameAsync(string userName, CancellationToken cancellationToken)
   {
     var user = await _userRepository.GetByUserNameAsync(userName, cancellationToken);
+
+    if (user == null)
+      throw new KeyNotFoundException($"User {userName} not found.");
 
     var userResponse = _mapper.Map<UserResponse>(user);
 

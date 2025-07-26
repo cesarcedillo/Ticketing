@@ -39,25 +39,6 @@ public class GetUserByNameQueryHandlerTests
         Times.Once);
   }
 
-  [Fact]
-  public async Task Handle_Should_Throw_KeyNotFoundException_When_Service_Returns_Null()
-  {
-    // Arrange
-    var userName = "nonExistentUser";
-    _userServiceMock
-        .Setup(s => s.GetUserByUserNameAsync(userName, It.IsAny<CancellationToken>()))
-        .ThrowsAsync(new KeyNotFoundException($"User {userName} not found."));
-
-    var query = new GetUserByNameQuery(userName);
-
-    // Act
-    Func<Task> act = async () => await _handler.Handle(query, CancellationToken.None);
-
-    // Assert
-    await act.Should().ThrowAsync<KeyNotFoundException>()
-        .WithMessage($"User {userName} not found.");
-  }
-
 
   [Fact]
   public async Task Handle_Should_Propagate_Exception_If_Service_Fails()

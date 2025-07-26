@@ -16,9 +16,6 @@ public class GetUserByNameQueryHandler : IRequestHandler<GetUserByNameQuery, Use
   {
     var user = await _userService.GetUserByUserNameAsync(request.UserName, cancellationToken);
 
-    if (user == null)
-      throw new KeyNotFoundException($"User {request.UserName} not found.");
-
     return user;
   }
 }
