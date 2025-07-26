@@ -1,0 +1,34 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+
+ENV ASPNETCORE_HTTP_PORTS 80
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY Ticketing.BFF/src/Ticketing.BFF.API Ticketing.BFF.API/
+# COPY Ticketing.BFF/src/Ticketing.BFF.Domain Ticketing.BFF.Domain/
+COPY Ticketing.BFF/src/Ticketing.BFF.Application Ticketing.BFF.Application/
+COPY Ticketing.BFF/src/Ticketing.BFF.Infrastructure Ticketing.BFF.Infrastructure/
+COPY nuget-packages nuget-packages/
+COPY nuget.config ./
+
+ENV DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER=0
+
+# RUN dotnet restore "Ticketing.BFF.Domain/Ticketing.BFF.Domain.csproj"
+RUN dotnet restore "Ticketing.BFF.API/Ticketing.BFF.API.csproj"
+RUN dotnet restore "Ticketing.BFF.Application/Ticketing.BFF.Application.csproj"
+RUN dotnet restore "Ticketing.BFF.Infrastructure/Ticketing.BFF.Infrastructure.csproj"
+
+COPY . .
+
+WORKDIR "/src/Ticketing.BFF.API"
+RUN dotnet build "Ticketing.BFF.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Ticketing.BFF.API.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Ticketing.BFF.API.dll"]

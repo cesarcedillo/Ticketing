@@ -35,6 +35,11 @@ services:
     environment:
       - RepositoryConnection=Data Source=/app/Auth.db
 
+      # Authentication config
+      - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
+      - Issuer=ticketing-auth
+      - Audience=ticketing-app
+
       # OpenTelemetry config
       - PropertiesToTrace=Id
       - TraceContents=false
@@ -60,6 +65,11 @@ services:
     environment:
       - RepositoryConnection=Data Source=/app/User.db
 
+      # Authentication config
+      - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
+      - Issuer=ticketing-auth
+      - Audience=ticketing-app
+
       # OpenTelemetry config
       - PropertiesToTrace=Id
       - TraceContents=false
@@ -76,6 +86,42 @@ services:
       - ASPNETCORE_ENVIRONMENT=development 
     networks:
       - ticketing-micro-net
+  ticketing-ticket-bff:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile.bff
+    ports:
+      - "5003:80"
+    environment:
+      # Authentication config
+      - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
+      - Issuer=ticketing-auth
+      - Audience=ticketing-app
+
+      # OpenTelemetry config
+      - PropertiesToTrace=Id
+      - TraceContents=false
+      - ServiceName=UserService
+      - ExcludedPaths=swagger,health
+      - AgentHost=zipkin
+      - AgentPort=9411
+
+      # Logging config
+      - MinimumLevel=Verbose
+      - Sink=Console
+      - FilePath=Logs/UserService.log
+
+      # Client config
+      - AuthClientUrl=http://ticketing-ticket-auth/,
+      - UserClientUrl=http://ticketing-ticket-user/
+
+      - ASPNETCORE_ENVIRONMENT=development 
+    depends_on:
+      - ticketing-ticket-user
+      - ticketing-ticket-auth
+    networks:
+      - ticketing-micro-net
+  
   ticketing-frontend:
     build:
       context: ./Frontend/Ticketing
