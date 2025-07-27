@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Net.Mime;
 using System.Text.Json;
+using Ticketing.Core.Observability.OpenTelemetry.Middleware;
 using Ticketing.Ticket.API.Endpoints;
 using Ticketing.Ticket.API.Extensions;
-using Ticketing.Core.Observability.OpenTelemetry.Middleware;
 using Ticketing.Ticket.Infrastructure.Data;
 using Ticketing.Ticket.Infrastructure.Extensions;
 
@@ -36,23 +36,23 @@ app.UseCors(x => x
     .AllowAnyHeader()
     .SetIsOriginAllowed(origin => true));
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseSwagger(c =>
 {
-  c.RouteTemplate = "Ticket/swagger/{documentNAme}/swagger.json";
+  c.RouteTemplate = "ticket/swagger/{documentNAme}/swagger.json";
 });
 
 app.UseSwaggerUI(c =>
 {
   c.SwaggerEndpoint("v1/swagger.json", "Ticket v1");
-  c.RoutePrefix = "Ticket/swagger";
+  c.RoutePrefix = "ticket/swagger";
 });
 
 app.MapControllers();
 
 app.MapTicketEndpoints();
-app.MapUserEndpoints();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 

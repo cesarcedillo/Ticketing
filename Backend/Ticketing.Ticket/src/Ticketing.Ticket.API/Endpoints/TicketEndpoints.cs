@@ -23,6 +23,7 @@ public static class TicketEndpoints
   {
     group.MapPost("/", CreateTicket)
         .WithName("CreateTicket")
+        .RequireAuthorization()
         .Accepts<CreateTicketRequest>("application/json")
         .Produces<Guid>(StatusCodes.Status201Created)
         .Produces<ProblemDetails>(StatusCodes.Status400BadRequest)
@@ -30,6 +31,7 @@ public static class TicketEndpoints
 
     group.MapPost("/{ticketId}/replies", AddTicketReply)
     .WithName("AddTicketReply")
+        .RequireAuthorization()
     .Accepts<AddTicketReplyRequest>("application/json")
     .Produces(StatusCodes.Status204NoContent)
     .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
@@ -42,12 +44,14 @@ public static class TicketEndpoints
   {
     group.MapGet("/", ListTickets)
     .WithName("ListTickets")
+        .RequireAuthorization()
     .Produces<List<TicketResponse>>(StatusCodes.Status200OK)
     .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
 
     group.MapGet("/{ticketId}", GetTicketDetail)
     .WithName("GetTicketDetail")
+        .RequireAuthorization()
     .Produces<TicketDetailResponse>(StatusCodes.Status200OK)
     .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
     .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
@@ -59,6 +63,7 @@ public static class TicketEndpoints
   {
     group.MapPatch("/{ticketId}/mark-as-resolved", MarkTickedAsResolved)
     .WithName("MarkAsResolved")
+        .RequireAuthorization()
     .Produces(StatusCodes.Status204NoContent)
     .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
     .Produces<ProblemDetails>(StatusCodes.Status400BadRequest);

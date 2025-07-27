@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Ticket.Domain", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Ticket.Infrastructure", "src\Ticketing.Ticket.Infrastructure\Ticketing.Ticket.Infrastructure.csproj", "{A85B91B2-1397-44AA-B6D4-B30227DD9BE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Client", "src\client\Ticketing.Client\Ticketing.Client.csproj", "{2F633722-7AE3-4635-9E10-3B01829FE840}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Ticket.Client", "src\client\Ticketing.Ticket.Client\Ticketing.Ticket.Client.csproj", "{2F633722-7AE3-4635-9E10-3B01829FE840}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{479E0236-1411-4ACC-A878-B2202BE90748}"
 EndProject

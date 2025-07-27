@@ -1,4 +1,4 @@
-﻿namespace Ticketing.Client.NswagAutoGen.HttpClientFactoryImplementation;
+﻿namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
 public abstract class ClientBase
 {
   protected abstract string HttpClientName { get; }
