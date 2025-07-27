@@ -3,6 +3,7 @@ using UserResponse = User.Cliente.NswagAutoGen.HttpClientFactoryImplementation.U
 using AutoMapper;
 using Ticketing.BFF.Application.Commands.User.Login;
 using Ticketing.BFF.Application.Dto.Responses;
+using Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
 
 namespace Ticketing.BFF.Application;
 public class MappingProfile : Profile
@@ -16,5 +17,7 @@ public class MappingProfile : Profile
                                                                 src.Expiration.Value.UtcDateTime : 
                                                                 (DateTime?)null));
     CreateMap<UserResponse, UserResponseBff>();
+    CreateMap<TicketDetailResponse, TicketDetailResponseBff>();
+    CreateMap<TicketResponse, TicketResponseBff>();
   }
 }

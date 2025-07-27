@@ -10,6 +10,7 @@ using Ticketing.BFF.Application.Services;
 using Ticketing.BFF.Infrastructure.Http;
 using Ticketing.Core.Application.Mediatr.Behaviours.Behaviours;
 using User.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
+using Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
 
 namespace Ticketing.BFF.Application;
 public static class DependencyInjection
@@ -17,8 +18,6 @@ public static class DependencyInjection
   public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
   {
     services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
-
 
     services.AddMediatR(cfg =>
     {
@@ -28,6 +27,7 @@ public static class DependencyInjection
     });
 
     services.AddTransient<IUserService, UserService>();
+    services.AddTransient<ITicketService, TicketService>();
 
     services.AddHttpContextAccessor();
 
@@ -43,7 +43,14 @@ public static class DependencyInjection
                     nameof(UserClient),
                     configureClient => configureClient.BaseAddress = new Uri(configuration["UserClientUrl"] ??
                     throw new Exception("UserClientUrl not exits in the configuration")))
-            .AddHttpMessageHandler<PropagateBearerTokenHandler>(); ;
+            .AddHttpMessageHandler<PropagateBearerTokenHandler>();
+
+    services.AddScoped<ITicketClient, TicketClient>();
+    services.AddHttpClient(
+                    nameof(TicketClient),
+                    configureClient => configureClient.BaseAddress = new Uri(configuration["TicketClientUrl"] ??
+                    throw new Exception("UserClientUrl not exits in the configuration")))
+            .AddHttpMessageHandler<PropagateBearerTokenHandler>();
 
     return services;
   }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 using Ticketing.Ticket.Application.Dtos.Responses;
 using Ticketing.Ticket.Application.Services.Interfaces;
@@ -60,12 +61,15 @@ public class TicketService : ITicketService
     return tickets;
   }
 
-  public async Task<TicketDetailResponse?> GetTicketDetailAsync(Guid ticketId, CancellationToken cancellationToken)
+  public async Task<TicketDetailResponse> GetTicketDetailAsync(Guid ticketId, CancellationToken cancellationToken)
   {
     var ticket = await _ticketRepository.Query()
         .Where(t => t.Id == ticketId)
         .ProjectTo<TicketDetailResponse>(_mapper.ConfigurationProvider)
         .FirstOrDefaultAsync(cancellationToken);
+
+    if (ticket == null)
+      throw new KeyNotFoundException($"Ticket {ticketId} not found.");
 
     return ticket;
   }

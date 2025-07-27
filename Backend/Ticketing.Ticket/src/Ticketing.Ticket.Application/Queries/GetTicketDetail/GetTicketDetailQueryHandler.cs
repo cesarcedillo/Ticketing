@@ -17,9 +17,6 @@ public class GetTicketDetailQueryHandler : IRequestHandler<GetTicketDetailQuery,
   {
     var ticket = await _ticketService.GetTicketDetailAsync(request.TicketId, cancellationToken);
 
-    if (ticket == null)
-      throw new KeyNotFoundException($"Ticket {request.TicketId} not found.");
-
     return ticket;
   }
 }
