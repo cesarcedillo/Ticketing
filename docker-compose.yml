@@ -1,14 +1,19 @@
 version: "3.8"
 
 services:
-  ticketing-ticket-api:
+  ticketing-ticket-ticket:
     build:
       context: ./Backend
       dockerfile: Dockerfile.ticket
     ports:
-      - "5000:80"
+      - "5003:80"
     environment:
       - RepositoryConnection=Data Source=/app/Ticket.db
+      
+      # Authentication config
+      - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
+      - Issuer=ticketing-auth
+      - Audience=ticketing-app
 
       # OpenTelemetry config
       - PropertiesToTrace=Id
@@ -91,7 +96,7 @@ services:
       context: ./Backend
       dockerfile: Dockerfile.bff
     ports:
-      - "5003:80"
+      - "5000:80"
     environment:
       # Authentication config
       - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
@@ -113,12 +118,14 @@ services:
 
       # Client config
       - AuthClientUrl=http://ticketing-ticket-auth/,
-      - UserClientUrl=http://ticketing-ticket-user/
+      - UserClientUrl=http://ticketing-ticket-user/,
+      - TicketClientUrl=http://ticketing-ticket-ticket/
 
       - ASPNETCORE_ENVIRONMENT=development 
     depends_on:
       - ticketing-ticket-user
       - ticketing-ticket-auth
+      - ticketing-ticket-ticket
     networks:
       - ticketing-micro-net
   
@@ -131,25 +138,9 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - ticketing-ticket-api
+      - ticketing-ticket-bff
     networks:
       - ticketing-micro-net
-
-  # jaeger:
-  #   image: jaegertracing/all-in-one:latest
-  #   container_name: jaeger
-  #   environment:
-  #     - COLLECTOR_ZIPKIN_HOST_PORT=:9411
-  #   ports:
-  #     - "16686:16686"
-  #     - "6831:6831/udp" 
-  #     - "6832:6832/udp"
-  #     - "5778:5778"
-  #     - "14268:14268"
-  #     - "14250:14250"
-  #     - "9411:9411"
-  #   networks:
-  #     - ticketing-micro-net
 
   zipkin:
     image: openzipkin/zipkin:latest

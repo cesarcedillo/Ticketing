@@ -21,7 +21,6 @@ public static class DependencyInjection
 
 
     services.AddTransient<ITicketRepository, TicketRepository>();
-    services.AddTransient<IUserRepository, UserRepository>();
 
     return services;
   }

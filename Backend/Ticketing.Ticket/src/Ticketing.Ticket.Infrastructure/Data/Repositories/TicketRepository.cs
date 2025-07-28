@@ -19,8 +19,7 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
   public async Task<TicketType?> GetByIdAsync(Guid ticketId, CancellationToken cancellationToken = default)
   {
     return await _dbContext.Tickets
-        .Include(t => t.User)
-        .Include(t => t.Replies).ThenInclude(r => r.User)
+        .Include(t => t.Replies)
         .FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
   }
 
@@ -28,14 +27,12 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
   {
     return await _dbContext.Tickets
         .Where(t => t.Status != TicketStatus.Resolved)
-        .Include(t => t.User)
         .ToListAsync(cancellationToken);
   }
 
   public IQueryable<TicketType> Query()
   {
     return _dbContext.Tickets
-              .Include(t => t.User)
               .Include(t => t.Replies);
   }
 
@@ -44,10 +41,6 @@ public class TicketRepository : GenericRepository<TicketType>, ITicketRepository
     var ticket = await _dbContext.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
     if (ticket == null)
       throw new KeyNotFoundException($"Ticket {ticketId} not found.");
-
-    var userExists = await _dbContext.Users.AnyAsync(u => u.Id == userId, cancellationToken);
-    if (!userExists)
-      throw new KeyNotFoundException($"User {userId} not found.");
 
     var reply = new TicketReply(text, userId, ticketId);
     ticket.MarkAsInResolution();

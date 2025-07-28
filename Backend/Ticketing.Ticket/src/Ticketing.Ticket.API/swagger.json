@@ -339,14 +339,6 @@
             "type": "string",
             "format": "uuid"
           },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
-          "avatar": {
-            "type": "string",
-            "nullable": true
-          },
           "replies": {
             "type": "array",
             "nullable": true,
@@ -375,14 +367,6 @@
           "userId": {
             "type": "string",
             "format": "uuid"
-          },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
-          "avatar": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -402,17 +386,9 @@
             "type": "string",
             "nullable": true
           },
-          "userName": {
-            "type": "string",
-            "nullable": true
-          },
           "userId": {
             "type": "string",
             "format": "uuid"
-          },
-          "avatar": {
-            "type": "string",
-            "nullable": true
           }
         }
       }

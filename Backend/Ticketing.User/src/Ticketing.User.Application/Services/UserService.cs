@@ -28,4 +28,11 @@ public class UserService : IUserService
     return userResponse;
   }
 
+  public async Task<IEnumerable<UserResponse>> GetUsersByIdsAsync(IEnumerable<Guid> userIds, CancellationToken cancellationToken)
+  {
+    var users = await _userRepository.GetByIdsAsync(userIds, cancellationToken);
+    return users.Select(u => _mapper.Map<UserResponse>(u));
+  }
+
+
 }

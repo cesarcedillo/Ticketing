@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Ticketing.User.Application.Dto.Responses;
 using Ticketing.User.Application.Queries.GetUserByName;
+using Ticketing.User.Application.Queries.GetUsersByIds;
 
 namespace Ticketing.User.API.Endpoints;
 public static class UserEndpoints
@@ -18,10 +19,18 @@ public static class UserEndpoints
     group.MapGet("/{userName}", GetUserByUserName)
     .WithName("GetUserByUserName")
         .RequireAuthorization()
-    .Produces<UserResponse>(StatusCodes.Status200OK)
-    .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
-    .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
-    .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+        .Produces<UserResponse>(StatusCodes.Status200OK)
+        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+        .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
+    group.MapPost("/by-ids", GetUsersByIds)
+        .WithName("GetUsersByIds")
+        .RequireAuthorization()
+        .Produces<List<UserResponse>>(StatusCodes.Status200OK)
+        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+        .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
     return group;
   }
@@ -36,4 +45,16 @@ public static class UserEndpoints
 
     return Results.Ok(result);
   }
+
+  public static async Task<IResult> GetUsersByIds(
+    [FromBody] IEnumerable<Guid> userIds,
+    IMediator mediator,
+    CancellationToken cancellationToken)
+  {
+    var query = new GetUsersByIdsQuery(userIds);
+    var result = await mediator.Send(query, cancellationToken);
+
+    return Results.Ok(result);
+  }
+
 }

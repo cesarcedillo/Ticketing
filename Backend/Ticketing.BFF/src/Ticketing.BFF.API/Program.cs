@@ -51,6 +51,7 @@ app.UseSwaggerUI(c =>
 app.MapControllers();
 
 app.MapUserEndpoints();
+app.MapTicketEndpoints();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 

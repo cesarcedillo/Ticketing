@@ -26,4 +26,15 @@ public class UserRepository : GenericRepository<UserType>, IUserRepository
         .FirstOrDefaultAsync(u => u.UserName == userName, cancellationToken);
   }
 
+  public async Task<IEnumerable<UserType>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+  {
+    if (ids == null || !ids.Any())
+      return Enumerable.Empty<UserType>();
+
+    return await _dbContext.Users
+        .Where(u => ids.Contains(u.Id))
+        .ToListAsync(cancellationToken);
+  }
+
+
 }

@@ -72,4 +72,48 @@ public class UserRepositoryTests
 
     result.Should().BeNull();
   }
+
+  [Fact]
+  public async Task GetByIdsAsync_Should_Return_Users_When_Exist()
+  {
+    var repo = new UserRepository(_context);
+
+    var users = _context.Users.ToList();
+    var ids = users.Select(u => u.Id);
+
+    var result = await repo.GetByIdsAsync(ids);
+
+    result.Should().NotBeNull();
+    result.Should().HaveCount(users.Count);
+    result.Select(u => u.Id).Should().BeEquivalentTo(ids);
+  }
+
+  [Fact]
+  public async Task GetByIdsAsync_Should_Return_Empty_When_None_Exist()
+  {
+    var repo = new UserRepository(_context);
+
+    var ids = new[] { Guid.NewGuid(), Guid.NewGuid() };
+
+    var result = await repo.GetByIdsAsync(ids);
+
+    result.Should().NotBeNull();
+    result.Should().BeEmpty();
+  }
+
+  [Fact]
+  public async Task GetByIdsAsync_Should_Return_Partial_Results_When_Some_Exist()
+  {
+    var repo = new UserRepository(_context);
+
+    var existingUser = await _context.Users.FirstAsync();
+    var ids = new[] { existingUser.Id, Guid.NewGuid() };
+
+    var result = await repo.GetByIdsAsync(ids);
+
+    result.Should().NotBeNull();
+    result.Should().HaveCount(1);
+    result.First().Id.Should().Be(existingUser.Id);
+  }
+
 }

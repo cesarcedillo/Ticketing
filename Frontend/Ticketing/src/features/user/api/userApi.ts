@@ -1,8 +1,23 @@
-import type { User } from "../types/User";
 import { API_BASE_URL } from "../../../config/apiConfig";
+import type { LoginResponse } from "../types/LoginResponse";
 
-export async function fetchUser(username: string): Promise<User> {
-  const response = await fetch(`${API_BASE_URL}/api/User/${username}`);
-  if (!response.ok) throw response;
+export async function loginUser(
+  username: string,
+  password: string
+): Promise<LoginResponse> {
+  const response = await fetch(`${API_BASE_URL}/api/User/login`, {
+    method: "POST",
+    headers: {
+      accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(error || "Login failed");
+  }
+
   return response.json();
 }

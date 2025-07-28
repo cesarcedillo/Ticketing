@@ -58,7 +58,7 @@ export default function TicketingPage() {
           selectedId={selectedId}
           onSelect={setSelectedId}
         />
-        {loadingList && <p className={styles.statusMsg}>Cargando tickets...</p>}
+        {loadingList && <p className={styles.statusMsg}>Loading tickets...</p>}
         {errorList && <p className={styles.errorMsg}>{errorList}</p>}
         {showNewModal && user?.id && (
           <NewTicketModal
@@ -69,7 +69,7 @@ export default function TicketingPage() {
         )}
       </div>
       <div className={styles.rightPanel}>
-        {loadingDetail && <p className={styles.statusMsg}>Cargando detalle...</p>}
+        {loadingDetail && <p className={styles.statusMsg}>Loading detalle...</p>}
         {errorDetail && <p className={styles.errorMsg}>{errorDetail}</p>}
         <TicketDetail
           ticket={ticket}

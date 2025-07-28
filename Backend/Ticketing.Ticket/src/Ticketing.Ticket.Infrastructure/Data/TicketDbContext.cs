@@ -13,14 +13,11 @@ public class TicketDbContext : DbContextBase
 
   public virtual DbSet<TicketType> Tickets => Set<TicketType>(); 
   public virtual DbSet<TicketReply> TicketReplies => Set<TicketReply>();
-  public virtual DbSet<User> Users => Set<User>();
 
   public TicketDbContext(DbContextOptions<TicketDbContext> options) : base(options) { }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
-
-    modelBuilder.ApplyConfiguration(new UserConfiguration());
     modelBuilder.ApplyConfiguration(new TicketConfiguration());
     modelBuilder.ApplyConfiguration(new TicketReplyConfiguration());
 

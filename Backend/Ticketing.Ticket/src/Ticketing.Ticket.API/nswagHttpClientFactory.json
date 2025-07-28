@@ -22,7 +22,7 @@
       "disposeHttpClient": true,
       "protectedMethods": [],
       "generateExceptionClasses": true,
-      "exceptionClass": "TiketApiException",
+      "exceptionClass": "TicketApiException",
       "wrapDtoExceptions": true,
       "useHttpClientCreationMethod": true,
       "httpClientType": "System.Net.Http.HttpClient",

@@ -16,9 +16,9 @@ export default function TicketList({ tickets, selectedId, onSelect }: Props) {
           className={`${styles.ticketItem} ${ticket.id === selectedId ? styles.selected : ""}`}
           onClick={() => onSelect(ticket.id)}
         >
-          {ticket.avatar ? (
+          {ticket.user.avatar ? (
             <img
-              src={`data:image/png;base64,${ticket.avatar}`}
+              src={`data:image/png;base64,${ticket.user.avatar}`}
               className={styles.avatar}
               alt="avatar"
             />
@@ -34,7 +34,7 @@ export default function TicketList({ tickets, selectedId, onSelect }: Props) {
           <div className={styles.ticketInfo}>
             <span className={styles.ticketSubject}>{ticket.subject}</span>
             <span className={styles.ticketUser}>
-              {ticket.userName} • {ticket.id.slice(0, 6)}
+              {ticket.user.userName} • {ticket.id.slice(0, 6)}
             </span>
           </div>
         </div>

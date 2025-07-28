@@ -2,12 +2,14 @@
 using FluentAssertions;
 using MockQueryable;
 using Moq;
+using System.Reflection.Metadata;
 using Ticketing.Core.Domain.SeedWork.Interfaces;
 using Ticketing.Ticket.Application.Services;
 using Ticketing.Ticket.Domain.Enums;
 using Ticketing.Ticket.Domain.Interfaces.Repositories;
 using Ticketing.Ticket.TestCommon.Builders;
 using Ticketing.Ticket.TestCommon.Fixtures;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using TicketType = Ticketing.Ticket.Domain.Aggregates.Ticket;
 
 namespace Ticketing.Ticket.Application.Tests.Services
@@ -15,7 +17,6 @@ namespace Ticketing.Ticket.Application.Tests.Services
   public class TicketServiceTests
   {
     private readonly Mock<ITicketRepository> _ticketRepositoryMock;
-    private readonly Mock<IUserRepository> _userRepositoryMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly IMapper _mapper;
     private readonly TicketService _service;
@@ -24,7 +25,6 @@ namespace Ticketing.Ticket.Application.Tests.Services
     public TicketServiceTests()
     {
       _ticketRepositoryMock = new Mock<ITicketRepository>();
-      _userRepositoryMock = new Mock<IUserRepository>();
       _unitOfWorkMock = new Mock<IUnitOfWork>();
 
       var config = new MapperConfiguration(cfg =>
@@ -37,7 +37,6 @@ namespace Ticketing.Ticket.Application.Tests.Services
 
       _service = new TicketService(
           _ticketRepositoryMock.Object,
-          _userRepositoryMock.Object,
           _mapper
       );
     }
@@ -46,9 +45,7 @@ namespace Ticketing.Ticket.Application.Tests.Services
     public async Task CreateTicketAsync_Should_Create_And_Return_Id()
     {
       // Arrange
-      var user = _fixture.CreateDefaultCustomer("testuser");
-      _userRepositoryMock.Setup(r => r.GetByIdAsync(user.Id, It.IsAny<CancellationToken>()))
-          .ReturnsAsync(user);
+      var userId = Guid.NewGuid();
 
       TicketType? createdTicket = null;
       _ticketRepositoryMock.Setup(r => r.Add(It.IsAny<TicketType>()))
@@ -58,13 +55,13 @@ namespace Ticketing.Ticket.Application.Tests.Services
           .ReturnsAsync(1);
 
       // Act
-      var id = await _service.CreateTicketAsync("Subject", "Description", user.Id, CancellationToken.None);
+      var id = await _service.CreateTicketAsync("Subject", "Description", userId, CancellationToken.None);
 
       // Assert
       id.Should().NotBeEmpty();
       createdTicket.Should().NotBeNull();
       createdTicket!.Subject.Should().Be("Subject");
-      createdTicket.User.Should().Be(user);
+      createdTicket.UserId.Should().Be(userId);
     }
 
     [Fact]
@@ -108,7 +105,7 @@ namespace Ticketing.Ticket.Application.Tests.Services
     }
 
     [Fact]
-    public async Task GetTicketDetailAsync_Should_Return_Null_If_Not_Found()
+    public async Task GetTicketDetailAsync_Should_Throw_Exception_If_Not_Found()
     {
       // Arrange
       var ticketId = Guid.NewGuid();
@@ -119,10 +116,12 @@ namespace Ticketing.Ticket.Application.Tests.Services
           .Returns(mockQueryable);
 
       // Act
-      var result = await _service.GetTicketDetailAsync(ticketId, CancellationToken.None);
+      Func<Task> act = async () => await _service.GetTicketDetailAsync(ticketId, CancellationToken.None);
 
       // Assert
-      result.Should().BeNull();
+
+      await act.Should().ThrowAsync<KeyNotFoundException>()
+        .WithMessage($"Ticket {ticketId} not found.");
     }
 
     [Fact]
@@ -155,19 +154,16 @@ namespace Ticketing.Ticket.Application.Tests.Services
       var ticket = new TicketBuilder().Build();
       var tickets = new List<TicketType> { ticket };
       var mockQueryable = tickets.AsQueryable().BuildMock();
-
-      var agent = _fixture.CreateDefaultAgent("agent1");
+      var userId = Guid.NewGuid();
 
       _ticketRepositoryMock.Setup(r => r.Query())
           .Returns(mockQueryable);
-      _userRepositoryMock.Setup(r => r.GetByIdAsync(agent.Id, It.IsAny<CancellationToken>()))
-          .ReturnsAsync(agent);
 
       _unitOfWorkMock.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
           .ReturnsAsync(1);
 
       // Act
-      await _service.AddReplyAsync(ticket.Id, "Response", agent.Id, CancellationToken.None);
+      await _service.AddReplyAsync(ticket.Id, "Response", userId, CancellationToken.None);
 
       // Assert
       _unitOfWorkMock.Verify(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);

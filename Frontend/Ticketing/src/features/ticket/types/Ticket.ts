@@ -1,19 +1,18 @@
+import type { User } from "../../user/types/User";
+
+
 export interface TicketSummary {
   id: string;
   subject: string;
   status: string;
-  userName: string;
-  userId: string;
-  avatar: string;
+  user: User;
 }
 
 export interface TicketReply {
   id: string;
   text: string;
   createdAt: string;
-  userId: string;
-  userName: string;
-  avatar: string;
+  user: User;
 }
 
 export interface Ticket extends TicketSummary {

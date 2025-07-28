@@ -1,13 +1,17 @@
-﻿using AutoMapper;
+﻿using Auth.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Ticketing.BFF.Application.Commands.Ticket.AddTicketReply;
 using Ticketing.BFF.Application.Commands.Ticket.CreateTicket;
 using Ticketing.BFF.Application.Commands.Ticket.MarkTicketAsResolved;
+using Ticketing.BFF.Application.Commands.User.Login;
 using Ticketing.BFF.Application.Dto.Requests;
 using Ticketing.BFF.Application.Dto.Responses;
 using Ticketing.BFF.Application.Querires.Ticket.GetTicketDetail;
 using Ticketing.BFF.Application.Querires.Ticket.ListTickets;
+using Ticketing.BFF.Application.Querires.User.GetUserByName;
 using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
 
 namespace Ticketing.BFF.API.Endpoints;

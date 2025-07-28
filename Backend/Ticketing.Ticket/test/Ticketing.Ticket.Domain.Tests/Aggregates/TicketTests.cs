@@ -12,18 +12,18 @@ public class TicketTests
   [Fact]
   public void Create_Ticket_Assigns_Open_Status_And_Data_Correctly()
   {
-    var user = new UserBuilder().Build();
+    var userId = Guid.NewGuid();
 
     var ticket = new TicketBuilder()
         .WithSubject("Subject")
         .WithDescription("Description")
-        .WithUser(user)
+        .WithUser(userId)
         .Build();
 
     ticket.Status.Should().Be(TicketStatus.Open);
     ticket.Subject.Should().Be("Subject");
     ticket.Description.Should().Be("Description");
-    ticket.User.Should().Be(user);
+    ticket.UserId.Should().Be(userId);
     ticket.Replies.Should().BeEmpty();
   }
 
@@ -32,9 +32,7 @@ public class TicketTests
   [InlineData("")]
   public void Cannot_Create_Ticket_With_Empty_Subject(string subject)
   {
-    var user = new UserBuilder().Build();
-
-    Action act = () => new TicketBuilder().WithSubject(subject!).WithUser(user).Build();
+    Action act = () => new TicketBuilder().WithSubject(subject!).Build();
 
     act.Should().Throw<ArgumentException>();
   }
@@ -44,9 +42,7 @@ public class TicketTests
   [InlineData("")]
   public void Cannot_Create_Ticket_With_Empty_Description(string description)
   {
-    var user = new UserBuilder().Build();
-
-    Action act = () => new TicketBuilder().WithDescription(description!).WithUser(user).Build();
+    Action act = () => new TicketBuilder().WithDescription(description!).Build();
 
     act.Should().Throw<ArgumentException>();
   }
@@ -72,9 +68,8 @@ public class TicketTests
   [Fact]
   public void AddReply_Adds_Reply_To_Ticket()
   {
-    var agent = new UserBuilder().WithUserType(UserType.Agent).Build();
     var ticket = new TicketBuilder().Build();
-    var reply = new TicketReplyBuilder().WithUser(agent).WithTicket(ticket).WithText("Reply text").Build();
+    var reply = new TicketReplyBuilder().WithTicket(ticket).WithText("Reply text").Build();
 
     ticket.AddReply(reply);
 
@@ -94,9 +89,8 @@ public class TicketTests
   [Fact]
   public void Cannot_Add_Reply_To_Resolved_Ticket()
   {
-    var agent = new UserBuilder().WithUserType(UserType.Agent).Build();
     var ticket = new TicketBuilder().Build();
-    var reply = new TicketReplyBuilder().WithUser(agent).WithTicket(ticket).Build();
+    var reply = new TicketReplyBuilder().WithTicket(ticket).Build();
 
     ticket.MarkAsResolved();
 
@@ -108,12 +102,11 @@ public class TicketTests
   [Fact]
   public void Ticket_Associates_Creator_Correctly()
   {
-    var user = new UserBuilder().Build();
+    var userId = Guid.NewGuid();
 
-    var ticket = new TicketBuilder().WithUser(user).Build();
+    var ticket = new TicketBuilder().WithUser(userId).Build();
 
-    ticket.User.Should().Be(user);
-    ticket.UserId.Should().Be(user.Id);
+    ticket.UserId.Should().Be(userId);
   }
 
   [Fact]

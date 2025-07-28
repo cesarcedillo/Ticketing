@@ -17,24 +17,14 @@ public class MappingProfile : Profile
     
     CreateMap<TicketType, CreateTicketResponse>().ReverseMap();
 
-    CreateMap<TicketType, TicketResponse>()
-        .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
-        .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.User.Avatar));
+    CreateMap<TicketType, TicketResponse>();
 
     CreateMap<TicketType, TicketDetailResponse>()
-        .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
-        .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.User.Avatar))
         .ForMember(dest => dest.Replies, opt => opt.MapFrom(src => src.Replies.OrderBy(r => r.CreatedAt)));
 
-    CreateMap<TicketReply, TicketReplyResponse>()
-        .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
-        .ForMember(dest => dest.Avatar, opt => opt.MapFrom(src => src.User.Avatar));
+    CreateMap<TicketReply, TicketReplyResponse>();
 
     CreateMap<AddTicketReplyRequest, AddTicketReplyCommand>()
         .ForMember(dest => dest.TicketId, opt => opt.Ignore());
-
-    CreateMap<User, UserResponse>()
-        .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.UserType.ToString()));
-
   }
 }

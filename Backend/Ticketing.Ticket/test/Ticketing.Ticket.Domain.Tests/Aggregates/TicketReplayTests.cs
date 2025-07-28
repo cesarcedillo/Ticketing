@@ -9,18 +9,19 @@ public class TicketReplyTests
   [Fact]
   public void Create_Reply_Assigns_Properties_Correctly()
   {
-    var user = new UserBuilder().WithUserType(UserType.Agent).Build();
-    var ticket = new TicketBuilder().WithUser(new UserBuilder().Build()).Build();
+    var userId = Guid.NewGuid();
+    var anotherUserId = Guid.NewGuid();
+    var ticket = new TicketBuilder().WithUser(userId).Build();
     var text = "Test reply";
 
     var reply = new TicketReplyBuilder()
         .WithText(text)
-        .WithUser(user)
+        .WithUser(anotherUserId)
         .WithTicket(ticket)
         .Build();
 
     reply.Text.Should().Be(text);
-    reply.User.Should().Be(user);
+    reply.UserId.Should().Be(anotherUserId);
     reply.Ticket.Should().Be(ticket);
   }
 
@@ -29,12 +30,10 @@ public class TicketReplyTests
   [InlineData("")]
   public void Cannot_Create_Reply_With_Empty_Text(string text)
   {
-    var user = new UserBuilder().Build();
-    var ticket = new TicketBuilder().WithUser(user).Build();
+    var ticket = new TicketBuilder().Build();
 
     Action act = () => new TicketReplyBuilder()
         .WithText(text!)
-        .WithUser(user)
         .WithTicket(ticket)
         .Build();
 
@@ -47,20 +46,18 @@ public class TicketReplyTests
     var ticket = new TicketBuilder().Build();
 
     Action act = () => new TicketReplyBuilder()
-        .WithUser(null!)
+        .WithUser(Guid.Empty)
         .WithTicket(ticket)
         .Build();
 
-    act.Should().Throw<ArgumentNullException>();
+    act.Should().Throw<ArgumentException>();
   }
 
   [Fact]
   public void Cannot_Create_Reply_With_Null_Ticket()
   {
-    var user = new UserBuilder().Build();
 
     Action act = () => new TicketReplyBuilder()
-        .WithUser(user)
         .WithTicket(null!)
         .Build();
 
@@ -70,11 +67,9 @@ public class TicketReplyTests
   [Fact]
   public void CreatedAt_Must_Be_Now_Or_Later_Than_TicketCreation()
   {
-    var user = new UserBuilder().Build();
-    var ticket = new TicketBuilder().WithUser(user).Build();
+    var ticket = new TicketBuilder().Build();
 
     var reply = new TicketReplyBuilder()
-        .WithUser(user)
         .WithTicket(ticket)
         .Build();
 

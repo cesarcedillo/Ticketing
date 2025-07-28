@@ -8,8 +8,8 @@ export default function UserLoginPage() {
   const navigate = useNavigate();
   const { user, error, loading, login } = useUserLogin();
 
-  const handleLogin = async (username: string) => {
-    await login(username);
+  const handleLogin = async (username: string, password: string) => {
+    await login(username, password);
   };
 
   useEffect(() => {

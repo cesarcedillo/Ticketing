@@ -12,24 +12,17 @@ namespace Ticketing.Ticket.Application.Services;
 public class TicketService : ITicketService
 {
   private readonly ITicketRepository _ticketRepository;
-  private readonly IUserRepository _userRepository;
   private readonly IMapper _mapper;
 
-  public TicketService(ITicketRepository ticketRepository, IUserRepository userRepository, IMapper mapper)
+  public TicketService(ITicketRepository ticketRepository, IMapper mapper)
   {
     _ticketRepository = ticketRepository;
-    _userRepository = userRepository;
     _mapper = mapper;
   }
 
   public async Task<Guid> CreateTicketAsync(string subject, string description, Guid userId, CancellationToken cancellationToken)
   {
-    var user = await _userRepository.GetByIdAsync(userId, cancellationToken);
-
-    if (user == null)
-      throw new InvalidOperationException("User not found.");
-
-    var ticket = new TicketType(subject, description, user);
+    var ticket = new TicketType(subject, description, userId);
 
     _ticketRepository.Add(ticket);
 

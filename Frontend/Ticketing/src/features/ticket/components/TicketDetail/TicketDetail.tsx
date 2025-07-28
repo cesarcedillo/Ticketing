@@ -16,8 +16,8 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
   const { loading, error, resolve } = useMarkTicketAsResolved();
 
   useEffect(() => {
-    if (ticket?.avatar) {
-      setAvatarUrl(`data:image/png;base64,${ticket.avatar}`);
+    if (ticket?.user.avatar) {
+      setAvatarUrl(`data:image/png;base64,${ticket.user.avatar}`);
     } else {
       setAvatarUrl(undefined);
     }
@@ -42,7 +42,7 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
         <div>
           <h2 className={styles.title}>{ticket.subject}</h2>
           <div className={styles.userInfo}>
-            <span className={styles.userName}>{ticket.userName}</span>
+            <span className={styles.userName}>{ticket.user.userName}</span>
             {avatarUrl && (
               <img
                 src={avatarUrl}
@@ -73,9 +73,9 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
         {ticket.replies.map(reply => (
           <div key={reply.id} className={styles.replyCard}>
             <div className={styles.replyAvatar}>
-              {reply.avatar ? (
+              {reply.user.avatar ? (
                 <img
-                  src={`data:image/png;base64,${reply.avatar}`}
+                  src={`data:image/png;base64,${reply.user.avatar}`}
                   alt="avatar"
                   style={{ width: 32, height: 32, borderRadius: "50%" }}
                 />
@@ -88,7 +88,7 @@ export default function TicketDetail({ ticket, userId, onReplyAdded, onResolved 
             </div>
             <div className={styles.replyBody}>
               <div className={styles.replyMeta}>
-                <span className={styles.replyName}>{reply.userName}</span>
+                <span className={styles.replyName}>{reply.user.userName}</span>
                 <span>{new Date(reply.createdAt).toLocaleString()}</span>
               </div>
               <div className={styles.replyText}>{reply.text}</div>

@@ -8,7 +8,7 @@ namespace Ticketing.Ticket.TestCommon.Builders
   {
     private string _subject = "Sample subject";
     private string _description = "Sample description";
-    private User _user = new UserBuilder().Build();
+    private Guid _userId = Guid.NewGuid();
     private readonly List<TicketReply> _replies = new();
 
 
@@ -24,9 +24,9 @@ namespace Ticketing.Ticket.TestCommon.Builders
       return this;
     }
 
-    public TicketBuilder WithUser(User user)
+    public TicketBuilder WithUser(Guid userId)
     {
-      _user = user;
+      _userId = userId;
       return this;
     }
 
@@ -44,7 +44,7 @@ namespace Ticketing.Ticket.TestCommon.Builders
 
     public TicketType Build()
     {
-      var ticket = new TicketType(_subject, _description, _user);
+      var ticket = new TicketType(_subject, _description, _userId);
 
       foreach (var reply in _replies)
       {

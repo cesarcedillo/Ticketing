@@ -1,25 +1,31 @@
 import { useState } from "react";
-import { fetchUser } from "../api/userApi";
+import { loginUser } from "../api/userApi";
 import type { User } from "../types/User";
 
 export function useUserLogin() {
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  async function login(username: string) {
+  const login = async (username: string, password: string) => {
     setLoading(true);
-    setError("");
+    setError(null);
     try {
-      const u = await fetchUser(username);
-      setUser(u);
-    } catch (err: any) {
-      if (err.status === 404) setError("The username is not valid");
-      else setError("Unexpected error");
-      setUser(null);
+      const result = await loginUser(username, password);
+
+      if (!result.success) {
+        setError(result.message || "Invalid username or password");
+        setLoading(false);
+        return;
+      }
+
+      setUser(result.user!);
+      localStorage.setItem("token", result.accessToken!);
+    } catch (e: any) {
+      setError(e.message || "Login failed");
     }
     setLoading(false);
-  }
+  };
 
   return { user, error, loading, login };
 }

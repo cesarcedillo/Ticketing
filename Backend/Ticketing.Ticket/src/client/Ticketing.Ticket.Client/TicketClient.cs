@@ -30,48 +30,48 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
     public partial interface ITicketClient
     {
         /// <returns>Created</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Guid> CreateTicketAsync(CreateTicketRequest body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Created</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Guid> CreateTicketAsync(CreateTicketRequest body, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TicketResponse>> ListTicketsAsync(string? status, System.Guid? userId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TicketResponse>> ListTicketsAsync(string? status, System.Guid? userId, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>No Content</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task AddTicketReplyAsync(System.Guid ticketId, AddTicketReplyRequest body);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task AddTicketReplyAsync(System.Guid ticketId, AddTicketReplyRequest body, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>OK</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<TicketDetailResponse> GetTicketDetailAsync(System.Guid ticketId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task<TicketDetailResponse> GetTicketDetailAsync(System.Guid ticketId, System.Threading.CancellationToken cancellationToken);
 
         /// <returns>No Content</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task MarkAsResolvedAsync(System.Guid ticketId);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         System.Threading.Tasks.Task MarkAsResolvedAsync(System.Guid ticketId, System.Threading.CancellationToken cancellationToken);
 
     }
@@ -107,7 +107,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <returns>Created</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Guid> CreateTicketAsync(CreateTicketRequest body)
         {
             return CreateTicketAsync(body, System.Threading.CancellationToken.None);
@@ -115,7 +115,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Created</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Guid> CreateTicketAsync(CreateTicketRequest body, System.Threading.CancellationToken cancellationToken)
         {
             if (body == null)
@@ -167,7 +167,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<System.Guid>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -177,9 +177,9 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -187,14 +187,14 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new TiketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new TicketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -212,7 +212,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
         }
 
         /// <returns>OK</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TicketResponse>> ListTicketsAsync(string? status, System.Guid? userId)
         {
             return ListTicketsAsync(status, userId, System.Threading.CancellationToken.None);
@@ -220,7 +220,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TicketResponse>> ListTicketsAsync(string? status, System.Guid? userId, System.Threading.CancellationToken cancellationToken)
         {
             var client_ = await CreateHttpClientAsync(cancellationToken).ConfigureAwait(false);
@@ -275,7 +275,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<TicketResponse>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -285,14 +285,14 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new TiketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new TicketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -310,7 +310,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
         }
 
         /// <returns>No Content</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task AddTicketReplyAsync(System.Guid ticketId, AddTicketReplyRequest body)
         {
             return AddTicketReplyAsync(ticketId, body, System.Threading.CancellationToken.None);
@@ -318,7 +318,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task AddTicketReplyAsync(System.Guid ticketId, AddTicketReplyRequest body, System.Threading.CancellationToken cancellationToken)
         {
             if (ticketId == null)
@@ -379,9 +379,9 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 400)
@@ -389,14 +389,14 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new TiketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new TicketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -414,7 +414,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
         }
 
         /// <returns>OK</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task<TicketDetailResponse> GetTicketDetailAsync(System.Guid ticketId)
         {
             return GetTicketDetailAsync(ticketId, System.Threading.CancellationToken.None);
@@ -422,7 +422,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task<TicketDetailResponse> GetTicketDetailAsync(System.Guid ticketId, System.Threading.CancellationToken cancellationToken)
         {
             if (ticketId == null)
@@ -471,7 +471,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<TicketDetailResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
                             return objectResponse_.Object;
                         }
@@ -481,9 +481,9 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 500)
@@ -491,14 +491,14 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Internal Server Error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new TiketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new TicketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -516,7 +516,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
         }
 
         /// <returns>No Content</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual System.Threading.Tasks.Task MarkAsResolvedAsync(System.Guid ticketId)
         {
             return MarkAsResolvedAsync(ticketId, System.Threading.CancellationToken.None);
@@ -524,7 +524,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>No Content</returns>
-        /// <exception cref="TiketApiException">A server side error occurred.</exception>
+        /// <exception cref="TicketApiException">A server side error occurred.</exception>
         public virtual async System.Threading.Tasks.Task MarkAsResolvedAsync(System.Guid ticketId, System.Threading.CancellationToken cancellationToken)
         {
             if (ticketId == null)
@@ -579,9 +579,9 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Not Found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 400)
@@ -589,14 +589,14 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                             var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
-                                throw new TiketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                                throw new TicketApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            throw new TiketApiException<ProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                            throw new TicketApiException<ProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new TiketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                            throw new TicketApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
                         }
                     }
                     finally
@@ -646,7 +646,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                 catch (Newtonsoft.Json.JsonException exception)
                 {
                     var message = "Could not deserialize the response body string as " + typeof(T).FullName + ".";
-                    throw new TiketApiException(message, (int)response.StatusCode, responseText, headers, exception);
+                    throw new TicketApiException(message, (int)response.StatusCode, responseText, headers, exception);
                 }
             }
             else
@@ -665,7 +665,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
                 catch (Newtonsoft.Json.JsonException exception)
                 {
                     var message = "Could not deserialize the response body stream as " + typeof(T).FullName + ".";
-                    throw new TiketApiException(message, (int)response.StatusCode, string.Empty, headers, exception);
+                    throw new TicketApiException(message, (int)response.StatusCode, string.Empty, headers, exception);
                 }
             }
         }
@@ -797,12 +797,6 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
         [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? UserId { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? UserName { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("avatar", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Avatar { get; set; } = default!;
-
         [Newtonsoft.Json.JsonProperty("replies", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<TicketReplyResponse>? Replies { get; set; } = default!;
 
@@ -823,12 +817,6 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
         [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? UserId { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? UserName { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("avatar", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Avatar { get; set; } = default!;
-
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -843,21 +831,15 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
         [Newtonsoft.Json.JsonProperty("status", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string? Status { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? UserName { get; set; } = default!;
-
         [Newtonsoft.Json.JsonProperty("userId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Guid? UserId { get; set; } = default!;
-
-        [Newtonsoft.Json.JsonProperty("avatar", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Avatar { get; set; } = default!;
 
     }
 
 
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class TiketApiException : System.Exception
+    public partial class TicketApiException : System.Exception
     {
         public int StatusCode { get; private set; }
 
@@ -865,7 +847,7 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
 
         public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
 
-        public TiketApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
+        public TicketApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, System.Exception? innerException)
             : base(message + "\n\nStatus: " + statusCode + "\nResponse: \n" + ((response == null) ? "(null)" : response.Substring(0, response.Length >= 512 ? 512 : response.Length)), innerException)
         {
             StatusCode = statusCode;
@@ -880,11 +862,11 @@ namespace Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class TiketApiException<TResult> : TiketApiException
+    public partial class TicketApiException<TResult> : TicketApiException
     {
         public TResult Result { get; private set; }
 
-        public TiketApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception? innerException)
+        public TicketApiException(string message, int statusCode, string? response, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result, System.Exception? innerException)
             : base(message, statusCode, response, headers, innerException)
         {
             Result = result;

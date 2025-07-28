@@ -14,7 +14,7 @@ export function useTicketSummaries() {
       const result = await fetchTicketSummaries();
       setTickets(result);
     } catch {
-      setError("Error cargando tickets");
+      setError("Error loading tickets");
     } finally {
       setLoading(false);
     }

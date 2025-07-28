@@ -1,14 +1,30 @@
 import type { Ticket, TicketSummary } from "../types/Ticket";
 import { API_BASE_URL } from "../../../config/apiConfig";
 
+function getAuthHeaders(): HeadersInit {
+  const token = localStorage.getItem("token");
+  return token
+    ? { Authorization: `Bearer ${token}` }
+    : {};
+}
+
 export async function fetchTicketSummaries(): Promise<TicketSummary[]> {
-  const resp = await fetch(`${API_BASE_URL}/api/Ticket`);
+  const resp = await fetch(`${API_BASE_URL}/api/Ticket`, {
+    headers: {
+      ...getAuthHeaders()
+    }
+  });
   if (!resp.ok) throw new Error("Error loading tickets");
   return resp.json();
 }
 
+
 export async function fetchTicketDetail(id: string): Promise<Ticket> {
-  const resp = await fetch(`${API_BASE_URL}/api/Ticket/${id}`);
+  const resp = await fetch(`${API_BASE_URL}/api/Ticket/${id}`, {
+    headers: {
+      ...getAuthHeaders()
+    }
+  });
   if (!resp.ok) throw new Error("Error loading ticket detail");
   return resp.json();
 }
@@ -16,7 +32,10 @@ export async function fetchTicketDetail(id: string): Promise<Ticket> {
 export async function postTicketReply(ticketId: string, text: string, userId: string): Promise<void> {
   const resp = await fetch(`${API_BASE_URL}/api/Ticket/${ticketId}/replies`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
+    },
     body: JSON.stringify({ text, userId })
   });
   if (!resp.ok) {
@@ -27,7 +46,10 @@ export async function postTicketReply(ticketId: string, text: string, userId: st
 export async function createTicket(subject: string, description: string, userId: string): Promise<void> {
   const resp = await fetch(`${API_BASE_URL}/api/Ticket`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
+    },
     body: JSON.stringify({ subject, description, userId })
   });
   if (!resp.ok) {
@@ -38,6 +60,9 @@ export async function createTicket(subject: string, description: string, userId:
 export async function markTicketAsResolved(ticketId: string): Promise<void> {
   const resp = await fetch(`${API_BASE_URL}/api/Ticket/${ticketId}/mark-as-resolved`, {
     method: "PATCH",
+    headers: {
+      ...getAuthHeaders()
+    }
   });
   if (!resp.ok) {
     throw new Error("the ticket could not be marked as resolved");

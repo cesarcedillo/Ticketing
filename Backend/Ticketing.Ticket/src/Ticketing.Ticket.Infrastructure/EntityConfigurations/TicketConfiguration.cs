@@ -21,10 +21,5 @@ public class TicketConfiguration : IEntityTypeConfiguration<TicketType>
 
     builder.Property(t => t.Status)
         .IsRequired();
-
-    builder.HasOne(t => t.User)
-        .WithMany()
-        .HasForeignKey(t => t.UserId)
-        .OnDelete(DeleteBehavior.Restrict);
   }
 }

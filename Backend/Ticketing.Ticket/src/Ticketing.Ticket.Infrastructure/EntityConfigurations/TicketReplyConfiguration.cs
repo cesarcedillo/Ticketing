@@ -21,10 +21,5 @@ public class TicketReplyConfiguration : IEntityTypeConfiguration<TicketReply>
         .WithMany(t => t.Replies)
         .HasForeignKey(r => r.TicketId)
         .OnDelete(DeleteBehavior.Cascade);
-
-    builder.HasOne(r => r.User)
-        .WithMany()
-        .HasForeignKey(r => r.UserId)
-        .OnDelete(DeleteBehavior.Restrict);
   }
 }

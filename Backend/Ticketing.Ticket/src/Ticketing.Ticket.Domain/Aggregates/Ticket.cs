@@ -12,7 +12,6 @@ public class Ticket : IAggregateRoot
   public TicketStatus Status { get; private set; } = TicketStatus.Open;
   public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
   public Guid UserId { get; private set; }
-  public User User { get; private set; } = null!;
 
   private readonly List<TicketReply> _replies = new();
   public IReadOnlyCollection<TicketReply> Replies => _replies.AsReadOnly();
@@ -23,7 +22,7 @@ public class Ticket : IAggregateRoot
 
   public Ticket() { }
 
-  public Ticket(string subject, string description, User user)
+  public Ticket(string subject, string description, Guid userId)
   {
     if (string.IsNullOrWhiteSpace(subject))
       throw new ArgumentException("Subject cannot be empty.", nameof(subject));
@@ -31,8 +30,7 @@ public class Ticket : IAggregateRoot
     if (string.IsNullOrWhiteSpace(description))
       throw new ArgumentException("Description cannot be empty.", nameof(description));
 
-    User = user ?? throw new ArgumentNullException(nameof(user), "User cannot be null.");
-    UserId = user.Id;
+    UserId = userId;
     Id = Guid.NewGuid();
     Subject = subject;
     Description = description;

@@ -65,4 +65,59 @@ public class UserServiceTests
     await act.Should().ThrowAsync<KeyNotFoundException>()
         .WithMessage($"User {userName} not found.");
   }
+
+  [Fact]
+  public async Task GetUsersByIdsAsync_UsersExist_ReturnsMappedUsers()
+  {
+    // Arrange
+    var userNames = new[] { "UserName1", "UserName2" };
+
+    var userEntities = userNames.Select(userName => _domainFixture.CreateDefaultAgent(userName)).ToList();
+    var userIds = userEntities.Select(u => u.Id).ToList();
+    var userResponses = userEntities.Select(u => new UserResponse
+    {
+      Id = u.Id,
+      UserName = u.UserName,
+      Avatar = u.Avatar,
+      Type = u.UserType.ToString()
+    }).ToList();
+
+    _userRepositoryMock
+        .Setup(repo => repo.GetByIdsAsync(userIds, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(userEntities);
+
+    for (int i = 0; i < userEntities.Count; i++)
+    {
+      _mapperMock
+          .Setup(mapper => mapper.Map<UserResponse>(userEntities[i]))
+          .Returns(userResponses[i]);
+    }
+
+    // Act
+    var result = (await _service.GetUsersByIdsAsync(userIds, CancellationToken.None)).ToList();
+
+    // Assert
+    result.Should().NotBeNull();
+    result.Should().HaveCount(userEntities.Count);
+    result.Select(r => r.Id).Should().BeEquivalentTo(userIds);
+  }
+
+  [Fact]
+  public async Task GetUsersByIdsAsync_NoUsersExist_ReturnsEmpty()
+  {
+    // Arrange
+    var userIds = new[] { Guid.NewGuid(), Guid.NewGuid() };
+
+    _userRepositoryMock
+        .Setup(repo => repo.GetByIdsAsync(userIds, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(new List<UserType>());
+
+    // Act
+    var result = await _service.GetUsersByIdsAsync(userIds, CancellationToken.None);
+
+    // Assert
+    result.Should().NotBeNull();
+    result.Should().BeEmpty();
+  }
+
 }

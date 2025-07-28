@@ -1,10 +1,13 @@
 ﻿using Auth.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
-using User.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
 using Microsoft.AspNetCore.Diagnostics;
+using Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
 using Ticketing.Core.Application.Mediatr.Behaviours.Exceptions;
+using User.Cliente.NswagAutoGen.HttpClientFactoryImplementation;
 using AuthProblemDetails = Auth.Cliente.NswagAutoGen.HttpClientFactoryImplementation.ProblemDetails;
-using UserProblemDetails = Auth.Cliente.NswagAutoGen.HttpClientFactoryImplementation.ProblemDetails;
 using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
+using TicketProblemDetails = Ticket.Cliente.NswagAutoGen.HttpClientFactoryImplementation.ProblemDetails;
+using UserProblemDetails = User.Cliente.NswagAutoGen.HttpClientFactoryImplementation.ProblemDetails;
+
 
 namespace Ticketing.BFF.API.Infrastructure;
 public class CustomExceptionHandler : IExceptionHandler
@@ -22,6 +25,7 @@ public class CustomExceptionHandler : IExceptionHandler
                 { typeof(InvalidOperationException), HandleInvalidOperationException},
                 { typeof(AuthApiException), HandleAuthApiException},
                 { typeof(UserApiException), HandleUserApiException},
+                { typeof(TicketApiException), HandleTicketApiException},
                 { typeof(Exception), HandleGenericException }
             };
   }
@@ -133,6 +137,29 @@ public class CustomExceptionHandler : IExceptionHandler
   {
     var exceptionDetailed = ex as UserApiException<UserProblemDetails>;
     var exceptionGeneral = ex as UserApiException;
+
+    var statusCode = exceptionDetailed?.Result?.Status
+              ?? exceptionGeneral?.StatusCode
+              ?? StatusCodes.Status500InternalServerError;
+
+    var detail = exceptionDetailed?.Result?.Detail
+               ?? exceptionGeneral?.Message
+               ?? "Unhandled exception";
+
+    httpContext.Response.StatusCode = statusCode;
+
+    await httpContext.Response.WriteAsJsonAsync(new HttpValidationProblemDetails()
+    {
+      Status = statusCode,
+      Title = "Client exception - " + ex.Source,
+      Detail = detail
+    });
+  }
+
+  private async Task HandleTicketApiException(HttpContext httpContext, Exception ex)
+  {
+    var exceptionDetailed = ex as TicketApiException<TicketProblemDetails>;
+    var exceptionGeneral = ex as TicketApiException;
 
     var statusCode = exceptionDetailed?.Result?.Status
               ?? exceptionGeneral?.StatusCode

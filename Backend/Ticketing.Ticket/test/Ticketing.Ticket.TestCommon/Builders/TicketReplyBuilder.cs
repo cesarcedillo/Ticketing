@@ -7,7 +7,7 @@ namespace Ticketing.Ticket.TestCommon.Builders;
 public class TicketReplyBuilder
 {
   private string _text = "Sample reply";
-  private User _user = new UserBuilder().Build();
+  private Guid _userId = Guid.NewGuid();
   private TicketType _ticket = null!;
 
   public TicketReplyBuilder WithText(string text)
@@ -16,9 +16,9 @@ public class TicketReplyBuilder
     return this;
   }
 
-  public TicketReplyBuilder WithUser(User user)
+  public TicketReplyBuilder WithUser(Guid userId)
   {
-    _user = user;
+    _userId = userId;
     return this;
   }
 
@@ -33,7 +33,7 @@ public class TicketReplyBuilder
     if (_ticket == null)
       throw new InvalidOperationException("Ticket must be provided to create a TicketReply.");
 
-    return new TicketReply(_text, _user, _ticket);
+    return new TicketReply(_text, _userId, _ticket);
   }
 }
 
