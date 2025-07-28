@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using MediatR;
 using Ticketing.User.Application.Dto.Responses;
 using Ticketing.User.Application.Services.Interfaces;
+using Ticketing.User.Domain.Enums;
 using Ticketing.User.Domain.Interfaces.Repositories;
+using UserType = Ticketing.User.Domain.Aggregates.User;
 
 namespace Ticketing.User.Application.Services;
 public class UserService : IUserService
@@ -34,5 +35,22 @@ public class UserService : IUserService
     return users.Select(u => _mapper.Map<UserResponse>(u));
   }
 
+  public async Task<UserResponse> CreateUserAsync(string userName, string avatar, string role, CancellationToken cancellationToken)
+  {
+    var existingUser = await _userRepository.GetByUserNameAsync(userName, cancellationToken);
+    if (existingUser != null)
+      throw new InvalidOperationException($"User with username '{userName}' already exists.");
+
+    if (!Enum.TryParse<Role>(role, true, out var roleEnum))
+      throw new ArgumentException($"Role '{role}' is not valid.", nameof(role));
+
+    var user = new UserType(userName, avatar, roleEnum);
+
+    await _userRepository.AddAsync(user, cancellationToken);
+
+    var userResponse = _mapper.Map<UserResponse>(user);
+
+    return userResponse;
+  }
 
 }

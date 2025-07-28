@@ -1,4 +1,5 @@
-﻿using Ticketing.Core.Domain.SeedWork.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Ticketing.Core.Domain.SeedWork.Interfaces;
 using Ticketing.Core.Infrastructure.EntityFramework.Context;
 
 namespace Ticketing.Core.Infrastructure.EntityFramework.Repositories;
@@ -19,6 +20,13 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
     return entityEntry.Entity;
   }
 
+  public async Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+  {
+    var entityEntry = await _dbContextBase.AddAsync(entity, cancellationToken);
+
+    return entityEntry.Entity;
+  }
+
   public void Delete(int id)
   {
     var entity = GetById(id);
@@ -33,10 +41,19 @@ public abstract class GenericRepository<TEntity> : IGenericRepository<TEntity> w
   {
     return _dbContextBase.Set<TEntity>().ToList();
   }
+  public async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+  {
+    return await _dbContextBase.Set<TEntity>().ToListAsync(cancellationToken);
+  }
 
   public TEntity? GetById(int id)
   {
     return _dbContextBase.Set<TEntity>().Find(id);
+  }
+
+  public async Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+  {
+    return await _dbContextBase.Set<TEntity>().FindAsync(id, cancellationToken);
   }
 
   public TEntity Update(TEntity entity)

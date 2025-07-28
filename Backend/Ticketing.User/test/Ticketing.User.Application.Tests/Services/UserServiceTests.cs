@@ -4,7 +4,9 @@ using Moq;
 using System.Reflection.Metadata;
 using Ticketing.User.Application.Dto.Responses;
 using Ticketing.User.Application.Services;
+using Ticketing.User.Domain.Enums;
 using Ticketing.User.Domain.Interfaces.Repositories;
+using Ticketing.User.TestCommon.Builders;
 using Ticketing.User.TestCommon.Fixtures;
 using UserType = Ticketing.User.Domain.Aggregates.User;
 
@@ -119,5 +121,116 @@ public class UserServiceTests
     result.Should().NotBeNull();
     result.Should().BeEmpty();
   }
+
+  [Fact]
+  public async Task CreateUserAsync_Should_Create_User_If_Not_Exists()
+  {
+    // Arrange
+    var userName = "testuser";
+    var createdUser = _domainFixture.CreateDefaultAgent(userName);
+    var userResponse = new UserResponse { UserName = userName, Avatar = createdUser.Avatar, Type = createdUser.UserType.ToString() };
+
+    _userRepositoryMock
+        .Setup(repo => repo.GetByUserNameAsync(userName, It.IsAny<CancellationToken>()))
+        .ReturnsAsync((UserType)null);
+
+
+    _userRepositoryMock
+        .Setup(repo => repo.AddAsync(It.IsAny<UserType>(), It.IsAny<CancellationToken>()))
+        .ReturnsAsync(createdUser);
+       
+    _mapperMock
+        .Setup(mapper => mapper.Map<UserResponse>(It.IsAny<UserType>()))
+        .Returns(userResponse);
+
+    // Act
+    var result = await _service.CreateUserAsync(userName, createdUser.Avatar, createdUser.UserType.ToString(), CancellationToken.None);
+
+    // Assert
+    result.Should().NotBeNull();
+    result.UserName.Should().Be(userName);
+    result.Avatar.Should().Be(createdUser.Avatar);
+    result.Type.Should().Be(createdUser.UserType.ToString());
+  }
+
+  [Fact]
+  public async Task CreateUserAsync_Should_Throw_When_User_Already_Exists()
+  {
+    // Arrange
+    var userName = "existinguser";
+    var avatar = "avatarUrl";
+    var role = "Agent";
+    var existingUser = _domainFixture.CreateDefaultAgent(userName);
+
+    _userRepositoryMock
+        .Setup(repo => repo.GetByUserNameAsync(userName, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(existingUser);
+
+    // Act
+    Func<Task> act = async () => await _service.CreateUserAsync(userName, avatar, role, CancellationToken.None);
+
+    // Assert
+    await act.Should().ThrowAsync<InvalidOperationException>()
+        .WithMessage($"User with username '{userName}' already exists.");
+  }
+
+  [Fact]
+  public async Task CreateUserAsync_Should_Throw_When_Role_Is_Invalid()
+  {
+    // Arrange
+    var userName = "newuser";
+    var avatar = "avatarUrl";
+    var role = "NotARole";
+
+    _userRepositoryMock
+        .Setup(repo => repo.GetByUserNameAsync(userName, It.IsAny<CancellationToken>()))
+        .ReturnsAsync((UserType)null);
+
+    // Act
+    Func<Task> act = async () => await _service.CreateUserAsync(userName, avatar, role, CancellationToken.None);
+
+    // Assert
+    await act.Should().ThrowAsync<ArgumentException>()
+        .WithMessage($"Role '{role}' is not valid. (Parameter 'role')");
+  }
+
+  [Fact]
+  public async Task CreateUserAsync_Should_Map_UserResponse_Correctly()
+  {
+    // Arrange
+    var userName = "mapuser";
+    var avatar = "avatarUrl";
+    var role = Role.Admin;
+    var userResponse = new UserResponse
+    {
+      UserName = userName,
+      Avatar = avatar,
+      Type = role.ToString()
+    };
+    var createdUser = new UserBuilder()
+        .WithUsername(userName)
+        .WithAvatar(avatar)
+        .WithUserType(Role.Admin)
+        .Build();
+
+    _userRepositoryMock
+        .Setup(repo => repo.GetByUserNameAsync(userName, It.IsAny<CancellationToken>()))
+        .ReturnsAsync((UserType)null);
+
+    _userRepositoryMock
+        .Setup(repo => repo.AddAsync(It.IsAny<UserType>(), It.IsAny<CancellationToken>()))
+        .ReturnsAsync(createdUser);
+
+    _mapperMock
+        .Setup(mapper => mapper.Map<UserResponse>(It.IsAny<UserType>()))
+        .Returns(userResponse);
+
+    // Act
+    var result = await _service.CreateUserAsync(userName, avatar, role.ToString(), CancellationToken.None);
+
+    // Assert
+    result.Should().BeEquivalentTo(userResponse);
+  }
+
 
 }

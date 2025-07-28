@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Ticketing.User.Application.Commands.CreateUser;
+using Ticketing.User.Application.Dto.Requests;
 using Ticketing.User.Application.Dto.Responses;
 using Ticketing.User.Application.Queries.GetUserByName;
 using Ticketing.User.Application.Queries.GetUsersByIds;
@@ -10,8 +12,8 @@ public static class UserEndpoints
   public static void MapUserEndpoints(this WebApplication app)
   {
     app.MapGroup("api/User")
-        .RequireAuthorization()
-      .MapUserGetEndpoints();
+      .MapUserGetEndpoints()
+      .MapUserPostEndpoints();
   }
 
   public static RouteGroupBuilder MapUserGetEndpoints(this RouteGroupBuilder group)
@@ -28,6 +30,19 @@ public static class UserEndpoints
         .WithName("GetUsersByIds")
         .RequireAuthorization()
         .Produces<List<UserResponse>>(StatusCodes.Status200OK)
+        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+        .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
+    return group;
+  }
+
+  public static RouteGroupBuilder MapUserPostEndpoints(this RouteGroupBuilder group)
+  {
+    group.MapPost("", CreateUser)
+    .WithName("CreateUser")
+        .RequireAuthorization()
+        .Produces<UserResponse>(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
@@ -54,6 +69,16 @@ public static class UserEndpoints
     var query = new GetUsersByIdsQuery(userIds);
     var result = await mediator.Send(query, cancellationToken);
 
+    return Results.Ok(result);
+  }
+
+  public static async Task<IResult> CreateUser(
+      [FromBody] UserRequest userRequest,
+      IMediator mediator,
+      CancellationToken cancellationToken)
+  {
+    var command = new CreateUserCommand(userRequest.UserName, userRequest.Avatar, userRequest.Role);
+    var result = await mediator.Send(command, cancellationToken);
     return Results.Ok(result);
   }
 

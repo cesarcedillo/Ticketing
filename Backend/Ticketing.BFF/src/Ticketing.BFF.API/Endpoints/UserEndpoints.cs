@@ -2,7 +2,9 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using Ticketing.BFF.Application.Commands.User.CreateUser;
 using Ticketing.BFF.Application.Commands.User.Login;
+using Ticketing.BFF.Application.Dto.Requests;
 using Ticketing.BFF.Application.Dto.Responses;
 using Ticketing.BFF.Application.Querires.User.GetUserByName;
 using ProblemDetails = Microsoft.AspNetCore.Mvc.ProblemDetails;
@@ -39,6 +41,13 @@ public static class UserEndpoints
 
     group.MapPost("/Me", Me)
         .WithName("Me")
+        .RequireAuthorization()
+        .Produces<UserResponseBff>(StatusCodes.Status200OK)
+        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
+    group.MapPost("", CreateUser)
+        .WithName("CreateUser")
         .RequireAuthorization()
         .Produces<UserResponseBff>(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
@@ -87,6 +96,16 @@ public static class UserEndpoints
     if (result is null)
       return Results.NotFound();
 
+    return Results.Ok(result);
+  }
+
+  public static async Task<IResult> CreateUser(
+      [FromBody] UserRequestBff userRequest,
+      IMediator mediator,
+      CancellationToken cancellationToken)
+  {
+    var command = new CreateUserCommandBff(userRequest.UserName, userRequest.Avatar, userRequest.Role);
+    var result = await mediator.Send(command, cancellationToken);
     return Results.Ok(result);
   }
 }
