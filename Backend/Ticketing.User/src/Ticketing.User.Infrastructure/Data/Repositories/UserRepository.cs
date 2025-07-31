@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using Ticketing.Core.Infrastructure.EntityFramework.Context;
 using Ticketing.Core.Infrastructure.EntityFramework.Repositories;
 using Ticketing.User.Domain.Interfaces.Repositories;
 using UserType = Ticketing.User.Domain.Aggregates.User;
@@ -36,5 +37,14 @@ public class UserRepository : GenericRepository<UserType>, IUserRepository
         .ToListAsync(cancellationToken);
   }
 
+  public async Task DeleteAsync(Guid userId, CancellationToken cancellationToken = default)
+  {
+    var user = await GetByIdAsync(userId, cancellationToken);
+
+    if (user is not null)
+    {
+      _dbContext.Remove(user);
+    }
+  }
 
 }

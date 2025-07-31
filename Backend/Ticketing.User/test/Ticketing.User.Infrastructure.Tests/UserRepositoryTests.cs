@@ -116,4 +116,38 @@ public class UserRepositoryTests
     result.First().Id.Should().Be(existingUser.Id);
   }
 
+  [Fact]
+  public async Task DeleteAsync_Should_Remove_User_When_Exists()
+  {
+    // Arrange
+    var repo = new UserRepository(_context);
+    var user = await _context.Users.FirstAsync();
+
+    // Act
+    await repo.DeleteAsync(user.Id);
+    await _context.SaveChangesAsync(); 
+
+    // Assert
+    var deletedUser = await _context.Users.FindAsync(user.Id);
+    deletedUser.Should().BeNull();
+  }
+
+  [Fact]
+  public async Task DeleteAsync_Should_Not_Throw_When_User_Does_Not_Exist()
+  {
+    // Arrange
+    var repo = new UserRepository(_context);
+    var nonExistentId = Guid.NewGuid();
+
+    // Act
+    Func<Task> act = async () =>
+    {
+      await repo.DeleteAsync(nonExistentId);
+      await _context.SaveChangesAsync();
+    };
+
+    // Assert
+    await act.Should().NotThrowAsync();
+  }
+
 }

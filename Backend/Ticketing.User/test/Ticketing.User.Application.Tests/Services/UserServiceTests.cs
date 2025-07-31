@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Moq;
-using System.Reflection.Metadata;
 using Ticketing.User.Application.Dto.Responses;
 using Ticketing.User.Application.Services;
 using Ticketing.User.Domain.Enums;
@@ -232,5 +231,46 @@ public class UserServiceTests
     result.Should().BeEquivalentTo(userResponse);
   }
 
+  [Fact]
+  public async Task DeleteUserAsync_UserExists_Should_Call_DeleteAsync()
+  {
+    // Arrange
+    var userName = "deletableUser";
+    var user = _domainFixture.CreateDefaultAgent(userName);
+
+    _userRepositoryMock
+        .Setup(repo => repo.GetByUserNameAsync(userName, It.IsAny<CancellationToken>()))
+        .ReturnsAsync(user);
+
+    _userRepositoryMock
+        .Setup(repo => repo.DeleteAsync(user.Id, It.IsAny<CancellationToken>()))
+        .Returns(Task.CompletedTask)
+        .Verifiable();
+
+    // Act
+    await _service.DeleteUserAsync(userName, CancellationToken.None);
+
+    // Assert
+    _userRepositoryMock.Verify(repo => repo.DeleteAsync(user.Id, It.IsAny<CancellationToken>()), Times.Once);
+  }
+
+
+  [Fact]
+  public async Task DeleteUserAsync_UserDoesNotExist_Should_Throw_KeyNotFoundException()
+  {
+    // Arrange
+    var userName = "nonexistentUser";
+
+    _userRepositoryMock
+        .Setup(repo => repo.GetByUserNameAsync(userName, It.IsAny<CancellationToken>()))
+        .ReturnsAsync((UserType)null);
+
+    // Act
+    Func<Task> act = async () => await _service.DeleteUserAsync(userName, CancellationToken.None);
+
+    // Assert
+    await act.Should().ThrowAsync<KeyNotFoundException>()
+        .WithMessage($"User '{userName}' not found.");
+  }
 
 }

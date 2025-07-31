@@ -53,4 +53,15 @@ public class UserService : IUserService
     return userResponse;
   }
 
+  public async Task DeleteUserAsync(string userName, CancellationToken cancellationToken)
+  {
+    var user = await _userRepository.GetByUserNameAsync(userName, cancellationToken);
+
+    if (user == null)
+      throw new KeyNotFoundException($"User '{userName}' not found.");
+
+    await _userRepository.DeleteAsync(user.Id, cancellationToken);
+  }
+
+
 }

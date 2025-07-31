@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Ticketing.User.Application.Commands.CreateUser;
+using Ticketing.User.Application.Commands.DeleteUser;
 using Ticketing.User.Application.Dto.Requests;
 using Ticketing.User.Application.Dto.Responses;
 using Ticketing.User.Application.Queries.GetUserByName;
@@ -13,7 +14,8 @@ public static class UserEndpoints
   {
     app.MapGroup("api/User")
       .MapUserGetEndpoints()
-      .MapUserPostEndpoints();
+      .MapUserPostEndpoints()
+      .MapUserDeleteEndpoints();
   }
 
   public static RouteGroupBuilder MapUserGetEndpoints(this RouteGroupBuilder group)
@@ -43,6 +45,19 @@ public static class UserEndpoints
     .WithName("CreateUser")
         .RequireAuthorization()
         .Produces<UserResponse>(StatusCodes.Status200OK)
+        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+        .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
+    return group;
+  }
+
+  public static RouteGroupBuilder MapUserDeleteEndpoints(this RouteGroupBuilder group)
+  {
+    group.MapPost("{userName}", DeleteUser)
+    .WithName("DeleteUser")
+        .RequireAuthorization()
+        .Produces(StatusCodes.Status204NoContent)
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status404NotFound)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
@@ -81,5 +96,14 @@ public static class UserEndpoints
     var result = await mediator.Send(command, cancellationToken);
     return Results.Ok(result);
   }
+
+  private static async Task<IResult> DeleteUser(string userName, 
+                                                  IMediator mediator, 
+                                                  CancellationToken cancellationToken)
+  {
+    await mediator.Send(new DeleteUserCommand(userName), cancellationToken);
+    return Results.NoContent();
+  }
+
 
 }
