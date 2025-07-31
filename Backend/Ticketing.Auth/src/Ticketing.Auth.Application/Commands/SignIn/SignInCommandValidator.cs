@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 
-namespace Ticketing.Auth.Application.Commands.Login;
-public class LoginCommandValidator : AbstractValidator<LoginCommand>
+namespace Ticketing.Auth.Application.Commands.SignIn;
+public class SignInCommandValidator : AbstractValidator<SignInCommand>
 {
-  public LoginCommandValidator()
+  public SignInCommandValidator()
   {
     RuleFor(x => x.UserName)
         .NotEmpty().WithMessage("Username is required.")

@@ -2,7 +2,7 @@
 
 namespace Ticketing.Auth.Application.Dtos.Responses;
 
-public class LoginResponse
+public class SignInResponse
 {
   public bool Success { get; set; }
   public string? Message { get; set; }
@@ -12,11 +12,11 @@ public class LoginResponse
   public string? UserName { get; set; }
   public string? Role { get; set; }
 
-  public static LoginResponse Failure(string message)
-      => new LoginResponse { Success = false, Message = message };
+  public static SignInResponse Failure(string message)
+      => new SignInResponse { Success = false, Message = message };
 
-  public static LoginResponse SuccessResult(string accessToken, DateTime expiration, string userName, string role)
-      => new LoginResponse
+  public static SignInResponse SuccessResult(string accessToken, DateTime expiration, string userName, string role)
+      => new SignInResponse
       {
         Success = true,
         AccessToken = accessToken,

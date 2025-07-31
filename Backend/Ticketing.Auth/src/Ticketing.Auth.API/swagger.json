@@ -5,17 +5,17 @@
     "version": "v1"
   },
   "paths": {
-    "/api/auth/login": {
+    "/api/auth/signin": {
       "post": {
         "tags": [
           "AuthEndpoints"
         ],
-        "operationId": "Login",
+        "operationId": "SignIn",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
+                "$ref": "#/components/schemas/SingInRequest"
               }
             }
           },
@@ -27,7 +27,57 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/SignInResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "tags": [
+          "AuthEndpoints"
+        ],
+        "operationId": "SignUp",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SingUpRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignInResponse"
                 }
               }
             }
@@ -98,21 +148,34 @@
   },
   "components": {
     "schemas": {
-      "LoginRequest": {
+      "ProblemDetails": {
         "type": "object",
-        "additionalProperties": false,
+        "additionalProperties": {},
         "properties": {
-          "username": {
+          "type": {
             "type": "string",
             "nullable": true
           },
-          "password": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
             "type": "string",
             "nullable": true
           }
         }
       },
-      "LoginResponse": {
+      "SignInResponse": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -142,28 +205,33 @@
           }
         }
       },
-      "ProblemDetails": {
+      "SingInRequest": {
         "type": "object",
-        "additionalProperties": {},
+        "additionalProperties": false,
         "properties": {
-          "type": {
+          "username": {
             "type": "string",
             "nullable": true
           },
-          "title": {
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SingUpRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "username": {
             "type": "string",
             "nullable": true
           },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
+          "role": {
             "type": "string",
             "nullable": true
           },
-          "instance": {
+          "password": {
             "type": "string",
             "nullable": true
           }

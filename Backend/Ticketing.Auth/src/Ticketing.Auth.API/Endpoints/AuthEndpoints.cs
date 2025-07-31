@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Ticketing.Auth.Application.Commands.Login;
+using Ticketing.Auth.Application.Commands.SignIn;
+using Ticketing.Auth.Application.Commands.SignUp;
 using Ticketing.Auth.Application.Dtos.Requests;
 using Ticketing.Auth.Application.Dtos.Responses;
 using Ticketing.Auth.Application.Queries.GetUserByName;
@@ -19,9 +20,15 @@ public static class AuthEndpoints
 
   public static RouteGroupBuilder MapAuthPostEndpoints(this RouteGroupBuilder group)
   {
-    group.MapPost("/login", Login)
-        .WithName("Login")
-        .Produces<LoginResponse>(StatusCodes.Status200OK)
+    group.MapPost("/signin", SignIn)
+        .WithName("SignIn")
+        .Produces<SignInResponse>(StatusCodes.Status200OK)
+        .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
+        .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
+
+    group.MapPost("/signup", SignUp)
+        .WithName("SignUp")
+        .Produces<SignInResponse>(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
 
@@ -40,16 +47,27 @@ public static class AuthEndpoints
     return group;
   }
 
-  public static async Task<IResult> Login(
-      [FromBody] LoginRequest request,
+  public static async Task<IResult> SignIn(
+      [FromBody] SingInRequest request,
       IMediator mediator,
       CancellationToken cancellationToken)
   {
-    var command = new LoginCommand(request.Username, request.Password);
+    var command = new SignInCommand(request.Username, request.Password);
     var result = await mediator.Send(command, cancellationToken);
 
     if (!result.Success)
       return Results.Unauthorized();
+
+    return Results.Ok(result);
+  }
+
+  public static async Task<IResult> SignUp(
+      [FromBody] SingUpRequest request,
+      IMediator mediator,
+      CancellationToken cancellationToken)
+  {
+    var command = new SignUpCommand(request.Username, request.Password, request.Role);
+    var result = await mediator.Send(command, cancellationToken);
 
     return Results.Ok(result);
   }

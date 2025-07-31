@@ -1,5 +1,7 @@
 ﻿using Ticketing.Auth.Application.Dtos.Responses;
 using Ticketing.Auth.Application.Services.Interfaces;
+using Ticketing.Auth.Domain.Aggregates;
+using Ticketing.Auth.Domain.Enums;
 using Ticketing.Auth.Domain.Interfaces;
 
 namespace Ticketing.Auth.Application.Services;
@@ -17,15 +19,15 @@ public class AuthService : IAuthService
     _jwtTokenGenerator = jwtTokenGenerator;
   }
 
-  public async Task<LoginResponse> LoginAsync(string userName, string password, CancellationToken cancellationToken)
+  public async Task<SignInResponse> SignInAsync(string userName, string password, CancellationToken cancellationToken)
   {
     var user = await _userRepository.GetByUserNameAsync(userName, cancellationToken);
     if (user == null || !_passwordHasher.Verify(password, user.PasswordHash))
-      return LoginResponse.Failure("Invalid credentials");
+      return SignInResponse.Failure("Invalid credentials");
 
     var tokenInfo = _jwtTokenGenerator.GenerateToken(user); // token y fecha
 
-    return LoginResponse.SuccessResult(
+    return SignInResponse.SuccessResult(
         tokenInfo.Token,
         tokenInfo.Expiration,
         user.UserName,
@@ -33,5 +35,22 @@ public class AuthService : IAuthService
     );
   }
 
+  public async Task<SignInResponse> SignUpAsync(string userName, string password, Role role, CancellationToken cancellationToken)
+  {
+    var existingUser = await _userRepository.GetByUserNameAsync(userName, cancellationToken);
+    if (existingUser is not null)
+      throw new InvalidOperationException($"User with username '{userName}' already exists.");
 
+    var hashedPassword = _passwordHasher.Hash(password);
+    var user = new User(userName, hashedPassword, role);
+    await _userRepository.AddAsync(user, cancellationToken);
+    var token = _jwtTokenGenerator.GenerateToken(user);
+
+    return SignInResponse.SuccessResult(
+        token.Token,
+        token.Expiration,
+        user.UserName,
+        user.Role.ToString()
+    );
+  }
 }
