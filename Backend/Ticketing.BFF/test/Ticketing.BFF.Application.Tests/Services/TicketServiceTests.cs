@@ -237,30 +237,32 @@ public class TicketServiceTests
     // Arrange
     string? status = null;
     Guid? userId = null;
-    var tickets = new List<TicketResponse>();
-    var ticketBffs = new List<TicketResponseBff>();
+
+    var tickets = new List<TicketResponse>(); 
+    var ticketBffs = new List<TicketResponseBff>(); 
     var users = new List<UserResponse>();
 
     _ticketClientMock
         .Setup(c => c.ListTicketsAsync(status, userId, It.IsAny<CancellationToken>()))
         .ReturnsAsync(tickets);
 
-    _userClientMock
-        .Setup(c => c.GetUsersByIdsAsync(It.IsAny<HashSet<Guid>>(), It.IsAny<CancellationToken>()))
-        .ReturnsAsync(users);
-
     _mapperMock
         .Setup(m => m.Map<IReadOnlyList<TicketResponseBff>>(tickets))
         .Returns(ticketBffs);
+
+    _userClientMock
+        .Setup(c => c.GetUsersByIdsAsync(It.IsAny<HashSet<Guid>>(), It.IsAny<CancellationToken>()))
+        .ReturnsAsync(users);
 
     // Act
     var result = await _service.ListTicketsAsync(status, userId, CancellationToken.None);
 
     // Assert
     result.Should().BeEmpty();
+
     _ticketClientMock.Verify(c => c.ListTicketsAsync(status, userId, It.IsAny<CancellationToken>()), Times.Once);
-    _userClientMock.Verify(c => c.GetUsersByIdsAsync(It.IsAny<HashSet<Guid>>(), It.IsAny<CancellationToken>()), Times.Once);
     _mapperMock.Verify(m => m.Map<IReadOnlyList<TicketResponseBff>>(tickets), Times.Once);
+    _userClientMock.Verify(c => c.GetUsersByIdsAsync(It.IsAny<HashSet<Guid>>(), It.IsAny<CancellationToken>()), Times.Never);
   }
 
 

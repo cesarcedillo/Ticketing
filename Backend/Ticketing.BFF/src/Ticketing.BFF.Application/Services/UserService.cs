@@ -24,12 +24,12 @@ public class UserService : IUserService
 
   public async Task<LoginResponseBff> LoginAsync(string userName, string password, CancellationToken cancellationToken)
   {
-    var loginRequest = new LoginRequest
+    var singInRequest = new SingInRequest
     {
       Username = userName,
       Password = password
     };
-    var loginResponse = _mapper.Map<LoginResponseBff>(await _authClient.LoginAsync(loginRequest, cancellationToken));
+    var loginResponse = _mapper.Map<LoginResponseBff>(await _authClient.SignInAsync(singInRequest, cancellationToken));
 
     if (loginResponse.Success && !string.IsNullOrEmpty(loginResponse.AccessToken))
     {
@@ -48,5 +48,39 @@ public class UserService : IUserService
     return userResponse;
   }
 
+  public async Task<UserResponseBff> CreateUserAsync(string userName, string password, string avatar, string role, CancellationToken cancellationToken)
+  {
+    var userRequest = new UserRequest
+    {
+      UserName = userName,
+      Avatar = password,
+      Role = role
+    };
+
+    var createdUser = await _userClient.CreateUserAsync(userRequest, cancellationToken);
+
+    try
+    {
+      var signUpRequest = new SingUpRequest
+      {
+        Username = userName,
+        Password = password
+      };
+      await _authClient.SignUpAsync(signUpRequest, cancellationToken);
+
+      return new UserResponseBff
+      {
+        Id = createdUser.Id!.Value.ToString(),
+        UserName = createdUser.UserName!,
+        Avatar = createdUser.Avatar!,
+        Type = createdUser.Type!
+      };
+    }
+    catch (Exception ex)
+    {
+      await _userClient.DeleteUserAsync(userName, cancellationToken);
+      throw new InvalidOperationException("Error creating credentials. User rolled back.", ex);
+    }
+  }
 }
 

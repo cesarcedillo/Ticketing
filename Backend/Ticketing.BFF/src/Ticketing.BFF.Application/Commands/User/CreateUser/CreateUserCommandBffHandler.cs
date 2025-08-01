@@ -14,7 +14,6 @@ public class CreateUserCommandBffHandler : IRequestHandler<CreateUserCommandBff,
 
   public async Task<UserResponseBff> Handle(CreateUserCommandBff command, CancellationToken cancellationToken)
   {
-    //return await _userService.CreateUserAsync(command.UserName, command.Avatar, command.Role, cancellationToken);
-    return new UserResponseBff();
+    return await _userService.CreateUserAsync(command.UserName, command.Password, command.Avatar, command.Role, cancellationToken);    
   }
 }

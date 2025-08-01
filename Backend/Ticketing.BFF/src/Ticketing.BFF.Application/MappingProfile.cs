@@ -12,9 +12,9 @@ public class MappingProfile : Profile
 {
   public MappingProfile()
   {
-    CreateMap<LoginCommandBff, LoginRequest>();
+    CreateMap<LoginCommandBff, SingInRequest>();
     CreateMap<CreateTicketRequestBff, CreateTicketCommandBff>();
-    CreateMap<LoginResponse, LoginResponseBff>()
+    CreateMap<SignInResponse, LoginResponseBff>()
         .ForMember(dest => dest.Expiration, opt => opt.MapFrom(src => src.Expiration.HasValue ? 
                                                     src.Expiration.Value.UtcDateTime : 
                                                     (DateTime?)null));

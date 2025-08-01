@@ -33,8 +33,8 @@ public static class UserEndpoints
   }
   public static RouteGroupBuilder MapUserPostEndpoints(this RouteGroupBuilder group)
   {
-    group.MapPost("/login", Login)
-        .WithName("Login")
+    group.MapPost("/signin", SignIn)
+        .WithName("SignIn")
         .Produces<LoginResponseBff>(StatusCodes.Status200OK)
         .Produces<ProblemDetails>(StatusCodes.Status401Unauthorized)
         .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError);
@@ -56,8 +56,8 @@ public static class UserEndpoints
     return group;
   }
 
-  public static async Task<IResult> Login(
-      [FromBody] LoginRequest request,
+  public static async Task<IResult> SignIn(
+      [FromBody] SingInRequest request,
       IMediator mediator,
       CancellationToken cancellationToken)
   {
@@ -104,7 +104,7 @@ public static class UserEndpoints
       IMediator mediator,
       CancellationToken cancellationToken)
   {
-    var command = new CreateUserCommandBff(userRequest.UserName, userRequest.Avatar, userRequest.Role);
+    var command = new CreateUserCommandBff(userRequest.UserName, userRequest.Password, userRequest.Avatar, userRequest.Role);
     var result = await mediator.Send(command, cancellationToken);
     return Results.Ok(result);
   }
