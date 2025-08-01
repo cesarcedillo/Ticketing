@@ -47,6 +47,7 @@ public class UserService : IUserService
     var user = new UserType(userName, avatar, roleEnum);
 
     await _userRepository.AddAsync(user, cancellationToken);
+    await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
 
     var userResponse = _mapper.Map<UserResponse>(user);
 
@@ -61,6 +62,7 @@ public class UserService : IUserService
       throw new KeyNotFoundException($"User '{userName}' not found.");
 
     await _userRepository.DeleteAsync(user.Id, cancellationToken);
+    await _userRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
   }
 
 

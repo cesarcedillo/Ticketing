@@ -106,7 +106,7 @@ services:
       # OpenTelemetry config
       - PropertiesToTrace=Id
       - TraceContents=false
-      - ServiceName=UserService
+      - ServiceName=BffService
       - ExcludedPaths=swagger,health
       - AgentHost=zipkin
       - AgentPort=9411
@@ -114,7 +114,7 @@ services:
       # Logging config
       - MinimumLevel=Verbose
       - Sink=Console
-      - FilePath=Logs/UserService.log
+      - FilePath=Logs/BffService.log
 
       # Client config
       - AuthClientUrl=http://ticketing-ticket-auth/,

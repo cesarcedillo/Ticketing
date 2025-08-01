@@ -49,7 +49,7 @@ public static class DependencyInjection
     services.AddHttpClient(
                     nameof(TicketClient),
                     configureClient => configureClient.BaseAddress = new Uri(configuration["TicketClientUrl"] ??
-                    throw new Exception("UserClientUrl not exits in the configuration")))
+                    throw new Exception("TicketClientUrl not exits in the configuration")))
             .AddHttpMessageHandler<PropagateBearerTokenHandler>();
 
     return services;

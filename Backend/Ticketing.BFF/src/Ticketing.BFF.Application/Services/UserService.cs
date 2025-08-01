@@ -53,7 +53,7 @@ public class UserService : IUserService
     var userRequest = new UserRequest
     {
       UserName = userName,
-      Avatar = password,
+      Avatar = avatar,
       Role = role
     };
 
@@ -64,7 +64,8 @@ public class UserService : IUserService
       var signUpRequest = new SingUpRequest
       {
         Username = userName,
-        Password = password
+        Password = password,
+        Role = role
       };
       await _authClient.SignUpAsync(signUpRequest, cancellationToken);
 

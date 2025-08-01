@@ -19,7 +19,7 @@ public class PropagateBearerTokenHandler : DelegatingHandler
     if (string.IsNullOrEmpty(token))
     {
       var authHeader = context?.Request.Headers["Authorization"].FirstOrDefault();
-      if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
+      if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
         token = authHeader.Substring("Bearer ".Length);
     }
 
