@@ -47,9 +47,10 @@ public class TicketService : ITicketService
 
     var ticketDetail = _mapper.Map<TicketDetailResponseBff>(ticket);
 
+    var userIds = new HashSet<Guid> { ticket.UserId!.Value };
+
     if (ticketDetail.Replies.Count > 0)
     {
-      var userIds = new HashSet<Guid> { ticket.UserId!.Value };
       userIds.UnionWith(ticket.Replies!.Select(r => r.UserId!.Value));
 
       var users = await _userClient.GetUsersByIdsAsync(userIds, cancellationToken);
@@ -62,8 +63,15 @@ public class TicketService : ITicketService
         reply.User = _mapper.Map<UserResponseBff>(usersDict[replyUserId]);
       }
     }
+    else
+    {
+      var users = await _userClient.GetUsersByIdsAsync(userIds, cancellationToken);
+      var usersDict = users.ToDictionary(u => u.Id!.Value);
 
-    return ticketDetail;
+      ticketDetail.User = _mapper.Map<UserResponseBff>(usersDict[ticket.UserId!.Value]);
+    }
+
+      return ticketDetail;
   }
 
   public async Task<IReadOnlyList<TicketResponseBff>> ListTicketsAsync(string? status, Guid? userId, CancellationToken cancellationToken)
