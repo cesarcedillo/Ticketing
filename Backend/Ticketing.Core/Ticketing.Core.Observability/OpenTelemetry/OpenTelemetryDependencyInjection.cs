@@ -8,7 +8,6 @@ using Ticketing.Core.Observability.OpenTelemetry.Options;
 namespace Ticketing.Core.Observability.OpenTelemetry;
 public static class OpenTelemetryDependencyInjection
 {
-  [ExcludeFromCodeCoverage]
   public static IServiceCollection AddOpenTelemetryCustom(this IServiceCollection services, OpenTelemetryOptions options)
   {
     var resourceAttributes = new Dictionary<string, object> {

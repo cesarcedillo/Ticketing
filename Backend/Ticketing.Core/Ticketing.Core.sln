@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Core.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Core.Observability", "Ticketing.Core.Observability\Ticketing.Core.Observability.csproj", "{58CCFFFB-F0A9-9905-0356-3A05AFF2327B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Core.Service.Messenger", "Ticketing.Core.Service.Messenger\Ticketing.Core.Service.Messenger.csproj", "{158262A2-B7E0-47FD-99D1-EE46AB5CFCA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Core.Service.IntegrationEvents", "Ticketing.Core.Service.IntegrationEvents\Ticketing.Core.Service.IntegrationEvents.csproj", "{978757A8-3275-41B4-890D-4D2086AFE251}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Core.Service.Messenger.RabbitMQ", "Ticketing.Core.Service.Messenger.RabbitMQ\Ticketing.Core.Service.Messenger.RabbitMQ.csproj", "{148CF153-EB2A-4875-871F-EF1CA7E33125}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +39,18 @@ Global
 		{58CCFFFB-F0A9-9905-0356-3A05AFF2327B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58CCFFFB-F0A9-9905-0356-3A05AFF2327B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58CCFFFB-F0A9-9905-0356-3A05AFF2327B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{158262A2-B7E0-47FD-99D1-EE46AB5CFCA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{158262A2-B7E0-47FD-99D1-EE46AB5CFCA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{158262A2-B7E0-47FD-99D1-EE46AB5CFCA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{158262A2-B7E0-47FD-99D1-EE46AB5CFCA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{978757A8-3275-41B4-890D-4D2086AFE251}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{978757A8-3275-41B4-890D-4D2086AFE251}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{978757A8-3275-41B4-890D-4D2086AFE251}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{978757A8-3275-41B4-890D-4D2086AFE251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{148CF153-EB2A-4875-871F-EF1CA7E33125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{148CF153-EB2A-4875-871F-EF1CA7E33125}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{148CF153-EB2A-4875-871F-EF1CA7E33125}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{148CF153-EB2A-4875-871F-EF1CA7E33125}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
