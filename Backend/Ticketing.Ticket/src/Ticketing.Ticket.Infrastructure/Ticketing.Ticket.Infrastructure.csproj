@@ -12,10 +12,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Ticketing.Core.Infrastructure.EntityFramework" Version="1.0.0" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\Ticketing.Ticket.Domain\Ticketing.Ticket.Domain.csproj" />
 	</ItemGroup>
 

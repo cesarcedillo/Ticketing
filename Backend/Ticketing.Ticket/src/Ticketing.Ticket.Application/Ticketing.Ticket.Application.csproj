@@ -9,10 +9,14 @@
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Ticketing.Core.Application.Mediatr.Behaviours" Version="1.0.0" />
+		<PackageReference Include="Ticketing.Core.Service.IntegrationEvents" Version="1.0.0" />
+		<PackageReference Include="Ticketing.Core.Service.Messenger" Version="1.2.0" />
+		<PackageReference Include="Ticketing.Core.Service.Messenger.RabbitMQ" Version="1.2.0" />
 	</ItemGroup>
 
 	<ItemGroup>

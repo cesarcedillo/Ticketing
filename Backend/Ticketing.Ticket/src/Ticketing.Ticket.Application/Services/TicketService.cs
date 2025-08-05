@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Azure.Core;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Ticketing.Core.Service.Messenger.Interfaces;
 using Ticketing.Ticket.Application.Dtos.Responses;
+using Ticketing.Ticket.Application.IntegrationEvents.Constants.Topics;
+using Ticketing.Ticket.Application.IntegrationEvents.Dtos;
 using Ticketing.Ticket.Application.Services.Interfaces;
 using Ticketing.Ticket.Domain.Interfaces.Repositories;
 using TicketType = Ticketing.Ticket.Domain.Aggregates.Ticket;
@@ -12,11 +15,14 @@ namespace Ticketing.Ticket.Application.Services;
 public class TicketService : ITicketService
 {
   private readonly ITicketRepository _ticketRepository;
+  private readonly IMessengerSendService _messengerSendService;
   private readonly IMapper _mapper;
 
-  public TicketService(ITicketRepository ticketRepository, IMapper mapper)
+  public TicketService(ITicketRepository ticketRepository,
+      IMessengerSendService messengerSendService, IMapper mapper)
   {
     _ticketRepository = ticketRepository;
+    _messengerSendService = messengerSendService;
     _mapper = mapper;
   }
 
@@ -69,14 +75,32 @@ public class TicketService : ITicketService
 
   public async Task MarkTicketAsResolvedAsync(Guid ticketId, CancellationToken cancellationToken)
   {
-    var ticket = await _ticketRepository.Query()
-        .FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
+    await _ticketRepository.UnitOfWork.BeginTransactionAsync(cancellationToken);
+    await _messengerSendService.BeginTransactionAsync(cancellationToken);
+    try
+    {
+      var ticket = await _ticketRepository.Query().FirstOrDefaultAsync(t => t.Id == ticketId, cancellationToken);
 
-    if (ticket == null)
-      throw new KeyNotFoundException($"Ticket {ticketId} not found.");
+      if (ticket == null)
+        throw new KeyNotFoundException($"Ticket {ticketId} not found.");
 
-    ticket.MarkAsResolved();
-    await _ticketRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+      ticket.MarkAsResolved();
+      await _ticketRepository.UnitOfWork.SaveChangesAsync(cancellationToken);
+
+      var integrationEvent = new TicketResolvedIntegrationEvent(ticket.Id, ticket.UserId);
+      await _messengerSendService.SendMessageAsync(JsonConvert.SerializeObject(integrationEvent), 
+                                                  IntegrationTopics.TicketResolved, 
+                                                  cancellationToken);
+
+      await _messengerSendService.CommitAsync(cancellationToken);
+      await _ticketRepository.UnitOfWork.CommitAsync(cancellationToken);
+    }
+    catch
+    {
+      await _messengerSendService.RollBackAsync(cancellationToken);
+      await _ticketRepository.UnitOfWork.RollbackAsync(cancellationToken);
+      throw;
+    }
   }
 
   public async Task AddReplyAsync(Guid ticketId, string text, Guid userId, CancellationToken cancellationToken)

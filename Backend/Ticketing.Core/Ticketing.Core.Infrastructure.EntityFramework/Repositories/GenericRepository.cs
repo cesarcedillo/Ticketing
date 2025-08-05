@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Threading;
 using Ticketing.Core.Domain.SeedWork.Interfaces;
 using Ticketing.Core.Infrastructure.EntityFramework.Context;
 

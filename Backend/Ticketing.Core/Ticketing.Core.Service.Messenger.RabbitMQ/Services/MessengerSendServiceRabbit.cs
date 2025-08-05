@@ -30,14 +30,36 @@ public sealed class MessengerSendServiceRabbit(
   {
     channel.RollBack();
   }
+  public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+  {
+    await channel.BeginTransactionAsync(cancellationToken);
+  }
+
+  public async Task CommitAsync(CancellationToken cancellationToken = default)
+  {
+    await channel.CommitAsync(cancellationToken);
+  }
+
+  public async Task RollBackAsync(CancellationToken cancellationToken = default)
+  {
+    await channel.RollBackAsync(cancellationToken);
+  }
 
   public void SendMessage(string body, string topic)
   {
     string exchange = messegerBrokerDiscover.GetBrokerName(topic);
-    StartActivityAndPublishMessage(exchange, topic, body);
+    StartActivity(exchange, topic, body);
+    channel.PublishMessage(exchange: exchange, topic: topic, body: body);
   }
 
-  private void StartActivityAndPublishMessage(string exchange, string topic, string body)
+  public async Task SendMessageAsync(string body, string topic, CancellationToken cancellationToken = default)
+  {
+    string exchange = messegerBrokerDiscover.GetBrokerName(topic);
+    StartActivity(exchange, topic, body);
+    await channel.PublishMessageAsync(exchange, topic, body, cancellationToken);
+  }
+
+  private void StartActivity(string exchange, string topic, string body)
   {
     using Activity? activity = Activity.Current?.Source.StartActivity(name: topic, kind: ActivityKind.Producer, parentId: Activity.Current.Id);
     activity?.SetActivityCustomProperties("Topic", topic);
@@ -46,6 +68,5 @@ public sealed class MessengerSendServiceRabbit(
     {
       activity?.SetActivityCustomProperties("Content", body);
     }
-    channel.PublishMessage(exchange: exchange, topic: topic, body: body);
   }
 }

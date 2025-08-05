@@ -7,28 +7,8 @@ services:
       dockerfile: Dockerfile.ticket
     ports:
       - "5003:80"
-    environment:
-      - RepositoryConnection=Data Source=/app/Ticket.db
-      
-      # Authentication config
-      - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
-      - Issuer=ticketing-auth
-      - Audience=ticketing-app
-
-      # OpenTelemetry config
-      - PropertiesToTrace=Id
-      - TraceContents=false
-      - ServiceName=TicketService
-      - ExcludedPaths=swagger,health
-      - AgentHost=zipkin
-      - AgentPort=9411
-
-      # Logging config
-      - MinimumLevel=Verbose
-      - Sink=Console
-      - FilePath=Logs/TicketService.log
-
-      - ASPNETCORE_ENVIRONMENT=development 
+    env_file:
+      - ticket.env  
     networks:
       - ticketing-micro-net
   ticketing-ticket-auth:
@@ -37,28 +17,8 @@ services:
       dockerfile: Dockerfile.auth
     ports:
       - "5001:80"
-    environment:
-      - RepositoryConnection=Data Source=/app/Auth.db
-
-      # Authentication config
-      - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
-      - Issuer=ticketing-auth
-      - Audience=ticketing-app
-
-      # OpenTelemetry config
-      - PropertiesToTrace=Id
-      - TraceContents=false
-      - ServiceName=AuthService
-      - ExcludedPaths=swagger,health
-      - AgentHost=zipkin
-      - AgentPort=9411
-
-      # Logging config
-      - MinimumLevel=Verbose
-      - Sink=Console
-      - FilePath=Logs/AuthService.log
-
-      - ASPNETCORE_ENVIRONMENT=development 
+    env_file:
+      - auth.env  
     networks:
       - ticketing-micro-net
   ticketing-ticket-user:
@@ -67,28 +27,8 @@ services:
       dockerfile: Dockerfile.user
     ports:
       - "5002:80"
-    environment:
-      - RepositoryConnection=Data Source=/app/User.db
-
-      # Authentication config
-      - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
-      - Issuer=ticketing-auth
-      - Audience=ticketing-app
-
-      # OpenTelemetry config
-      - PropertiesToTrace=Id
-      - TraceContents=false
-      - ServiceName=UserService
-      - ExcludedPaths=swagger,health
-      - AgentHost=zipkin
-      - AgentPort=9411
-
-      # Logging config
-      - MinimumLevel=Verbose
-      - Sink=Console
-      - FilePath=Logs/UserService.log
-
-      - ASPNETCORE_ENVIRONMENT=development 
+    env_file:
+      - user.env  
     networks:
       - ticketing-micro-net
   ticketing-ticket-bff:
@@ -97,31 +37,8 @@ services:
       dockerfile: Dockerfile.bff
     ports:
       - "5000:80"
-    environment:
-      # Authentication config
-      - Secret=jEDkl97XMZP3j78qLJd9Kbnw6V2Hr0G1YpsR4Q8fzUKsXw2BpVIYzAC4Wt5Fn1u
-      - Issuer=ticketing-auth
-      - Audience=ticketing-app
-
-      # OpenTelemetry config
-      - PropertiesToTrace=Id
-      - TraceContents=false
-      - ServiceName=BffService
-      - ExcludedPaths=swagger,health
-      - AgentHost=zipkin
-      - AgentPort=9411
-
-      # Logging config
-      - MinimumLevel=Verbose
-      - Sink=Console
-      - FilePath=Logs/BffService.log
-
-      # Client config
-      - AuthClientUrl=http://ticketing-ticket-auth/,
-      - UserClientUrl=http://ticketing-ticket-user/,
-      - TicketClientUrl=http://ticketing-ticket-ticket/
-
-      - ASPNETCORE_ENVIRONMENT=development 
+    env_file:
+      - bff.env    
     depends_on:
       - ticketing-ticket-user
       - ticketing-ticket-auth
@@ -149,6 +66,18 @@ services:
       - "9411:9411"
     networks:
       - ticketing-micro-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - ticketing-micro-net
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
 
 networks:
   ticketing-micro-net:

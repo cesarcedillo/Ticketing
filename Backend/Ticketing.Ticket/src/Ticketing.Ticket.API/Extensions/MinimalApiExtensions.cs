@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 using Ticketing.Ticket.API.Infrastructure;
 using Ticketing.Ticket.Application;
 
@@ -92,7 +91,7 @@ public static class MinimalApiExtensions
     builder.Services.AddSingleton(mapper);
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-    builder.Services.AddApplicationServices();
+    builder.Services.AddApplicationServices(Configuration);
     builder.Services.AddSingleton(TimeProvider.System);
     builder.AddHealthChecks(Configuration);
   }
