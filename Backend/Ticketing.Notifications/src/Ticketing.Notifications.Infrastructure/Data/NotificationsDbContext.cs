@@ -1,10 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using Ticketing.Core.Infrastructure.EntityFramework.Context;
 using Ticketing.Notifications.Domain.Aggregates;
 using Ticketing.Notifications.Infrastructure.EntityConfigurations;

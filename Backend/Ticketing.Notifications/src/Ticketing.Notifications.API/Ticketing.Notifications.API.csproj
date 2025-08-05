@@ -7,7 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Ticketing.Core.Observability" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ticketing.Notifications.Application\Ticketing.Notifications.Application.csproj" />
+    <ProjectReference Include="..\Ticketing.Notifications.Infrastructure\Ticketing.Notifications.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
