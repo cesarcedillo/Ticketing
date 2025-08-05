@@ -12,7 +12,7 @@ public class Notification : IAggregateRoot
   public DateTimeOffset CreatedAt { get; private set; }
   public bool IsRead { get; private set; }
 
-  private Notification() { }
+  public Notification() { }
 
   public Notification(string title, string message, string recipient, NotificationType type)
   {
