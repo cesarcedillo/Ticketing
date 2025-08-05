@@ -52,7 +52,7 @@ public static class MinimalApiExtensions
       c.SwaggerDoc("v1",
           new OpenApiInfo
           {
-            Title = "Ticketing.USer",
+            Title = "Ticketing.Notifications",
             Version = "v1",
           });
 
