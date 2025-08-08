@@ -11,12 +11,12 @@
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 		<PackageReference Include="Ticketing.Core.Application.Mediatr.Behaviours" Version="2.0.0" />
+		<PackageReference Include="Ticketing.Core.Service.Messenger.RabbitMQ" Version="2.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\..\Ticketing.Core\Ticketing.Core.Service.Messenger.RabbitMQ\Ticketing.Core.Service.Messenger.RabbitMQ.csproj" />
-		<ProjectReference Include="..\Ticketing.Ticket.Domain\Ticketing.Ticket.Domain.csproj" />
-		<ProjectReference Include="..\Ticketing.Ticket.Infrastructure\Ticketing.Ticket.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Ticketing.Ticket.Domain\Ticketing.Ticket.Domain.csproj" />
+	  <ProjectReference Include="..\Ticketing.Ticket.Infrastructure\Ticketing.Ticket.Infrastructure.csproj" />
 	</ItemGroup>
 
 </Project>
