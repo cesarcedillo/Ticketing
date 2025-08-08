@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System.Diagnostics;
 using Ticketing.Core.Observability.OpenTelemetry.Options;
+using Ticketing.Core.Service.Messenger.Implementations;
 using Ticketing.Core.Service.Messenger.Interfaces;
 using Ticketing.Core.Service.Messenger.RabbitMQ.Interfaces;
 using Ticketing.Core.Service.Messenger.RabbitMQ.Services;
@@ -18,6 +20,11 @@ public static class MessengerServiceRabbitExtension
       OpenTelemetryOptions openTelemetryOptions)
   {
     brokersConfiguration.ValidateConfiguration();
+
+    services.AddSingleton(_ => Options.Create(brokersConfiguration));
+    services.AddSingleton(_ => Options.Create(messagingConfiguration));
+
+    services.AddSingleton<IMessengerBrokerDiscover, MessengerBrokerDiscover>();
 
     return services
         .AddSingleton(CreateRabbitMQConnection(rabbitMQConnection, connectionName, brokersConfiguration, messagingConfiguration))

@@ -11,7 +11,10 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
     <PackageReference Include="Polly" Version="8.5.2" />
-    <PackageReference Include="Ticketing.Core.Service.IntegrationEvents" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ticketing.Core.Service.IntegrationEvents\Ticketing.Core.Service.IntegrationEvents.csproj" />
   </ItemGroup>
 
 </Project>

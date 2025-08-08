@@ -33,12 +33,22 @@ public class CustomExceptionHandler : IExceptionHandler
   {
     var exceptionType = exception.GetType();
 
-    var handler = _exceptionHandlers.ContainsKey(exceptionType) || _exceptionHandlers.ContainsKey(exceptionType.BaseType!)
-        ? _exceptionHandlers[exceptionType]
-        : HandleGenericException;
+    if (_exceptionHandlers.TryGetValue(exceptionType, out var handler))
+    {
+      await handler.Invoke(httpContext, exception);
+      return true;
+    }
 
-    await handler.Invoke(httpContext, exception);
+    var baseType = exceptionType.BaseType;
+    if (baseType is not null && _exceptionHandlers.TryGetValue(baseType, out handler))
+    {
+      await handler.Invoke(httpContext, exception);
+      return true;
+    }
+
+    await HandleGenericException(httpContext, exception);
     return true;
+
   }
 
   private async Task HandleValidationException(HttpContext httpContext, Exception ex)

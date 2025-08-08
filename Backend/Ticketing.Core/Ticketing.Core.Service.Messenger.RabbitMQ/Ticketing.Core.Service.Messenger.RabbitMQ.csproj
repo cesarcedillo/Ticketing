@@ -11,7 +11,10 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.6.0" />
     <PackageReference Include="Ticketing.Core.Observability" Version="2.0.0" />
-    <PackageReference Include="Ticketing.Core.Service.Messenger" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ticketing.Core.Service.Messenger\Ticketing.Core.Service.Messenger.csproj" />
   </ItemGroup>
 
 </Project>

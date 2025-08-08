@@ -34,8 +34,8 @@ public static class MessengerConfigurationExtension
     var brokerConfigurations = JsonSerializer.Deserialize<BrokersConfiguration>(brokerJson, options)!;
     var messagingConfiguration = JsonSerializer.Deserialize<MessagingConfiguration>(messagingJson, options)!;
 
-    services.AddSingleton(brokerConfigurations);
-    services.AddSingleton(messagingConfiguration);
+    services.AddSingleton(_ => Options.Create(brokerConfigurations));
+    services.AddSingleton(_ => Options.Create(messagingConfiguration));
 
     services.AddSingleton<IMessengerBrokerDiscover, MessengerBrokerDiscover>();
 
