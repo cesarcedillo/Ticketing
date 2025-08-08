@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Ticketing.Core.Service.IntegrationEvents;
 using Ticketing.Notifications.Application.Commands.TicketResolved;
 
 namespace Ticketing.Notifications.Application.IntegrationEvents.Events.TicketResolved;

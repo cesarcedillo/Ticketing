@@ -21,11 +21,6 @@ public static class MessengerServiceRabbitExtension
   {
     brokersConfiguration.ValidateConfiguration();
 
-    services.AddSingleton(_ => Options.Create(brokersConfiguration));
-    services.AddSingleton(_ => Options.Create(messagingConfiguration));
-
-    services.AddSingleton<IMessengerBrokerDiscover, MessengerBrokerDiscover>();
-
     return services
         .AddSingleton(CreateRabbitMQConnection(rabbitMQConnection, connectionName, brokersConfiguration, messagingConfiguration))
         .AddSingleton<IChannelPool, ChannelPool>()

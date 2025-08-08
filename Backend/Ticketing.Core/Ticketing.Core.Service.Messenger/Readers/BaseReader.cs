@@ -35,12 +35,17 @@ public abstract class BaseReader : BackgroundService
         throw new InvalidOperationException("The message type is not recognized");
       }
 
-      using var localScope = _serviceScopeFactory.CreateScope();
-      foreach (var handler in localScope.ServiceProvider.GetKeyedServices<IIntegrationEventHandler>(integrationEventType))
+      using var scope = _serviceScopeFactory.CreateScope();
+
+      var handlers = scope.ServiceProvider
+          .GetKeyedServices<IIntegrationEventHandler>(integrationEventType);
+
+      foreach (var handler in handlers)
       {
         RunIntegrationEventHandler(message, integrationEventType, handler);
         _messengerReceiveService.AckMessage(message.MessageId);
       }
+
     }
     catch (MessageReaderException)
     {

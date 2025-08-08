@@ -3,9 +3,14 @@ using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RabbitMQ.Client;
 using System.Reflection;
 using Ticketing.Core.Application.Mediatr.Behaviours.Behaviours;
+using Ticketing.Core.Service.IntegrationEvents;
 using Ticketing.Notifications.Application.Extensions;
+using Ticketing.Notifications.Application.IntegrationEvents;
+using Ticketing.Notifications.Application.IntegrationEvents.Events.TicketResolved;
+using Ticketing.Notifications.Application.IntegrationEvents.Readers;
 using Ticketing.Notifications.Application.Services;
 using Ticketing.Notifications.Application.Services.Interfaces;
 
@@ -26,6 +31,9 @@ public static class DependencyInjection
     services.AddMessengerConfiguration(configuration);
 
     services.AddTransient<INotificationsService, NotificationsService>();
+
+    services.AddHostedService<NotificationsQueueReader>();
+    services.AddKeyedScoped<IIntegrationEventHandler, TicketResolvedIntegrationEventHandler>(typeof(TicketResolvedIntegrationEvent));
 
     return services;
   }

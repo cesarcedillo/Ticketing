@@ -134,9 +134,9 @@ public sealed class MessengerReceiveServiceRabbit : IMessengerReceiveService
     {
       0 => 0,
       1 => 1000,
-      2 => 10000,
-      3 => 30000,
-      _ => 60000 // 1 minute 
+      2 => 2000,
+      3 => 3000,
+      _ => 3000
     };
   }
 }
