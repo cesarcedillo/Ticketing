@@ -17,7 +17,6 @@ public class CustomExceptionHandler : IExceptionHandler
                 { typeof(ArgumentNullException), HandleArgumentException },
                 { typeof(ArgumentException), HandleArgumentException },
                 { typeof(InvalidOperationException), HandleInvalidOperationException},
-                { typeof(Exception), HandleGenericException }
             };
   }
 
@@ -25,13 +24,12 @@ public class CustomExceptionHandler : IExceptionHandler
   {
     var exceptionType = exception.GetType();
 
-    if (_exceptionHandlers.ContainsKey(exceptionType))
-    {
-      await _exceptionHandlers[exceptionType].Invoke(httpContext, exception);
-      return true;
-    }
+    var handler = _exceptionHandlers.ContainsKey(exceptionType)
+        ? _exceptionHandlers[exceptionType]
+        : HandleGenericException;
 
-    return false;
+    await handler.Invoke(httpContext, exception);
+    return true;
   }
 
   private async Task HandleValidationException(HttpContext httpContext, Exception ex)

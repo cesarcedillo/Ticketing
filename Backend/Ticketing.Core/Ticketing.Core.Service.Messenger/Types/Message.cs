@@ -19,5 +19,5 @@ public record Message
   public string MessageId { get; set; }
   public string Content { get; set; }
   public OriginalMessageInformation? OriginalMessageInformacion { get; set; }
-  public string TraceID { get; set; }
+  public string TraceID { get; set; } = string.Empty;
 }

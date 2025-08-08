@@ -4,41 +4,81 @@ services:
   ticketing-ticket-ticket:
     build:
       context: ./Backend
-      dockerfile: Dockerfile.ticket
+      dockerfile: ./Dockerfiles/Dockerfile.ticket
     ports:
       - "5003:80"
     env_file:
-      - ticket.env  
+      - ./Configuration/authentication.env
+      - ./Configuration/ticket.env
+      - ./Configuration/brokerConfigurations.env
+    environment:
+      - RunningInDocker=true
+      - RepositoryConnection=Data Source=/app/db.db
+      - RabbitMQConnection=amqp://guest:guest@rabbitmq:5672/
     networks:
       - ticketing-micro-net
   ticketing-ticket-auth:
     build:
       context: ./Backend
-      dockerfile: Dockerfile.auth
+      dockerfile: ./Dockerfiles/Dockerfile.auth
     ports:
       - "5001:80"
     env_file:
-      - auth.env  
+      - ./Configuration/authentication.env
+      - ./Configuration/auth.env  
+    environment:
+      - RunningInDocker=true
+      - RepositoryConnection=Data Source=/app/db.db
     networks:
       - ticketing-micro-net
   ticketing-ticket-user:
     build:
       context: ./Backend
-      dockerfile: Dockerfile.user
+      dockerfile: ./Dockerfiles/Dockerfile.user
     ports:
       - "5002:80"
     env_file:
-      - user.env  
+      - ./Configuration/authentication.env
+      - ./Configuration/user.env  
+    environment:
+      - RunningInDocker=true
+      - RepositoryConnection=Data Source=/app/db.db
     networks:
       - ticketing-micro-net
   ticketing-ticket-bff:
     build:
       context: ./Backend
-      dockerfile: Dockerfile.bff
+      dockerfile: ./Dockerfiles/Dockerfile.bff
     ports:
       - "5000:80"
     env_file:
-      - bff.env    
+      - ./Configuration/authentication.env
+      - ./Configuration/bff.env  
+    environment:
+      - RunningInDocker=true  
+      - AuthClientUrl=http://ticketing-ticket-auth/,
+      - UserClientUrl=http://ticketing-ticket-user/,
+      - TicketClientUrl=http://ticketing-ticket-ticket/
+    depends_on:
+      - ticketing-ticket-user
+      - ticketing-ticket-auth
+      - ticketing-ticket-ticket
+    networks:
+      - ticketing-micro-net
+  ticketing-ticket-notifications:
+    build:
+      context: ./Backend
+      dockerfile: ./Dockerfiles/Dockerfile.notifications
+    ports:
+      - "5000:80"
+    env_file:
+      - ./Configuration/authentication.env
+      - ./Configuration/notifications.env
+      - ./Configuration/brokerConfigurations.env
+    environment:
+      - RunningInDocker=true 
+      - RepositoryConnection=Data Source=/app/db.db
+      - RabbitMQConnection=amqp://guest:guest@rabbitmq:5672/
     depends_on:
       - ticketing-ticket-user
       - ticketing-ticket-auth

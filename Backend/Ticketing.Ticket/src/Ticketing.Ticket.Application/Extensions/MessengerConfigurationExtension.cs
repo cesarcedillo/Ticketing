@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using System.Text.Json;
+using Ticketing.Core.Observability.OpenTelemetry.Options;
 using Ticketing.Core.Service.Messenger.Implementations;
 using Ticketing.Core.Service.Messenger.Interfaces;
 using Ticketing.Core.Service.Messenger.RabbitMQ.Extensions;
@@ -10,27 +13,44 @@ public static class MessengerConfigurationExtension
 {
   public static IServiceCollection AddMessengerConfiguration(this IServiceCollection services, IConfiguration configuration)
   {
-    var messagingConfiguration = configuration.GetRequiredSection("MessagingConfiguration");
-    var brokerConfigurations = configuration.GetRequiredSection("BrokerConfigurations");
-    var rabbitMQConnection = configuration["RabbitMQConnection"];
+    var brokerJson = Environment.GetEnvironmentVariable("BrokerConfigurations");
+    var messagingJson = Environment.GetEnvironmentVariable("MessagingConfiguration");
+    var rabbitMQConnection = Environment.GetEnvironmentVariable("RabbitMQConnection");
+    var serviceName = Environment.GetEnvironmentVariable("ServiceName");
 
-    if ((messagingConfiguration is null) || (brokerConfigurations is null) || string.IsNullOrWhiteSpace(rabbitMQConnection))
+    if (string.IsNullOrWhiteSpace(brokerJson) || string.IsNullOrWhiteSpace(messagingJson) || string.IsNullOrWhiteSpace(rabbitMQConnection))
     {
       throw new Exception("Error collecting messaging settings: " +
-          $"{nameof(messagingConfiguration)} exists -> [{messagingConfiguration is not null}]," +
-          $"{nameof(brokerConfigurations)} exists -> [{brokerConfigurations is not null}]," +
-          $"{nameof(brokerConfigurations)} exists -> [{string.IsNullOrWhiteSpace(rabbitMQConnection)}]");
+          $"BrokerConfigurations exists -> [{!string.IsNullOrWhiteSpace(brokerJson)}], " +
+          $"MessagingConfiguration exists -> [{!string.IsNullOrWhiteSpace(messagingJson)}], " +
+          $"RabbitMQConnection exists -> [{!string.IsNullOrWhiteSpace(rabbitMQConnection)}]");
     }
 
-    services.Configure<MessagingConfiguration>(messagingConfiguration);
-    services.Configure<BrokersConfiguration>(brokerConfigurations);
+    var options = new JsonSerializerOptions
+    {
+      PropertyNameCaseInsensitive = true
+    };
+
+    var brokerConfigurations = JsonSerializer.Deserialize<BrokersConfiguration>(brokerJson, options)!;
+    var messagingConfiguration = JsonSerializer.Deserialize<MessagingConfiguration>(messagingJson, options)!;
+
+    services.AddSingleton(brokerConfigurations);
+    services.AddSingleton(messagingConfiguration);
 
     services.AddSingleton<IMessengerBrokerDiscover, MessengerBrokerDiscover>();
-    services.AddRabbitMQConfiguration
-        (new Uri(rabbitMQConnection),
-        configuration["ServiceName"] ?? throw new Exception("The service name could not be found."),
-        brokerConfigurations.Get<BrokersConfiguration>()!,
-        messagingConfiguration.Get<MessagingConfiguration>()!);
+
+    var openTelemetryOptions = services
+    .BuildServiceProvider()
+    .GetRequiredService<IOptions<OpenTelemetryOptions>>()
+    .Value;
+
+
+    services.AddRabbitMQConfiguration(
+        new Uri(rabbitMQConnection),
+        serviceName ?? throw new Exception("The service name could not be found."),
+        brokerConfigurations,
+        messagingConfiguration,
+        openTelemetryOptions);
 
     return services;
   }

@@ -8,7 +8,22 @@ using Ticketing.Notifications.API.Extensions;
 using Ticketing.Notifications.Infrastructure.Data;
 using Ticketing.Notifications.Infrastructure.Extensions;
 
+if (Environment.GetEnvironmentVariable("RunningInDocker") != "true")
+{
+  var root = Directory.GetCurrentDirectory();
+  var envPath = Path.Combine(root, "..", "..", "..", "..", "Configuration", "notifications.env");
+  DotNetEnv.Env.Load(envPath);
+  envPath = Path.Combine(root, "..", "..", "..", "..", "Configuration", "authentication.env");
+  DotNetEnv.Env.Load(envPath);
+  envPath = Path.Combine(root, "..", "..", "..", "..", "Configuration", "brokerConfigurations.env");
+  DotNetEnv.Env.Load(envPath);
+
+}
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
+
 builder.RegisterServices();
 
 var app = builder.Build();

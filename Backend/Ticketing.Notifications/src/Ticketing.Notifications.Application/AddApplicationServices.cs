@@ -1,16 +1,18 @@
 ﻿using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Ticketing.Core.Application.Mediatr.Behaviours.Behaviours;
+using Ticketing.Notifications.Application.Extensions;
 using Ticketing.Notifications.Application.Services;
 using Ticketing.Notifications.Application.Services.Interfaces;
 
 namespace Ticketing.Notifications.Application;
 public static class DependencyInjection
 {
-  public static IServiceCollection AddApplicationServices(this IServiceCollection services)
+  public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
   {
     services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -20,6 +22,8 @@ public static class DependencyInjection
       cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
       cfg.AddRequestPreProcessor(typeof(IRequestPreProcessor<>), typeof(LoggingBehaviour<>));
     });
+
+    services.AddMessengerConfiguration(configuration);
 
     services.AddTransient<INotificationsService, NotificationsService>();
 

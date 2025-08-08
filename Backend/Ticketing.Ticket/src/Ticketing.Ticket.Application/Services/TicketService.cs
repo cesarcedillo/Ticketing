@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
 using Newtonsoft.Json;
 using Ticketing.Core.Service.Messenger.Interfaces;
 using Ticketing.Ticket.Application.Dtos.Responses;

@@ -2,14 +2,13 @@
 using FluentAssertions;
 using MockQueryable;
 using Moq;
-using System.Reflection.Metadata;
 using Ticketing.Core.Domain.SeedWork.Interfaces;
+using Ticketing.Core.Service.Messenger.Interfaces;
 using Ticketing.Ticket.Application.Services;
 using Ticketing.Ticket.Domain.Enums;
 using Ticketing.Ticket.Domain.Interfaces.Repositories;
 using Ticketing.Ticket.TestCommon.Builders;
 using Ticketing.Ticket.TestCommon.Fixtures;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using TicketType = Ticketing.Ticket.Domain.Aggregates.Ticket;
 
 namespace Ticketing.Ticket.Application.Tests.Services
@@ -17,6 +16,7 @@ namespace Ticketing.Ticket.Application.Tests.Services
   public class TicketServiceTests
   {
     private readonly Mock<ITicketRepository> _ticketRepositoryMock;
+    private readonly Mock<IMessengerSendService> _messengerSendService;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly IMapper _mapper;
     private readonly TicketService _service;
@@ -25,6 +25,7 @@ namespace Ticketing.Ticket.Application.Tests.Services
     public TicketServiceTests()
     {
       _ticketRepositoryMock = new Mock<ITicketRepository>();
+      _messengerSendService = new Mock<IMessengerSendService>();
       _unitOfWorkMock = new Mock<IUnitOfWork>();
 
       var config = new MapperConfiguration(cfg =>
@@ -37,6 +38,7 @@ namespace Ticketing.Ticket.Application.Tests.Services
 
       _service = new TicketService(
           _ticketRepositoryMock.Object,
+          _messengerSendService.Object,
           _mapper
       );
     }

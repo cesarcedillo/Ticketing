@@ -26,10 +26,5 @@ public static class ObservabilityExtensions
       AgentHost = configuration.GetValue<string>("AgentHost", "zipkin"),
       AgentPort = configuration.GetValue<int>("AgentPort", 9411),
     });
-
-    Console.WriteLine($"ServiceName: {configuration.GetValue<string>("ServiceName")}");
-    Console.WriteLine($"AgentHost: {configuration.GetValue<string>("AgentHost")}");
-    Console.WriteLine($"AgentPort: {configuration.GetValue<string>("AgentPort")}");
-
   }
 }

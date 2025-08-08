@@ -8,7 +8,18 @@ using Ticketing.Auth.Infrastructure.Data;
 using Ticketing.Auth.Infrastructure.Extensions;
 using Ticketing.Core.Observability.OpenTelemetry.Middleware;
 
+if (Environment.GetEnvironmentVariable("RunningInDocker") != "true")
+{
+  var root = Directory.GetCurrentDirectory();
+  var envPath = Path.Combine(root, "..", "..", "..", "..", "Configuration", "auth.env");
+  DotNetEnv.Env.Load(envPath);
+  envPath = Path.Combine(root, "..", "..", "..", "..", "Configuration", "authentication.env");
+  DotNetEnv.Env.Load(envPath);
+}
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
 builder.RegisterServices();
 
 var app = builder.Build();

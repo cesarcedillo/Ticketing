@@ -1,0 +1,34 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+
+ENV ASPNETCORE_HTTP_PORTS 80
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY Ticketing.Notifications/src/Ticketing.Notifications.API Ticketing.Notifications.API/
+COPY Ticketing.Notifications/src/Ticketing.Notifications.Domain Ticketing.Notifications.Domain/
+COPY Ticketing.Notifications/src/Ticketing.Notifications.Application Ticketing.Notifications.Application/
+COPY Ticketing.Notifications/src/Ticketing.Notifications.Infrastructure Ticketing.Notifications.Infrastructure/
+COPY nuget-packages nuget-packages/
+COPY nuget.config ./
+
+ENV DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER=0
+
+RUN dotnet restore "Ticketing.Notifications.Domain/Ticketing.Notifications.Domain.csproj"
+RUN dotnet restore "Ticketing.Notifications.API/Ticketing.Notifications.API.csproj"
+RUN dotnet restore "Ticketing.Notifications.Application/Ticketing.Notifications.Application.csproj"
+RUN dotnet restore "Ticketing.Notifications.Infrastructure/Ticketing.Notifications.Infrastructure.csproj"
+
+COPY . .
+
+WORKDIR "/src/Ticketing.Notifications.API"
+RUN dotnet build "Ticketing.Notifications.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Ticketing.Notifications.API.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Ticketing.Notifications.API.dll"]

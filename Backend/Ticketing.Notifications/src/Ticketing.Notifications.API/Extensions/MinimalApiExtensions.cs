@@ -14,11 +14,6 @@ public static class MinimalApiExtensions
     var Environment = builder.Environment;
     builder.Services.AddControllers();
 
-    if (Environment.IsDevelopment())
-    {
-      Configuration.AddUserSecrets(Assembly.GetExecutingAssembly());
-    }
-
     builder.Services.AddCors(options =>
     {
       options.AddPolicy("PoliticaCors",
@@ -45,7 +40,6 @@ public static class MinimalApiExtensions
               System.Text.Encoding.UTF8.GetBytes(Configuration["Secret"] ?? "SOME_SECRET_KEY"))
       };
     });
-
 
     builder.Services.AddSwaggerGen(c =>
     {
@@ -97,7 +91,7 @@ public static class MinimalApiExtensions
     builder.Services.AddSingleton(mapper);
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddExceptionHandler<CustomExceptionHandler>();
-    builder.Services.AddApplicationServices();
+    builder.Services.AddApplicationServices(Configuration);
     builder.Services.AddSingleton(TimeProvider.System);
     builder.AddHealthChecks(Configuration);
   }

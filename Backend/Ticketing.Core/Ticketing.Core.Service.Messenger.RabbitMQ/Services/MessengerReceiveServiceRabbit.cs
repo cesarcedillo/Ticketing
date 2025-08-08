@@ -24,8 +24,8 @@ public sealed class MessengerReceiveServiceRabbit : IMessengerReceiveService
 
   public MessengerReceiveServiceRabbit(
     IRabbitMQChannel channel,
-    IOptions<BrokersConfiguration> brokersConfiguration,
-    IOptions<OpenTelemetryOptions> openTelemetryOptions,
+    BrokersConfiguration brokersConfiguration,
+    OpenTelemetryOptions openTelemetryOptions,
     ActivitySource? activitySource = null)
   {
     this.channel = channel;
@@ -34,9 +34,9 @@ public sealed class MessengerReceiveServiceRabbit : IMessengerReceiveService
     consumer = new EventingBasicConsumer(this.channel.Model);
     consumer.Received += ConsumerMessageReceived;
     consumer.ConsumerCancelled += ConsumerCancelled;
-    errorsBrokerName = brokersConfiguration.Value.ErrorsBroker.BrokerName;
-    propertiesToTrace = openTelemetryOptions.Value?.PropertiesToTrace ?? [];
-    traceContents = openTelemetryOptions.Value?.TraceContents ?? false;
+    errorsBrokerName = brokersConfiguration.ErrorsBroker.BrokerName;
+    propertiesToTrace = openTelemetryOptions?.PropertiesToTrace ?? [];
+    traceContents = openTelemetryOptions?.TraceContents ?? false;
   }
 
   private void ConsumerCancelled(object? sender, ConsumerEventArgs e)

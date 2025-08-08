@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35825.156 d17.13
+VisualStudioVersion = 17.13.35825.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Notifications.API", "src\Ticketing.Notifications.API\Ticketing.Notifications.API.csproj", "{6E34B4E6-53E2-4D0F-9B76-9F0E1A8A6FB5}"
 EndProject
@@ -26,6 +26,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Notifications.Application.Tests", "test\Ticketing.Notifications.Application.Tests\Ticketing.Notifications.Application.Tests.csproj", "{0DE8CFCE-E265-4489-9C3F-AFBA91DEBC4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticketing.Notifications.TestCommon", "Ticketing.Notifications.TestCommon\Ticketing.Notifications.TestCommon.csproj", "{E07198D2-8A33-478C-B7AC-FAC99E5A21E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{27023AFD-4AEA-42BD-8FC4-C3DB0D981CE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,6 +86,7 @@ Global
 		{5FF11C5B-FB5C-4A3B-B329-171A94CC3F0D} = {37AB1CD7-6D73-491C-A4D6-1A21085CFD4A}
 		{0DE8CFCE-E265-4489-9C3F-AFBA91DEBC4D} = {37AB1CD7-6D73-491C-A4D6-1A21085CFD4A}
 		{E07198D2-8A33-478C-B7AC-FAC99E5A21E0} = {37AB1CD7-6D73-491C-A4D6-1A21085CFD4A}
+		{27023AFD-4AEA-42BD-8FC4-C3DB0D981CE0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2A93113B-0C16-481E-BF37-A89FA4BA4731}

@@ -1,5 +1,4 @@
 ﻿using Ticketing.Core.Observability.OpenTelemetry;
-using Ticketing.Core.Observability.OpenTelemetry.Helpers;
 using Ticketing.Core.Observability.OpenTelemetry.Options;
 using Ticketing.Core.Observability.Serilog;
 
@@ -28,11 +27,6 @@ namespace Ticketing.Ticket.API.Extensions
         AgentHost = configuration.GetValue<string>("AgentHost", "zipkin"),
         AgentPort = configuration.GetValue<int>("AgentPort", 9411),
       });
-
-      Console.WriteLine($"ServiceName: {configuration.GetValue<string>("ServiceName")}");
-      Console.WriteLine($"AgentHost: {configuration.GetValue<string>("AgentHost")}");
-      Console.WriteLine($"AgentPort: {configuration.GetValue<string>("AgentPort")}");
-
     }
   }
 }

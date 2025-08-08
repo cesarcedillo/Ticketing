@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
+using System.Diagnostics;
+using Ticketing.Core.Observability.OpenTelemetry.Options;
 using Ticketing.Core.Service.Messenger.Interfaces;
 using Ticketing.Core.Service.Messenger.RabbitMQ.Interfaces;
 using Ticketing.Core.Service.Messenger.RabbitMQ.Services;
@@ -12,7 +14,8 @@ public static class MessengerServiceRabbitExtension
       Uri rabbitMQConnection,
       string connectionName,
       BrokersConfiguration brokersConfiguration,
-      MessagingConfiguration messagingConfiguration)
+      MessagingConfiguration messagingConfiguration,
+      OpenTelemetryOptions openTelemetryOptions)
   {
     brokersConfiguration.ValidateConfiguration();
 
@@ -20,8 +23,23 @@ public static class MessengerServiceRabbitExtension
         .AddSingleton(CreateRabbitMQConnection(rabbitMQConnection, connectionName, brokersConfiguration, messagingConfiguration))
         .AddSingleton<IChannelPool, ChannelPool>()
         .AddScoped<IRabbitMQChannel, RabbitMQChannel>()
-        .AddTransient<IMessengerSendService, MessengerSendServiceRabbit>()
-        .AddTransient<IMessengerReceiveService, MessengerReceiveServiceRabbit>();
+        .AddTransient<IMessengerSendService>(provider =>
+        {
+          var channel = provider.GetRequiredService<IRabbitMQChannel>();
+          var brokerDiscover = provider.GetRequiredService<IMessengerBrokerDiscover>();
+
+          return new MessengerSendServiceRabbit(channel, brokerDiscover, openTelemetryOptions);
+        })
+
+        .AddTransient<IMessengerReceiveService>(provider =>
+        {
+          var channel = provider.GetRequiredService<IRabbitMQChannel>();
+          var brokerDiscover = provider.GetRequiredService<IMessengerBrokerDiscover>();
+          var activitySource = provider.GetRequiredService<ActivitySource>();
+
+          return new MessengerReceiveServiceRabbit(channel, brokersConfiguration, openTelemetryOptions, activitySource);
+        })
+        .AddHostedService<RabbitMQStartupHostedService>();
   }
 
   private static Func<IServiceProvider, IConnection> CreateRabbitMQConnection(Uri rabbitMQConnection, string connectionName, BrokersConfiguration brokersConfiguration, MessagingConfiguration messagingConfiguration)

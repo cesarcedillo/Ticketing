@@ -6,7 +6,7 @@ namespace Ticketing.Core.Infrastructure.EntityFramework.Context;
 public class DbContextBase : DbContext, IUnitOfWork, IAsyncDisposable
 {
 
-  private IDbContextTransaction _currentTransaction;
+  private IDbContextTransaction? _currentTransaction;
 
   public DbContextBase() { }
 

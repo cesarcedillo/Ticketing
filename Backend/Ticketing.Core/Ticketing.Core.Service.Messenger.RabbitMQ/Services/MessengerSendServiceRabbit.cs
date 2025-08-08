@@ -9,12 +9,12 @@ namespace Ticketing.Core.Service.Messenger.RabbitMQ.Services;
 public sealed class MessengerSendServiceRabbit(
   IRabbitMQChannel channel,
   IMessengerBrokerDiscover messegerBrokerDiscover,
-  IOptions<OpenTelemetryOptions> openTelemetryOptions) : IMessengerSendService
+  OpenTelemetryOptions openTelemetryOptions) : IMessengerSendService
 {
   private readonly IRabbitMQChannel channel = channel;
   private readonly IMessengerBrokerDiscover messegerBrokerDiscover = messegerBrokerDiscover;
-  private readonly List<string> propertiesToTrace = openTelemetryOptions.Value?.PropertiesToTrace ?? [];
-  private readonly bool traceContents = openTelemetryOptions.Value?.TraceContents ?? false;
+  private readonly List<string> propertiesToTrace = openTelemetryOptions?.PropertiesToTrace ?? [];
+  private readonly bool traceContents = openTelemetryOptions?.TraceContents ?? false;
 
   public void BeginTransaction()
   {

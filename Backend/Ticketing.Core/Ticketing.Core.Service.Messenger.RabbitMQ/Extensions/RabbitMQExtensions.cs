@@ -103,14 +103,11 @@ public static class RabbitMQExtensions
     messagingConfiguration.Events.ForEach(queueEvent =>
         queueEvent.Topics.ForEach(topic =>
         {
-          // ^ at the begining to indicate the begining of the pattern
-          // Replace . with its special character \.
-          // Replace * with .* to match any single character n times
-          // $ at the endo to indicate the end of the patter 
           string topicRegex = $"^{topic.Replace(".", "\\.").Replace("*", ".*")}$";
           brokersConfiguration.AllBrokers
                   .FindAll(broker => broker.Topics.Exists(t => Regex.IsMatch(t, topicRegex, RegexOptions.IgnoreCase, TimeSpan.FromSeconds(5))))
                   .ForEach(broker => model.QueueBind(queue: queueEvent.Queue, exchange: broker.BrokerName, routingKey: topic, arguments: null));
+
         })
     );
   }

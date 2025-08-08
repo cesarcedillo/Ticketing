@@ -1,9 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Ticketing.Core.Observability.OpenTelemetry.Options;
+using Microsoft.Extensions.Options;
+
 
 namespace Ticketing.Core.Observability.OpenTelemetry;
 public static class OpenTelemetryDependencyInjection
@@ -72,14 +73,23 @@ public static class OpenTelemetryDependencyInjection
       .ConfigureResource(resourceBuilder => resourceBuilder.AddAttributes(resourceAttributes));
 
     services.AddSingleton(new ActivitySource(options.ServiceName));
-    services.Configure<OpenTelemetryOptions>(opts =>
+
+    services.AddSingleton(Microsoft.Extensions.Options.Options.Create(options));
+    services.AddSingleton(options);
+
+    switch (options)
     {
-      opts.ServiceName = options.ServiceName;
-      opts.SamplingRatio = options.SamplingRatio;
-      opts.ExcludedPaths = options.ExcludedPaths;
-      opts.PropertiesToTrace = options.PropertiesToTrace;
-      opts.TraceContents = options.TraceContents;
-    });
+      case JaegerOptions jaeger:
+        services.AddSingleton(Microsoft.Extensions.Options.Options.Create(jaeger));
+        break;
+
+      case ZipkinOptions zipkin:
+        services.AddSingleton(Microsoft.Extensions.Options.Options.Create(zipkin));
+        break;
+
+      default:
+        throw new NotSupportedException("Unsupported OpenTelemetry type.");
+    }
 
     return services;
   }

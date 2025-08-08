@@ -8,7 +8,18 @@ using Ticketing.User.API.Extensions;
 using Ticketing.User.Infrastructure.Data;
 using Ticketing.User.Infrastructure.Extensions;
 
+if (Environment.GetEnvironmentVariable("RunningInDocker") != "true")
+{
+  var root = Directory.GetCurrentDirectory();
+  var envPath = Path.Combine(root, "..", "..", "..", "..", "Configuration", "user.env");
+  DotNetEnv.Env.Load(envPath);
+  envPath = Path.Combine(root, "..", "..", "..", "..", "Configuration", "authentication.env");
+  DotNetEnv.Env.Load(envPath);
+}
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
 builder.RegisterServices();
 
 var app = builder.Build();

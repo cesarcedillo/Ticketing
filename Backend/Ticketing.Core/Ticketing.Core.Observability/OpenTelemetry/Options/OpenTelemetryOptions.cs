@@ -3,7 +3,7 @@
 /// <summary>
 /// Base options for OpenTelemetry tracing configuration.
 /// </summary>
-public abstract class OpenTelemetryOptions
+public class OpenTelemetryOptions
 {
   public string ServiceName { get; set; } = string.Empty;
   public float SamplingRatio { get; set; } = 1.0F;

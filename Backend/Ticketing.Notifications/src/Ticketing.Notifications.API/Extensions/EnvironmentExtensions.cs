@@ -1,4 +1,8 @@
-﻿namespace Ticketing.Notifications.API.Extensions;
+﻿using Ticketing.Core.Observability.OpenTelemetry.Options;
+using Ticketing.Core.Observability.OpenTelemetry;
+using Ticketing.Core.Observability.Serilog;
+
+namespace Ticketing.Notifications.API.Extensions;
 public static class EnvironmentExtensions
 {
   public static bool IsTesting(this IWebHostEnvironment webHostEnvironment)
