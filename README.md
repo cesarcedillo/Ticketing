@@ -2,17 +2,65 @@
 
 ## Project Overview
 
-Ticketing System is a simple yet robust ticket management platform built using Clean Architecture with a .NET 8 backend and a modern React frontend (Vite).
+Ticketing System is a simple yet robust ticket management platform built using Clean Architecture with a .NET 9 backend and a modern React frontend (Vite).
 
 The solution includes:
 
-* **Backend RESTful API** (`Ticketing.Ticket.API`, .NET 8)
+* **Backend Microservices Architecture** (`Ticketing`, .NET 9)
 * **Frontend SPA** (`Ticketing`, React + Vite)
 * **Infrastructure** (Entity Framework Core, SQLite for local/dev)
 * **Observability** (OpenTelemetry + Zipkin for distributed tracing)
 * **Unit tests** (backend)
 * **Container orchestration** via Docker Compose for easy setup
 
+---
+
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+  %% NODOS
+  subgraph Client
+    FE["Frontend (React / Vite)"]
+  end
+
+  subgraph Backend["Backend (.NET)"]
+    BFF[BFF]
+    AUTH[Auth]
+    USER[User]
+    TICKET[Ticket]
+    NOTIF[Notifications]
+  end
+
+  RMQ[(RabbitMQ Broker)]
+  ZIPKIN[[Zipkin / Tracing]]
+
+  %% FLUJOS HTTP
+  FE -->|HTTP| BFF
+  BFF -->|HTTP| AUTH
+  BFF -->|HTTP| USER
+  BFF -->|HTTP| TICKET
+
+  %% MENSAJERÍA
+  TICKET -- Publish --> RMQ
+  NOTIF -- Consume --> RMQ
+
+  %% OBSERVABILIDAD
+  BFF -. OTel .-> ZIPKIN
+  AUTH -. OTel .-> ZIPKIN
+  USER -. OTel .-> ZIPKIN
+  TICKET -. OTel .-> ZIPKIN
+  NOTIF -. OTel .-> ZIPKIN
+
+  %% ESTILOS
+  classDef broker fill:#fff3,stroke:#888,stroke-width:1px,stroke-dasharray:3 3;
+  class RMQ broker;
+```
+
+**Legend:**
+- **Solid lines** → HTTP communication  
+- **Publish/Consume arrows** → Messaging via RabbitMQ  
+- **Dashed lines** → OpenTelemetry traces to Zipkin  
 ---
 
 ## Setup Instructions
@@ -81,46 +129,16 @@ cd Ticketing
 
 #### Option A: Docker Compose (Recommended)
 
-This will run **backend, frontend, and Zipkin** for observability, using SQLite for persistence.
+This will run **backend, frontend, rabbitMQ, and Zipkin** for observability, using SQLite for persistence.
 
 ```bash
 docker compose up --build
 ```
 
 * **Frontend**: [http://localhost:3000](http://localhost:3000)
-* **Backend API**: [http://localhost:8080](http://localhost:8080)
+* **Backend BFF**: [http://localhost:500](http://localhost:8080)
 * **Zipkin UI** (tracing): [http://localhost:9411](http://localhost:9411)
-
-#### Option B: Run Locally (Development Mode)
-
-**Backend:**
-
-```bash
-cd Backend/src
-dotnet run --project Ticketing.Ticket.API
-```
-
-* Default API: [https://localhost:7086](https://localhost:7086)
-
-**Frontend:**
-
-```bash
-cd Frontend
-npm install
-npm run dev
-```
-
-* Vite Dev Server: [http://localhost:5173](http://localhost:5173)
-
-**Zipkin (for traces):**
-
-If not using Docker Compose, you can run Zipkin manually with Docker:
-
-```bash
-docker run -d -p 9411:9411 openzipkin/zipkin
-```
-
-* Access Zipkin UI: [http://localhost:9411](http://localhost:9411)
+* **RabbitMQ** (messaging): [http://localhost:15672](http://localhost:15672)
 
 ---
 
@@ -128,8 +146,8 @@ docker run -d -p 9411:9411 openzipkin/zipkin
 
 To access the application, use one of the default users:
 
-* **admin**
-* **alice**
+* **admin/1234**
+* **alice/1234**
 
 ---
 
@@ -137,7 +155,6 @@ To access the application, use one of the default users:
 
 * SQLite is used for local development and when running via Docker by default. No external DB configuration required unless specified.
 * The frontend expects the backend API URL to be set via `VITE_API_BASE_URL` (in `.env` for local dev or as a build arg for Docker).
-* No advanced authentication is implemented (public API for demonstration, default users provided).
 * All migrations are automatically applied on startup when using Docker.
 * OpenTelemetry and Zipkin are enabled by default for distributed tracing.
 
@@ -171,8 +188,8 @@ If not implemented.
 
 ## SQLite Setup Notes
 
-* **Docker:** The API uses a local SQLite file located at `/app/Ticketing.db` inside the container.
-* **Local development:** If no connection string is set, defaults to a `Ticketing.db` file in the project folder.
+* **Docker:** The APIs uses a local SQLite file located at `/app/db.db` inside the container.
+* **Local development:** If no connection string is set, defaults to a `db.db` file in the project folder.
 * To inspect the DB, you can open the `.db` file with [DB Browser for SQLite](https://sqlitebrowser.org/) or similar tools.
 
 ---

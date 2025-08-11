@@ -12,7 +12,7 @@ Make sure your project file (`.csproj`) includes the necessary metadata:
 
 ```xml
 <PropertyGroup>
-  <TargetFramework>net8.0</TargetFramework>
+  <TargetFramework>net9.0</TargetFramework>
   <Version>1.0.0</Version> <!-- Update as needed -->
   <Authors>Your Name</Authors>
   <PackageId>MyCompany.Core.Domain.SeedWork</PackageId>
