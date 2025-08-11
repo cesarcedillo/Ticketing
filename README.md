@@ -136,7 +136,7 @@ docker compose up --build
 ```
 
 * **Frontend**: [http://localhost:3000](http://localhost:3000)
-* **Backend BFF**: [http://localhost:500](http://localhost:8080)
+* **Backend BFF**: [http://localhost:5000](http://localhost:5000)
 * **Zipkin UI** (tracing): [http://localhost:9411](http://localhost:9411)
 * **RabbitMQ** (messaging): [http://localhost:15672](http://localhost:15672)
 

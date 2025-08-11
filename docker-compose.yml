@@ -15,6 +15,8 @@ services:
       - RunningInDocker=true
       - RepositoryConnection=Data Source=/app/db.db
       - RabbitMQConnection=amqp://guest:guest@rabbitmq:5672/
+    depends_on:
+      - rabbitmq
     networks:
       - ticketing-micro-net
   ticketing-ticket-auth:
@@ -70,7 +72,7 @@ services:
       context: ./Backend
       dockerfile: ./Dockerfiles/Dockerfile.notifications
     ports:
-      - "5000:80"
+      - "5004:80"
     env_file:
       - ./Configuration/authentication.env
       - ./Configuration/notifications.env
@@ -80,9 +82,7 @@ services:
       - RepositoryConnection=Data Source=/app/db.db
       - RabbitMQConnection=amqp://guest:guest@rabbitmq:5672/
     depends_on:
-      - ticketing-ticket-user
-      - ticketing-ticket-auth
-      - ticketing-ticket-ticket
+      - rabbitmq
     networks:
       - ticketing-micro-net
   
