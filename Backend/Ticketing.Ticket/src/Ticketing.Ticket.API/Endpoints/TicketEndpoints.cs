@@ -102,7 +102,7 @@ public static class TicketEndpoints
     var command = mapper.Map<CreateTicketCommand>(request);
     var ticketId = await mediator.Send(command, cancellationToken);
 
-    return Results.Created($"/api/Ticketing/{ticketId}", new { id = ticketId });
+    return Results.Created($"/api/Ticketing/{ticketId}", ticketId.TicketId);
   }
 
   public static async Task<IResult> AddTicketReply(
