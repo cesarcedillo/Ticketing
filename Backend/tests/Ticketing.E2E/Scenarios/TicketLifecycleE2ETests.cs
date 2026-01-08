@@ -6,6 +6,7 @@ using Ticketing.E2E.Helpers;
 
 namespace Ticketing.E2E.Scenarios;
 
+[Trait("Category", "E2E")]
 public class TicketLifecycleE2ETests : IClassFixture<BffApiFixture>
 {
   private readonly BffApiFixture _fx;
