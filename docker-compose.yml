@@ -16,9 +16,18 @@ services:
       - RepositoryConnection=Data Source=/app/db.db
       - RabbitMQConnection=amqp://guest:guest@rabbitmq:5672/
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/healthz/ready >/dev/null || curl -fsS http://localhost/healthcheck >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
     networks:
       - ticketing-micro-net
+
   ticketing-ticket-auth:
     build:
       context: ./Backend
@@ -27,12 +36,19 @@ services:
       - "5001:80"
     env_file:
       - ./Configuration/authentication.env
-      - ./Configuration/auth.env  
+      - ./Configuration/auth.env
     environment:
       - RunningInDocker=true
       - RepositoryConnection=Data Source=/app/db.db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/healthz/ready >/dev/null || curl -fsS http://localhost/healthcheck >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
     networks:
       - ticketing-micro-net
+
   ticketing-ticket-user:
     build:
       context: ./Backend
@@ -41,12 +57,19 @@ services:
       - "5002:80"
     env_file:
       - ./Configuration/authentication.env
-      - ./Configuration/user.env  
+      - ./Configuration/user.env
     environment:
       - RunningInDocker=true
       - RepositoryConnection=Data Source=/app/db.db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/healthz/ready >/dev/null || curl -fsS http://localhost/healthcheck >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
     networks:
       - ticketing-micro-net
+
   ticketing-ticket-bff:
     build:
       context: ./Backend
@@ -55,18 +78,29 @@ services:
       - "5000:80"
     env_file:
       - ./Configuration/authentication.env
-      - ./Configuration/bff.env  
+      - ./Configuration/bff.env
     environment:
-      - RunningInDocker=true  
-      - AuthClientUrl=http://ticketing-ticket-auth/,
-      - UserClientUrl=http://ticketing-ticket-user/,
+      - RunningInDocker=true
+      - AuthClientUrl=http://ticketing-ticket-auth/
+      - UserClientUrl=http://ticketing-ticket-user/
       - TicketClientUrl=http://ticketing-ticket-ticket/
     depends_on:
-      - ticketing-ticket-user
-      - ticketing-ticket-auth
-      - ticketing-ticket-ticket
+      ticketing-ticket-user:
+        condition: service_healthy
+      ticketing-ticket-auth:
+        condition: service_healthy
+      ticketing-ticket-ticket:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/healthz/ready >/dev/null || curl -fsS http://localhost/healthcheck >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
     networks:
       - ticketing-micro-net
+
   ticketing-ticket-notifications:
     build:
       context: ./Backend
@@ -78,14 +112,22 @@ services:
       - ./Configuration/notifications.env
       - ./Configuration/brokerConfigurations.env
     environment:
-      - RunningInDocker=true 
+      - RunningInDocker=true
       - RepositoryConnection=Data Source=/app/db.db
       - RabbitMQConnection=amqp://guest:guest@rabbitmq:5672/
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/healthz/ready >/dev/null || curl -fsS http://localhost/healthcheck >/dev/null || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
     networks:
       - ticketing-micro-net
-  
+
   ticketing-frontend:
     build:
       context: ./Frontend/Ticketing
@@ -95,7 +137,8 @@ services:
     ports:
       - "3000:80"
     depends_on:
-      - ticketing-ticket-bff
+      ticketing-ticket-bff:
+        condition: service_healthy
     networks:
       - ticketing-micro-net
 
@@ -118,6 +161,13 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping && rabbitmq-diagnostics -q check_port_connectivity"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 15s
+
 
 networks:
   ticketing-micro-net:
