@@ -151,15 +151,6 @@ To access the application, use one of the default users:
 
 ---
 
-## Assumptions
-
-* SQLite is used for local development and when running via Docker by default. No external DB configuration required unless specified.
-* The frontend expects the backend API URL to be set via `VITE_API_BASE_URL` (in `.env` for local dev or as a build arg for Docker).
-* All migrations are automatically applied on startup when using Docker.
-* OpenTelemetry and Zipkin are enabled by default for distributed tracing.
-
----
-
 ## Observability & Tracing
 
 **Distributed tracing is enabled with OpenTelemetry and Zipkin.**
@@ -171,18 +162,59 @@ To access the application, use one of the default users:
 
 ---
 
-## How to Run the Tests
+## Assumptions
 
-**Backend tests:**
+* SQLite is used for local development and when running via Docker by default. No external DB configuration required unless specified.
+* The frontend expects the backend API URL to be set via `VITE_API_BASE_URL` (in `.env` for local dev or as a build arg for Docker).
+* All migrations are automatically applied on startup when using Docker.
+* OpenTelemetry and Zipkin are enabled by default for distributed tracing.
 
-```bash
-cd Backend/tests/Ticketing.Tests
+---
+
+## End-to-End (E2E) Tests
+### Overview
+
+The project includes a backend End-to-End test suite that validates the system as a whole:
+
+* Tests enter only through the BFF
+* Real HTTP calls between microservices
+* Real databases (SQLite)
+* Real RabbitMQ broker
+* No mocks
+
+The E2E tests validate critical user flows such as:
+
+* Authentication (SignIn, Me)
+* Ticket creation and retrieval
+* Ticket replies
+* Ticket resolution
+* Error scenarios (404, invalid transitions)
+
+### Project location
+
+```env
+Backend/tests/Ticketing.E2E/
+```
+
+### How to run E2E tests
+
+Start the full system using Docker Compose:
+
+```env
+docker compose up -d --build
+```
+Run the E2E tests:
+
+```env
+cd Backend/tests/Ticketing.E2E
 dotnet test
 ```
 
-**Frontend tests:**
-
-If not implemented.
+The tests automatically load their configuration from:
+```env
+Configuration/e2e.env
+```
+No environment variables or command-line parameters are required.
 
 ---
 
@@ -198,11 +230,19 @@ If not implemented.
 
 Sample RESTful endpoints:
 
-* `GET /api/ticket` – List all tickets
-* `GET /api/ticket/{id}` – Get ticket by ID
-* `POST /api/ticket` – Create a new ticket
-* `PUT /api/ticket/{id}` – Update ticket
-* `DELETE /api/ticket/{id}` – Delete ticket
-* `GET /api/user/{username}` – Get user by UserName
+### User endpoints
+
+* `POST /api/User/signin` – Sign in user and obtain JWT access token
+* `POST /api/User/Me` – Get current authenticated user information
+* `POST /api/User` – Create a new user
+* `GET /api/User/{userName}` – Get user by user name
+
+### Ticket endpoints
+
+* `GET /api/Ticket` – List tickets (optional filters: status, userId)
+* `GET /api/Ticket/{ticketId}` – Get ticket detail by ID
+* `POST /api/Ticket` – Create a new ticket
+* `POST /api/Ticket/{ticketId}/replies` – Add a reply to a ticket
+* `PATCH /api/Ticket/{ticketId}/mark-as-resolved` – Mark ticket as resolved
 
 ---
