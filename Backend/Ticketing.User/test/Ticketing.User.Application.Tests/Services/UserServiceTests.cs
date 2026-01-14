@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using Moq;
+using Ticketing.Core.Domain.SeedWork.Interfaces;
 using Ticketing.User.Application.Dto.Responses;
 using Ticketing.User.Application.Services;
 using Ticketing.User.Domain.Enums;
@@ -16,11 +17,22 @@ public class UserServiceTests
   private readonly Mock<IMapper> _mapperMock;
   private readonly UserService _service;
   private readonly DomainFixture _domainFixture = new DomainFixture();
+  private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
   public UserServiceTests()
   {
     _userRepositoryMock = new Mock<IUserRepository>();
     _mapperMock = new Mock<IMapper>();
+    _unitOfWorkMock = new Mock<IUnitOfWork>();
+
+    _unitOfWorkMock
+    .Setup(uow => uow.SaveChangesAsync(It.IsAny<CancellationToken>()))
+    .Returns(Task.FromResult(1));
+
+    _userRepositoryMock
+      .SetupGet(r => r.UnitOfWork)
+      .Returns(_unitOfWorkMock.Object);
+
     _service = new UserService(_userRepositoryMock.Object, _mapperMock.Object);
   }
 

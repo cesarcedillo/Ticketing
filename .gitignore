@@ -56,3 +56,6 @@ Thumbs.db
 
 # User secrets
 secrets.json
+
+
+*.deb
