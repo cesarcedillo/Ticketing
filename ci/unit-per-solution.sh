@@ -14,17 +14,26 @@ CONFIGURATION="${CONFIGURATION:-Release}"
 # Artefactos
 RESULTS_DIR="${RESULTS_DIR:-$ROOT/TestResults}"
 LOGS_DIR="${LOGS_DIR:-$ROOT/ci-logs/unit}"
+BUILD_LOGS_DIR="${BUILD_LOGS_DIR:-$ROOT/ci-logs/build}"
 RUN_ID="${RUN_ID:-$(date +%Y%m%d-%H%M%S)}"
 
-mkdir -p "$RESULTS_DIR" "$LOGS_DIR"
+mkdir -p "$RESULTS_DIR" "$LOGS_DIR" "$BUILD_LOGS_DIR"
 
+log "Unit-per-solution"
+log "RUN_ID=$RUN_ID | CONFIGURATION=$CONFIGURATION"
+
+# 1) Reutiliza build-per-solution.sh (restore + build por solución)
+log "Running build-per-solution first..."
+chmod +x "$ROOT/ci/build-per-solution.sh"
+BACKEND_DIR="$BACKEND_DIR" CONFIGURATION="$CONFIGURATION" RUN_ID="$RUN_ID" LOGS_DIR="$BUILD_LOGS_DIR" \
+  bash "$ROOT/ci/build-per-solution.sh"
+
+# 2) Descubre soluciones (podrías también refactorizar discovery a una lib común si quieres)
 log "Searching for solutions under: $BACKEND_DIR"
 mapfile -t SLNS < <(find "$BACKEND_DIR" -name "*.sln" -type f | sort)
 [ ${#SLNS[@]} -gt 0 ] || die "No .sln files found under $BACKEND_DIR/"
 
 log "Found ${#SLNS[@]} solution(s). Running unit tests per solution..."
-
-failures=()
 
 for sln in "${SLNS[@]}"; do
   if echo "$sln" | grep -qi "e2e"; then
@@ -36,10 +45,7 @@ for sln in "${SLNS[@]}"; do
   sln_slug="${sln_base//[^a-zA-Z0-9._-]/_}"
   run_slug="${sln_slug}.${RUN_ID}"
 
-  # Log completo por solución
   log_file="$LOGS_DIR/${run_slug}.log"
-
-  # Directorio de resultados por solución (evita pisar TRX)
   sol_results_dir="$RESULTS_DIR/$run_slug"
   mkdir -p "$sol_results_dir"
 
@@ -50,29 +56,24 @@ for sln in "${SLNS[@]}"; do
 
   start_ts="$(date +%s)"
 
-  # En consola: solo lo mínimo. El detalle va a fichero.
+  # Nota: con pipefail, OJO a grep:
+  # - grep puede devolver 1 si no hay coincidencias
+  # - eso haría fallar el script
+  # Por eso añadimos "|| true" al grep.
   {
-  echo "=== RESTORE: $sln"
-  dotnet restore "$sln"
-
-  echo "=== BUILD:   $sln"
-  dotnet build "$sln" -c "$CONFIGURATION" --no-restore
-
-  echo "=== TEST:    $sln"
-  dotnet test "$sln" -c "$CONFIGURATION" --no-build \
-    --results-directory "$sol_results_dir" \
-    --logger "trx"
-} 2>&1 | tee "$log_file" | grep -vE '(^/.*: warning (NU|CS)[0-9]{4}:|^ *[0-9]+ Warning\(s\)|^Time Elapsed|^ *Determining projects to restore|^ *All projects are up-to-date for restore\.)'
+    echo "=== TEST: $sln"
+    dotnet test "$sln" -c "$CONFIGURATION" --no-build --no-restore \
+      --results-directory "$sol_results_dir" \
+      --logger "trx"
+  } 2>&1 | tee "$log_file" | grep -vE '(^/.*: warning (NU|CS)[0-9]{4}:|^ *[0-9]+ Warning\(s\)|^Time Elapsed|^ *Determining projects to restore|^ *All projects are up-to-date for restore\.)' || true
 
   end_ts="$(date +%s)"
   dur="$((end_ts - start_ts))"
 
-  # Si dotnet test devuelve !=0, el script se habría detenido por set -e.
-  # Para capturar fallos sin abortar todo, podríamos relajar set -e, pero mantengo set -e
-  # porque es CI. Aun así, dejamos una línea resumen por cada solución que pasa.
   log "OK: $sln_base (${dur}s)"
 done
 
 log "Unit tests completed."
+log "Build logs:  $BUILD_LOGS_DIR"
 log "Unit logs:   $LOGS_DIR"
 log "Unit TRX:    $RESULTS_DIR/<solution>.$RUN_ID/*.trx"

@@ -1,4 +1,4 @@
-name: CI - Unit (per-solution) + E2E (Ephemeral)
+name: CI - Build + Unit + E2E
 
 on:
   push:
@@ -7,18 +7,17 @@ on:
     branches: ["Phase-3"]
   workflow_dispatch:
 
-jobs:
-  build-test-e2e:
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
+env:
+  DOTNET_VERSION: "9.0.x"
+  CONFIGURATION: "Release"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
 
-    env:
-      DOTNET_VERSION: "9.0.x"
-      CONFIGURATION: "Release"
-      RUN_UNITS: "true"
-      RUN_E2E: "true"
-      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
-      DOTNET_NOLOGO: "1"
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -37,26 +36,107 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
-      - name: Print versions
+      - name: Build (script)
         shell: bash
         run: |
           set -euo pipefail
-          dotnet --info
-          docker --version
-          docker compose version
+          chmod +x ci/build-per-solution.sh
+          CONFIGURATION="${CONFIGURATION}" bash ci/build-per-solution.sh
 
-      - name: Run CI Orchestrator (Units + E2E)
+      - name: Upload build logs (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          if-no-files-found: warn
+          path: |
+            ci-logs/build/**
+            ci-logs/**
+
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/nuget.config', '**/*.sln') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Run Unit (orchestrator)
         shell: bash
         run: |
           set -euo pipefail
           chmod +x ci/run-ci.sh
-          RUN_UNITS="${RUN_UNITS}" RUN_E2E="${RUN_E2E}" CONFIGURATION="${CONFIGURATION}" bash ci/run-ci.sh
+          RUN_UNITS=true RUN_E2E=false CONFIGURATION="${CONFIGURATION}" bash ci/run-ci.sh
 
-      - name: Upload logs + test results (always)
+      - name: Upload unit logs + TRX (always)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ci-artifacts
+          name: unit-artifacts
+          if-no-files-found: warn
+          path: |
+            ci-logs/unit/**
+            TestResults/**/*.trx
+            **/TestResults/**/*.trx
+
+  e2e:
+    name: E2E tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    needs: unit
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/nuget.config', '**/*.sln') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Docker info
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker --version
+          docker compose version
+          docker info
+
+      - name: Run E2E (orchestrator)
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x ci/run-ci.sh
+          RUN_UNITS=false RUN_E2E=true CONFIGURATION="${CONFIGURATION}" bash ci/run-ci.sh
+
+      - name: Upload e2e logs + TRX + compose logs (always)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-artifacts
           if-no-files-found: warn
           path: |
             ci-logs/**
