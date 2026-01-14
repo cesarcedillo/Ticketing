@@ -3,7 +3,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$ROOT/ci/common.sh"
 
-RUN_UNITS="${RUN_UNITS:-false}"
+RUN_UNITS="${RUN_UNITS:-true}"
 RUN_E2E="${RUN_E2E:-true}"
 CONFIGURATION="${CONFIGURATION:-Release}"
 
